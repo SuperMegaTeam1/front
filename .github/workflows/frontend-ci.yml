@@ -1,0 +1,83 @@
+name: Frontend CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feat/**
+      - fix/**
+      - chore/**
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  ci:
+    name: Lint, test, and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check project initialization
+        shell: bash
+        run: |
+          if [ ! -f package.json ]; then
+            echo "PROJECT_READY=false" >> "$GITHUB_ENV"
+            echo "package.json was not found. The frontend application has not been initialized yet."
+            echo "Skipping dependency installation, lint, tests, and build."
+          else
+            echo "PROJECT_READY=true" >> "$GITHUB_ENV"
+          fi
+
+      - name: Detect package manager
+        if: env.PROJECT_READY == 'true'
+        shell: bash
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "INSTALL_CMD=npm ci" >> "$GITHUB_ENV"
+            echo "RUN_CMD=npm run" >> "$GITHUB_ENV"
+          elif [ -f pnpm-lock.yaml ]; then
+            echo "INSTALL_CMD=pnpm install --frozen-lockfile" >> "$GITHUB_ENV"
+            echo "RUN_CMD=pnpm run" >> "$GITHUB_ENV"
+          elif [ -f yarn.lock ]; then
+            echo "INSTALL_CMD=yarn install --frozen-lockfile" >> "$GITHUB_ENV"
+            echo "RUN_CMD=yarn run" >> "$GITHUB_ENV"
+          else
+            echo "No supported lock file was found. Commit package-lock.json, pnpm-lock.yaml, or yarn.lock."
+            exit 1
+          fi
+
+      - name: Detect package scripts
+        if: env.PROJECT_READY == 'true'
+        shell: bash
+        run: |
+          node -e "const scripts = require('./package.json').scripts || {}; const fs = require('fs'); fs.appendFileSync(process.env.GITHUB_ENV, ['HAS_LINT=' + Boolean(scripts.lint), 'HAS_TEST=' + Boolean(scripts.test), 'HAS_BUILD=' + Boolean(scripts.build)].join('\n') + '\n');"
+
+      - name: Enable Corepack
+        if: env.PROJECT_READY == 'true' && hashFiles('pnpm-lock.yaml', 'yarn.lock') != ''
+        run: corepack enable
+
+      - name: Install dependencies
+        if: env.PROJECT_READY == 'true'
+        run: $INSTALL_CMD
+
+      - name: Run lint
+        if: env.PROJECT_READY == 'true' && env.HAS_LINT == 'true'
+        run: $RUN_CMD lint
+
+      - name: Run tests
+        if: env.PROJECT_READY == 'true' && env.HAS_TEST == 'true'
+        run: $RUN_CMD test
+
+      - name: Build application
+        if: env.PROJECT_READY == 'true' && env.HAS_BUILD == 'true'
+        run: $RUN_CMD build
