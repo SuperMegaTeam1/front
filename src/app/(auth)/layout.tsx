@@ -1,1 +1,7 @@
-export default function LayoutComponent() { return null; }
+export default function AuthLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return children;
+}
