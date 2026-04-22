@@ -8,16 +8,21 @@ const theme = createTheme(
   {
     palette: {
       primary: {
-        main: '#1565c0',
-        light: '#42a5f5',
-        dark: '#0d47a1',
+        main: '#5ea9d8',
+        light: '#c9e7fb',
+        dark: '#35708a',
       },
       secondary: {
         main: '#7c4dff',
       },
+      text: {
+        primary: '#2f383c',
+        secondary: '#8fa1b3',
+      },
+      divider: '#dde6ed',
       background: {
-        default: '#f5f7fa',
-        paper: '#ffffff',
+        default: '#fbfdfe',
+        paper: '#fafcfd',
       },
     },
     typography: {
