@@ -1,1 +1,70 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
 
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: $color-surface;
+  border: 1px solid rgba(227, 233, 236, 0.4);
+  border-radius: $radius-md;
+  box-shadow: $shadow-sm;
+  padding: 25px;
+  text-decoration: none;
+  transition: box-shadow $transition-fast, transform $transition-fast;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-2px);
+  }
+}
+
+.top {
+  @include flex-between;
+  align-items: flex-start;
+  margin-bottom: 0;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  @include flex-center;
+  flex-shrink: 0;
+
+  img {
+    display: block;
+    max-width: 24px;
+    max-height: 24px;
+    object-fit: contain;
+  }
+}
+
+.badge {
+  background-color: $color-surface-alt;
+  border-radius: $radius-lg;
+  padding: 4px 12px;
+  font-family: 'Liberation Sans', sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  line-height: 15px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: $color-text-secondary;
+}
+
+.name {
+  font-family: var(--font-manrope), 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 28px;
+  color: $color-text-primary;
+  padding-top: 12px;
+}
+
+.groups {
+  font-family: 'Liberation Sans', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: $color-text-secondary;
+}

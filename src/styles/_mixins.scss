@@ -1,22 +1,30 @@
-@use './variables' as *;
+@use '@/styles/variables' as *;
 
 // ==========================================
 // Адаптивность
 // ==========================================
 @mixin mobile {
-  @media (max-width: $bp-mobile) { @content; }
+  @media (max-width: $bp-mobile) {
+    @content;
+  }
 }
 
 @mixin tablet {
-  @media (max-width: $bp-tablet) { @content; }
+  @media (max-width: $bp-tablet) {
+    @content;
+  }
 }
 
 @mixin desktop {
-  @media (min-width: $bp-desktop) { @content; }
+  @media (min-width: $bp-desktop) {
+    @content;
+  }
 }
 
 @mixin wide {
-  @media (min-width: $bp-wide) { @content; }
+  @media (min-width: $bp-wide) {
+    @content;
+  }
 }
 
 // ==========================================
@@ -70,3 +78,7 @@
   box-shadow: $shadow-sm;
   border: 1px solid $color-border;
 }
+
+// Примечание: @mixin card удалён, т.к. требовал переменные из _variables.
+// Используйте @include card через @use '@/styles/variables' as *; в целевом файле
+// или просто напишите стили inline.

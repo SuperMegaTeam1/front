@@ -48,3 +48,6 @@ src/
 ├── styles/          # SCSS переменные и миксины
 └── types/           # TypeScript типы
 ```
+страници : 
+http://localhost:3000/login
+http://localhost:3000/teacher/schedule

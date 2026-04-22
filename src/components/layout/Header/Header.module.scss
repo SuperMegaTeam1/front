@@ -1,1 +1,141 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
 
+.root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: $header-height;
+  background-color: $color-surface; // match screenshot (white background instead of grey)
+  border-bottom: 1px solid $color-border;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: 16px $content-padding;
+  height: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logoText {
+  font-family: var(--font-manrope), 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.4px;
+  color: $color-brand;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.nav {
+  @include flex-center;
+  gap: 24px;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: $radius-full; // Pill shaped like in screenshot
+  font-family: var(--font-manrope), 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.35px;
+  color: $color-brand;
+  text-decoration: none;
+  transition: background-color $transition-fast, color $transition-fast;
+  opacity: 0.6;
+
+  &:hover {
+    background-color: rgba($color-brand-light, 0.5);
+    opacity: 0.8;
+  }
+}
+
+.navLinkActive {
+  background-color: $color-brand-light;
+  color: $color-brand;
+  opacity: 1;
+
+  &:hover {
+    background-color: $color-brand-light;
+    opacity: 1;
+  }
+}
+
+.navIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: $radius-full;
+  color: $color-brand;
+  text-decoration: none;
+  transition: background-color $transition-fast;
+  opacity: 0.6;
+
+  &:hover {
+    background-color: rgba($color-brand-light, 0.5);
+    opacity: 0.8;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.actionBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: $radius-full;
+  @include flex-center;
+  color: $color-brand;
+  opacity: 0.6;
+  transition: background-color $transition-fast, opacity $transition-fast;
+
+  &:hover { 
+    background-color: rgba($color-brand-light, 0.5);
+    opacity: 0.8; 
+  }
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(171, 179, 183, 0.2);
+  background-color: $color-brand;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

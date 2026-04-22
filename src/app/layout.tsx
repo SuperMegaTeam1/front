@@ -1,11 +1,26 @@
 import type { Metadata } from 'next';
+import { Manrope, IBM_Plex_Sans } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
 import './globals.scss';
 import { Providers } from '@/providers/Providers';
 
+const manrope = Manrope({
+  subsets: ['latin', 'cyrillic'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-manrope',
+  display: 'swap',
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  subsets: ['latin', 'cyrillic'],
+  weight: ['400', '500', '600'],
+  variable: '--font-ibm-plex-sans',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'МОЙ ИВМИИТ',
-  description: 'Проверка стека',
+  title: 'Мой ИВМиИТ',
+  description: 'Цифровой кабинет студента и преподавателя ИВМиИТ КФУ',
 };
 
 export default function RootLayout({
@@ -14,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
+    <html lang="ru" className={`${manrope.variable} ${ibmPlexSans.variable}`}>
       <body>
         <AppRouterCacheProvider>
           <Providers>{children}</Providers>

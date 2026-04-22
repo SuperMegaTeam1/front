@@ -1,0 +1,84 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 25px;
+  background: $color-surface;
+  border: 1px solid rgba(227, 233, 236, 0.4);
+  border-radius: $radius-md;
+  box-shadow: $shadow-md;
+  width: 100%;
+}
+
+.dimmed {
+  opacity: 0.6;
+  box-shadow: $shadow-sm;
+}
+
+.compact {
+  padding: 21px;
+  box-shadow: $shadow-sm;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex: 1;
+  min-width: 0;
+}
+
+.time {
+  font-family: 'Liberation Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  color: $color-text-primary;
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.compact .time {
+  font-size: 12px;
+  min-width: 100px;
+}
+
+.subject {
+  @include flex-column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--font-manrope), 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 28px;
+  color: $color-text-primary;
+  white-space: nowrap;
+}
+
+.compact .name {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.meta {
+  font-family: 'Liberation Sans', sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  color: $color-text-secondary;
+  white-space: nowrap;
+}
+
+.room {
+  font-family: 'Liberation Sans', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  color: $color-text-secondary;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
