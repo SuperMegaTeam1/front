@@ -13,6 +13,7 @@ import { useNotificationStore } from '@/stores/useNotificationStore';
 import styles from './HeaderStudent.module.scss';
 
 const HOME_PATH = '/student/schedule';
+const SUBJECTS_PATH = '/student/subjects';
 const RATING_PATH = '/student/rating';
 const NOTIFICATIONS_PATH = '/student/notifications';
 const PROFILE_PATH = '/student/profile';
@@ -26,6 +27,10 @@ export function HeaderStudent() {
     ? `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.trim()
     : 'МИ';
   const isHomePage = pathname === HOME_PATH;
+  const isSubjectsPage = pathname === SUBJECTS_PATH || pathname.startsWith(`${SUBJECTS_PATH}/`);
+  const isRatingPage = pathname === RATING_PATH;
+  const isNotificationsPage = pathname === NOTIFICATIONS_PATH;
+  const isProfilePage = pathname === PROFILE_PATH;
 
   return (
     <header className={styles.root}>
@@ -34,21 +39,32 @@ export function HeaderStudent() {
           Мой ИВМиИТ
         </Link>
 
-        <nav className={styles.nav}>
+        <nav className={styles.nav} aria-label="Основная навигация студента">
           <Link
             href={HOME_PATH}
-            className={`${styles.homeLink} ${isHomePage ? styles.homeLinkActive : ''}`}
+            className={`${styles.navIconLink} ${isHomePage ? `${styles.navIconLinkActive} ${styles.navIconLinkHomeActive}` : ''}`}
+            aria-label="Главная"
             aria-current={isHomePage ? 'page' : undefined}
           >
-            <HomeRoundedIcon sx={{ fontSize: 24 }} />
-            Главная
+            <HomeRoundedIcon sx={{ fontSize: 28 }} />
+            {isHomePage && <span className={styles.navText}>Главная</span>}
           </Link>
 
-          <Link href={HOME_PATH} className={styles.navIconLink} aria-label="Расписание">
+          <Link
+            href={SUBJECTS_PATH}
+            className={`${styles.navIconLink} ${isSubjectsPage ? styles.navIconLinkActive : ''}`}
+            aria-label="Предметы"
+            aria-current={isSubjectsPage ? 'page' : undefined}
+          >
             <CalendarMonthOutlinedIcon sx={{ fontSize: 28 }} />
           </Link>
 
-          <Link href={RATING_PATH} className={styles.navIconLink} aria-label="Рейтинг">
+          <Link
+            href={RATING_PATH}
+            className={`${styles.navIconLink} ${isRatingPage ? styles.navIconLinkActive : ''}`}
+            aria-label="Рейтинг"
+            aria-current={isRatingPage ? 'page' : undefined}
+          >
             <BarChartRoundedIcon sx={{ fontSize: 28 }} />
           </Link>
         </nav>
@@ -58,7 +74,12 @@ export function HeaderStudent() {
             <DarkModeOutlinedIcon sx={{ fontSize: 28 }} />
           </button>
 
-          <Link href={NOTIFICATIONS_PATH} className={styles.actionButton} aria-label="Уведомления">
+          <Link
+            href={NOTIFICATIONS_PATH}
+            className={`${styles.actionButton} ${isNotificationsPage ? styles.actionButtonActive : ''}`}
+            aria-label="Уведомления"
+            aria-current={isNotificationsPage ? 'page' : undefined}
+          >
             <Badge
               badgeContent={unreadCount || null}
               color="error"
@@ -72,17 +93,18 @@ export function HeaderStudent() {
             component={Link}
             href={PROFILE_PATH}
             variant="rounded"
-            className={styles.profileAvatar}
+            className={`${styles.profileAvatar} ${isProfilePage ? styles.profileAvatarActive : ''}`}
             sx={{
-              bgcolor: '#2a657e',
-              width: 52,
-              height: 52,
-              fontSize: '18px',
+              bgcolor: '#201b2d',
+              width: 62,
+              height: 62,
+              fontSize: '20px',
               fontWeight: 700,
               cursor: 'pointer',
               textDecoration: 'none',
               borderRadius: '14px',
             }}
+            aria-current={isProfilePage ? 'page' : undefined}
           >
             {avatarLabel}
           </Avatar>

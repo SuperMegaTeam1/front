@@ -6,9 +6,9 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  height: 96px;
+  height: 116px;
   background: $color-surface;
-  border-bottom: 1px solid rgba(151, 169, 189, 0.24);
+  border-bottom: 1px solid rgba(151, 169, 189, 0.2);
 }
 
 .inner {
@@ -19,47 +19,23 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: clamp(20px, 3vw, 56px);
+  gap: clamp(24px, 4vw, 96px);
 }
 
 .logo {
   font-family: $font-family-heading;
-  font-size: clamp(22px, 2vw, 40px);
+  font-size: clamp(24px, 2.1vw, 34px);
   font-weight: 800;
   letter-spacing: -0.04em;
   color: $color-brand;
   text-decoration: none;
-  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .nav {
   @include flex-center;
   justify-content: center;
-  gap: clamp(12px, 1.5vw, 30px);
-}
-
-.homeLink {
-  @include flex-center;
-  gap: 12px;
-  height: 62px;
-  padding: 0 28px;
-  border-radius: 22px;
-  text-decoration: none;
-  font-size: clamp(15px, 1.1vw, 20px);
-  font-weight: 700;
-  color: $color-brand;
-  background: rgba(191, 232, 255, 0.82);
-  box-shadow: 0 12px 28px rgba(42, 101, 126, 0.12);
-  transition: transform $transition-fast, box-shadow $transition-fast, background $transition-fast;
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 16px 36px rgba(42, 101, 126, 0.14);
-  }
-}
-
-.homeLinkActive {
-  background: rgba(191, 232, 255, 0.96);
+  gap: clamp(18px, 1.8vw, 34px);
 }
 
 .navIconLink,
@@ -69,27 +45,59 @@
   border: none;
   border-radius: 16px;
   background: transparent;
-  color: #57636c;
+  color: #5b6972;
   text-decoration: none;
   cursor: pointer;
   @include flex-center;
-  transition: color $transition-fast, background $transition-fast, transform $transition-fast;
+  transition: color $transition-fast, background $transition-fast, transform $transition-fast, box-shadow $transition-fast;
 
   &:hover {
     color: $color-brand;
-    background: rgba(191, 232, 255, 0.4);
+    background: rgba(191, 232, 255, 0.36);
     transform: translateY(-1px);
   }
 }
 
+.navIconLinkHomeActive {
+  width: auto;
+  min-width: 150px;
+  padding: 0 22px;
+  gap: 12px;
+}
+
+.navIconLinkActive,
+.actionButtonActive {
+  background: rgba(191, 232, 255, 0.92);
+  color: $color-brand;
+  box-shadow: 0 10px 24px rgba(42, 101, 126, 0.12);
+}
+
+.navText {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 .actions {
   @include flex-center;
-  gap: clamp(10px, 1vw, 18px);
-  flex-shrink: 0;
+  gap: clamp(14px, 1.2vw, 22px);
 }
 
 .profileAvatar {
-  box-shadow: 0 14px 28px rgba(43, 52, 55, 0.16);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(32, 27, 45, 0.18);
+  transition: transform $transition-fast, box-shadow $transition-fast, outline-color $transition-fast;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(32, 27, 45, 0.24);
+  }
+}
+
+.profileAvatarActive {
+  outline: 3px solid rgba(191, 232, 255, 0.95);
+  outline-offset: 0;
 }
 
 @include tablet {
@@ -100,22 +108,30 @@
   .inner {
     grid-template-columns: 1fr;
     justify-items: center;
-    padding: $spacing-lg $spacing-lg $spacing-md;
+    padding: $spacing-lg;
     gap: $spacing-md;
   }
 }
 
 @include mobile {
-  .homeLink {
-    height: 54px;
-    padding: 0 20px;
-    gap: 8px;
-    font-size: $font-size-sm;
+  .logo {
+    font-size: 22px;
   }
 
   .navIconLink,
-  .actionButton {
-    width: 46px;
-    height: 46px;
+  .actionButton,
+  .profileAvatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .navIconLinkHomeActive {
+    min-width: 132px;
+    padding: 0 18px;
+    gap: 10px;
+  }
+
+  .navText {
+    font-size: 15px;
   }
 }

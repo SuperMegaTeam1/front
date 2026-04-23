@@ -23,6 +23,9 @@ export function HeaderTeacher() {
     ? `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.trim()
     : 'МИ';
   const isHomePage = pathname === HOME_PATH;
+  const isCalendarPage = pathname.startsWith('/teacher/lesson/');
+  const isSubjectsPage = pathname === SUBJECTS_PATH || pathname.startsWith(`${SUBJECTS_PATH}/`);
+  const isProfilePage = pathname === PROFILE_PATH;
 
   return (
     <header className={styles.root}>
@@ -31,21 +34,32 @@ export function HeaderTeacher() {
           Мой ИВМиИТ
         </Link>
 
-        <nav className={styles.nav}>
+        <nav className={styles.nav} aria-label="Основная навигация преподавателя">
           <Link
             href={HOME_PATH}
-            className={`${styles.homeLink} ${isHomePage ? styles.homeLinkActive : ''}`}
+            className={`${styles.navIconLink} ${isHomePage ? `${styles.navIconLinkActive} ${styles.navIconLinkHomeActive}` : ''}`}
+            aria-label="Главная"
             aria-current={isHomePage ? 'page' : undefined}
           >
-            <HomeRoundedIcon sx={{ fontSize: 24 }} />
-            Главная
+            <HomeRoundedIcon sx={{ fontSize: 28 }} />
+            {isHomePage && <span className={styles.navText}>Главная</span>}
           </Link>
 
-          <Link href={HOME_PATH} className={styles.navIconLink} aria-label="Расписание">
+          <Link
+            href={HOME_PATH}
+            className={`${styles.navIconLink} ${isCalendarPage ? styles.navIconLinkActive : ''}`}
+            aria-label="Расписание"
+            aria-current={isCalendarPage ? 'page' : undefined}
+          >
             <CalendarMonthOutlinedIcon sx={{ fontSize: 28 }} />
           </Link>
 
-          <Link href={SUBJECTS_PATH} className={styles.navIconLink} aria-label="Мои предметы">
+          <Link
+            href={SUBJECTS_PATH}
+            className={`${styles.navIconLink} ${isSubjectsPage ? styles.navIconLinkActive : ''}`}
+            aria-label="Предметы"
+            aria-current={isSubjectsPage ? 'page' : undefined}
+          >
             <ArticleOutlinedIcon sx={{ fontSize: 28 }} />
           </Link>
         </nav>
@@ -55,7 +69,12 @@ export function HeaderTeacher() {
             <DarkModeOutlinedIcon sx={{ fontSize: 28 }} />
           </button>
 
-          <Link href={PROFILE_PATH} className={styles.actionButton} aria-label="Редактировать профиль">
+          <Link
+            href={PROFILE_PATH}
+            className={`${styles.actionButton} ${isProfilePage ? styles.actionButtonActive : ''}`}
+            aria-label="Профиль"
+            aria-current={isProfilePage ? 'page' : undefined}
+          >
             <EditOutlinedIcon sx={{ fontSize: 28 }} />
           </Link>
 
@@ -63,17 +82,18 @@ export function HeaderTeacher() {
             component={Link}
             href={PROFILE_PATH}
             variant="rounded"
-            className={styles.profileAvatar}
+            className={`${styles.profileAvatar} ${isProfilePage ? styles.profileAvatarActive : ''}`}
             sx={{
-              bgcolor: '#2a657e',
-              width: 52,
-              height: 52,
-              fontSize: '18px',
+              bgcolor: '#201b2d',
+              width: 62,
+              height: 62,
+              fontSize: '20px',
               fontWeight: 700,
               cursor: 'pointer',
               textDecoration: 'none',
               borderRadius: '14px',
             }}
+            aria-current={isProfilePage ? 'page' : undefined}
           >
             {avatarLabel}
           </Avatar>

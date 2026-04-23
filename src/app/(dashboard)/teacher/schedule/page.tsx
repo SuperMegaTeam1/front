@@ -166,7 +166,7 @@ export default function TeacherSchedulePage() {
             </div>
 
             <button type="button" className={styles.arrowButton} aria-label="Предыдущий день">
-              <ChevronLeftRoundedIcon sx={{ fontSize: 38 }} />
+              <ChevronLeftRoundedIcon sx={{ fontSize: 26 }} />
             </button>
 
             <div className={styles.todayColumn}>
@@ -176,7 +176,7 @@ export default function TeacherSchedulePage() {
             </div>
 
             <button type="button" className={styles.arrowButton} aria-label="Следующий день">
-              <ChevronRightRoundedIcon sx={{ fontSize: 38 }} />
+              <ChevronRightRoundedIcon sx={{ fontSize: 26 }} />
             </button>
 
             <div className={`${styles.sideColumn} ${styles.sideColumnRight}`}>

@@ -3,34 +3,34 @@
 @use '@/styles/typography' as *;
 
 .root {
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.98);
   border: 1px solid rgba(227, 233, 236, 0.92);
-  border-radius: 26px;
-  box-shadow: 0 22px 50px rgba(146, 164, 183, 0.16);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(146, 164, 183, 0.1);
   transition: transform $transition-fast, box-shadow $transition-fast, opacity $transition-fast;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 28px 58px rgba(146, 164, 183, 0.2);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 30px rgba(146, 164, 183, 0.14);
   }
 }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(180px, 280px) 1fr auto;
-  gap: clamp(24px, 3vw, 42px);
+  grid-template-columns: minmax(120px, 160px) minmax(0, 1fr) auto;
+  gap: clamp(16px, 2vw, 32px);
   align-items: center;
-  padding: 32px clamp(24px, 3vw, 52px);
-  min-height: 132px;
+  padding: 22px clamp(20px, 2.2vw, 32px);
+  min-height: 108px;
 }
 
 .preview {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: min(100%, 236px);
-  min-height: 122px;
-  padding: 24px 22px;
+  gap: 6px;
+  width: 100%;
+  min-height: 92px;
+  padding: 18px 18px;
   opacity: 0.58;
 }
 
@@ -45,55 +45,54 @@
 .timeRange {
   font-family: $font-family-heading;
   font-weight: 700;
-  font-size: clamp(22px, 1.55vw, 34px);
-  letter-spacing: -0.03em;
-  color: #94a3b8;
+  font-size: clamp(16px, 1.05vw, 22px);
+  letter-spacing: -0.02em;
+  color: $color-text-primary;
   white-space: nowrap;
 }
 
 .body {
   @include flex-column;
-  gap: 10px;
+  gap: 6px;
   min-width: 0;
 }
 
 .subject {
   font-family: $font-family-heading;
   font-weight: 700;
-  font-size: clamp(24px, 2vw, 44px);
-  line-height: 1.08;
-  letter-spacing: -0.04em;
+  font-size: clamp(18px, 1.35vw, 26px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   color: $color-text-primary;
-  @include truncate;
+  @include line-clamp(2);
 }
 
 .meta {
-  font-size: clamp(16px, 1.15vw, 24px);
+  font-size: clamp(13px, 0.9vw, 16px);
   color: #97a7bd;
   @include truncate;
 }
 
 .room {
-  font-size: clamp(22px, 1.5vw, 36px);
+  font-size: clamp(15px, 1vw, 20px);
   font-weight: 500;
-  letter-spacing: -0.03em;
   color: #97a7bd;
   white-space: nowrap;
 }
 
 .previewTime {
   font-family: $font-family-heading;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   color: #94a3b8;
 }
 
 .previewSubject {
   font-family: $font-family-heading;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.18;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
   color: rgba(43, 52, 55, 0.78);
   @include line-clamp(2);
 }
