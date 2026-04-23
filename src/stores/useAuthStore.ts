@@ -1,3 +1,9 @@
+// TODO(auth): перейти на HttpOnly cookies — см. wiki/concepts/auth-strategy.md
+// Сейчас токен хранится в localStorage (persist), это уязвимо к XSS.
+// Решение: бэк ставит куку Set-Cookie: HttpOnly; Secure; SameSite=Lax,
+// а этот стор хранит ТОЛЬКО user (без accessToken/refreshToken и без persist).
+// Ждём реализации /auth/login на бэке.
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { User, Role } from '@/types/user';

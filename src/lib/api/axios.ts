@@ -1,3 +1,9 @@
+// TODO(auth): перейти на HttpOnly cookies — см. wiki/concepts/auth-strategy.md
+// После готовности бэка:
+//   - добавить сюда { withCredentials: true }
+//   - удалить request-интерсептор с Authorization: Bearer
+//   - кука будет ехать автоматически
+
 import axios from 'axios';
 import { useAuthStore } from '@/stores/useAuthStore';
 

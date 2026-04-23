@@ -1,29 +1,42 @@
 // ==========================================
-// Цветовая палитра
+// Цветовая палитра — из Figma (Мой ИВМиИТ)
 // ==========================================
-$color-primary: #1565c0;
-$color-primary-light: #42a5f5;
-$color-primary-dark: #0d47a1;
 
+// Бренд (тёмно-бирюзовый — основной цвет проекта)
+$color-brand: #2a657e;
+$color-brand-dark: #004b63;  // градиент кнопки: верх
+$color-brand-light: #bfe8ff; // акценты, hover, активные пункты меню
+
+// Совместимые алиасы (чтобы не ломать существующие импорты)
+$color-primary: $color-brand;
+$color-primary-light: $color-brand-light;
+$color-primary-dark: $color-brand-dark;
+
+// Градиент кнопки входа
+$gradient-login: linear-gradient(135deg, #004b63 0%, #006686 100%);
+
+// Вспомогательный secondary (пока не используется в Figma, оставлен из дефолта)
 $color-secondary: #7c4dff;
-$color-secondary-light: #b47cff;
-$color-secondary-dark: #3f1dcb;
 
+// Статусы
 $color-success: #2e7d32;
 $color-warning: #f57f17;
 $color-error: #d32f2f;
 $color-info: #0288d1;
 
-// Нейтральные
-$color-bg: #f5f7fa;
-$color-surface: #ffffff;
-$color-text-primary: #1a1a2e;
-$color-text-secondary: #64748b;
-$color-border: #e2e8f0;
-$color-divider: #f1f5f9;
+// Нейтральные — фон/поверхности/текст из Figma
+$color-bg: #f8f9fa;             // фон страницы
+$color-surface: #ffffff;        // карточки
+$color-surface-alt: #f1f4f6;    // greeting-блок, спокойные фоны
+$color-text-primary: #2b3437;   // основной текст
+$color-text-secondary: #94a3b8; // meta, подписи
+$color-text-label: #586064;     // label над инпутом
+$color-border: #e3e9ec;
+$color-divider: #e3e9ec;
+$color-input-bg: #dbe4e7;       // фон инпута (login screen)
 
 // ==========================================
-// Отступы
+// Отступы (4px-база)
 // ==========================================
 $spacing-xs: 4px;
 $spacing-sm: 8px;
@@ -33,19 +46,21 @@ $spacing-xl: 32px;
 $spacing-2xl: 48px;
 
 // ==========================================
-// Скругления
+// Скругления — из Figma
 // ==========================================
-$radius-sm: 6px;
-$radius-md: 10px;
-$radius-lg: 16px;
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
 $radius-full: 9999px;
 
 // ==========================================
-// Тени
+// Тени — из Figma
 // ==========================================
-$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 24px rgba(43, 52, 55, 0.08);
+$shadow-lg: 0 20px 40px rgba(25, 28, 30, 0.06);
+$shadow-btn: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 
 // ==========================================
 // Переходы
@@ -63,8 +78,10 @@ $bp-desktop: 1024px;
 $bp-wide: 1280px;
 
 // ==========================================
-// Sidebar
+// Layout
 // ==========================================
+$header-height: 73px;
 $sidebar-width: 260px;
 $sidebar-collapsed-width: 72px;
-$header-height: 64px;
+$content-max-width: 1280px;
+$content-padding: 32px;

@@ -3,34 +3,51 @@
 import { createTheme, ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
 import { ruRU } from '@mui/material/locale';
 
-/** Кастомная MUI-тема проекта */
+/**
+ * MUI-тема проекта.
+ *
+ * ВАЖНО: значения здесь должны ПО ЗНАЧЕНИЯМ совпадать с `src/styles/_variables.scss`.
+ * Если меняешь цвет — правь оба места. Иначе SCSS-блоки и MUI-компоненты
+ * разойдутся по оттенку.
+ */
 const theme = createTheme(
   {
     palette: {
       primary: {
-        main: '#1565c0',
-        light: '#42a5f5',
-        dark: '#0d47a1',
+        main: '#2a657e',
+        light: '#bfe8ff',
+        dark: '#004b63',
       },
       secondary: {
         main: '#7c4dff',
       },
       background: {
-        default: '#f5f7fa',
+        default: '#f8f9fa',
         paper: '#ffffff',
       },
+      text: {
+        primary: '#2b3437',
+        secondary: '#94a3b8',
+      },
+      divider: '#e3e9ec',
     },
     typography: {
-      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      // Основной шрифт — IBM Plex Sans (тело, инпуты, подписи)
+      fontFamily: "var(--font-ibm-plex-sans), 'IBM Plex Sans', -apple-system, sans-serif",
+      // Заголовки — Manrope
+      h1: { fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 800 },
+      h2: { fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 800 },
+      h3: { fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 700 },
+      h4: { fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 700 },
     },
     shape: {
-      borderRadius: 10,
+      borderRadius: 8,
     },
     components: {
       MuiButton: {
         styleOverrides: {
           root: {
-            textTransform: 'none', // Без CAPS
+            textTransform: 'none',
             fontWeight: 600,
           },
         },
@@ -38,14 +55,14 @@ const theme = createTheme(
       MuiCard: {
         styleOverrides: {
           root: {
-            boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-            border: '1px solid #e2e8f0',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+            border: '1px solid rgba(227,233,236,0.4)',
           },
         },
       },
     },
   },
-  ruRU // Русская локализация MUI (подписи, пагинация и т.д.)
+  ruRU
 );
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {

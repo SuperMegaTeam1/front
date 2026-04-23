@@ -2,16 +2,16 @@ import { create } from 'zustand';
 
 interface UiState {
   /** Sidebar открыт/закрыт */
-  sidebarOpen: boolean;
+  isSidebarOpen: boolean;
   /** Переключить sidebar */
   toggleSidebar: () => void;
   /** Установить состояние sidebar */
-  setSidebarOpen: (open: boolean) => void;
+  setSidebarOpen: (isOpen: boolean) => void;
 }
 
 export const useUiStore = create<UiState>()((set) => ({
-  sidebarOpen: true,
+  isSidebarOpen: true,
 
-  toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
-  setSidebarOpen: (open) => set({ sidebarOpen: open }),
+  toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+  setSidebarOpen: (isOpen) => set({ isSidebarOpen: isOpen }),
 }));

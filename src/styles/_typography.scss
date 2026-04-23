@@ -2,7 +2,14 @@
 // Типографика
 // ==========================================
 
-$font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+// Основной шрифт — IBM Plex Sans (тело, инпуты). Подключается через next/font в app/layout.tsx.
+$font-family: var(--font-ibm-plex-sans), 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+// Заголовочный шрифт — Manrope.
+$font-family-heading: var(--font-manrope), 'Manrope', sans-serif;
+
+// Добавлены веса 800 — Manrope ExtraBold для крупных заголовков в Figma.
+$font-weight-extrabold: 800;
 
 $font-size-xs: 0.75rem;    // 12px
 $font-size-sm: 0.875rem;   // 14px
