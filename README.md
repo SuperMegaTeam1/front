@@ -24,6 +24,9 @@ npm install
 npm run dev
 
 # Открыть http://localhost:3000
+http://localhost:3000/login
+http://localhost:3000/student/schedule
+http://localhost:3000/teacher/schedule
 ```
 
 ## Скрипты
