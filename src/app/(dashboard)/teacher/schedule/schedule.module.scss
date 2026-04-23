@@ -1,0 +1,234 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
+
+.page {
+  background: $color-bg;
+  min-height: calc(100vh - 96px);
+}
+
+.container {
+  max-width: 1760px;
+  margin: 0 auto;
+  padding: 44px 64px 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+.greeting {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: end;
+  padding: 42px 50px;
+  border-radius: 28px;
+  background: rgba(241, 244, 246, 0.98);
+
+  @include tablet {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+}
+
+.greetingBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.greetingTitle {
+  font-family: $font-family-heading !important;
+  font-weight: 800 !important;
+  font-size: clamp(38px, 4vw, 74px) !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.05em !important;
+  color: $color-text-primary !important;
+}
+
+.greetingMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  font-size: clamp(20px, 1.55vw, 34px);
+  color: #97a7bd;
+
+  strong {
+    color: $color-brand;
+    font-weight: 700;
+  }
+}
+
+.metaDot {
+  color: #b1bfd0;
+}
+
+.greetingLink {
+  @include flex-center;
+  gap: 8px;
+  font-size: clamp(20px, 1.45vw, 28px);
+  font-weight: 700;
+  color: $color-brand;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.scheduleStage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.stageTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  padding: 0 50px;
+  border-radius: 28px;
+  background: rgba(191, 232, 255, 0.98);
+  box-shadow: 0 18px 38px rgba(42, 101, 126, 0.12);
+  font-size: clamp(20px, 1.6vw, 36px);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: $color-brand;
+}
+
+.stageLayout {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 240px) 80px minmax(0, 1fr) 80px minmax(0, 240px);
+  gap: 24px;
+  align-items: center;
+}
+
+.sideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  opacity: 0.7;
+}
+
+.sideColumnLeft {
+  align-items: flex-start;
+}
+
+.sideColumnRight {
+  align-items: flex-end;
+}
+
+.sideLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 132px;
+  min-height: 50px;
+  padding: 0 18px;
+  border-radius: 18px;
+  background: rgba(219, 228, 231, 0.55);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #97a7bd;
+}
+
+.todayColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.arrowButton {
+  width: 72px;
+  height: 72px;
+  border: none;
+  border-radius: 22px;
+  background: rgba(191, 232, 255, 0.98);
+  box-shadow: 0 18px 38px rgba(42, 101, 126, 0.12);
+  color: $color-brand;
+  cursor: pointer;
+  @include flex-center;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 22px 42px rgba(42, 101, 126, 0.16);
+  }
+}
+
+.subjectSection {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.sectionTitle {
+  font-family: $font-family-heading !important;
+  font-size: clamp(34px, 2.4vw, 52px) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+  color: $color-text-primary !important;
+}
+
+.sectionLink {
+  font-size: clamp(18px, 1.2vw, 24px);
+  font-weight: 700;
+  color: $color-brand;
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.subjectsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+}
+
+@include tablet {
+  .container {
+    padding: 30px 24px 52px;
+    gap: 42px;
+  }
+
+  .stageLayout {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .sideColumn {
+    order: 2;
+    opacity: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .todayColumn {
+    order: 1;
+  }
+
+  .arrowButton {
+    width: 56px;
+    height: 56px;
+    justify-self: center;
+  }
+
+  .subjectsGrid {
+    grid-template-columns: 1fr;
+  }
+}

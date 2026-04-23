@@ -1,0 +1,117 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
+
+.root {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(227, 233, 236, 0.92);
+  border-radius: 26px;
+  box-shadow: 0 22px 50px rgba(146, 164, 183, 0.16);
+  transition: transform $transition-fast, box-shadow $transition-fast, opacity $transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 28px 58px rgba(146, 164, 183, 0.2);
+  }
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) 1fr auto;
+  gap: clamp(24px, 3vw, 42px);
+  align-items: center;
+  padding: 32px clamp(24px, 3vw, 52px);
+  min-height: 132px;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(100%, 236px);
+  min-height: 122px;
+  padding: 24px 22px;
+  opacity: 0.58;
+}
+
+.active {
+  opacity: 1;
+}
+
+.timeColumn {
+  align-self: center;
+}
+
+.timeRange {
+  font-family: $font-family-heading;
+  font-weight: 700;
+  font-size: clamp(22px, 1.55vw, 34px);
+  letter-spacing: -0.03em;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.body {
+  @include flex-column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.subject {
+  font-family: $font-family-heading;
+  font-weight: 700;
+  font-size: clamp(24px, 2vw, 44px);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  color: $color-text-primary;
+  @include truncate;
+}
+
+.meta {
+  font-size: clamp(16px, 1.15vw, 24px);
+  color: #97a7bd;
+  @include truncate;
+}
+
+.room {
+  font-size: clamp(22px, 1.5vw, 36px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: #97a7bd;
+  white-space: nowrap;
+}
+
+.previewTime {
+  font-family: $font-family-heading;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #94a3b8;
+}
+
+.previewSubject {
+  font-family: $font-family-heading;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.18;
+  color: rgba(43, 52, 55, 0.78);
+  @include line-clamp(2);
+}
+
+@include tablet {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .room {
+    font-size: 20px;
+  }
+}
+
+@include mobile {
+  .preview {
+    width: 100%;
+  }
+}

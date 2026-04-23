@@ -31,6 +31,13 @@ export function formatDateWithDay(dateStr: string): string {
   });
 }
 
+/** "Среда" — только название дня недели */
+export function getWeekDay(dateStr: string): string {
+  const date = new Date(dateStr);
+  const day = date.toLocaleDateString('ru-RU', { weekday: 'long' });
+  return day.charAt(0).toUpperCase() + day.slice(1);
+}
+
 /** Получить ISO-строку текущей даты: "2026-04-16" */
 export function getTodayISO(): string {
   return new Date().toISOString().split('T')[0];
