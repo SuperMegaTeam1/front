@@ -2,7 +2,7 @@
 
 import { useForm, Controller } from 'react-hook-form';
 import { TextField, Button, Typography, Link as MuiLink } from '@mui/material';
-import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
+import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { useAuth } from '@/lib/hooks/useAuth';
 import type { LoginPayload } from '@/types/api';
 import styles from './login.module.scss';
@@ -46,7 +46,7 @@ export default function LoginPage() {
       <div className={styles.content}>
         <div className={styles.logoBlock}>
           <div className={styles.logoIconWrap}>
-            <GridViewOutlinedIcon sx={{ fontSize: 42, color: '#2a657e' }} />
+            <SchoolOutlinedIcon sx={{ fontSize: 52, color: '#2a657e' }} />
           </div>
           <Typography className={styles.title}>Мой ИВМиИТ</Typography>
           <Typography className={styles.subtitle}>Цифровой кабинет студента</Typography>
@@ -115,9 +115,7 @@ export default function LoginPage() {
           </form>
 
           <Typography className={styles.helperText}>
-            Используйте ваши университетские
-            <br />
-            учётные данные для входа
+            Используйте ваши университетские учётные данные для входа
           </Typography>
         </div>
 

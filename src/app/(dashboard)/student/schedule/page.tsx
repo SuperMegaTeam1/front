@@ -210,7 +210,10 @@ export default function StudentSchedulePage() {
 
             <div className={styles.subjectScores}>
               {MOCK_GRADES.map((grade) => (
-                <div key={grade.subject} className={styles.subjectScoreRow}>
+                <div
+                  key={grade.subject}
+                  className={`${styles.subjectScoreRow} ${grade.score < 70 ? styles.subjectScoreRowDim : ''}`}
+                >
                   <span>{grade.subject}</span>
                   <strong>{grade.score}</strong>
                 </div>

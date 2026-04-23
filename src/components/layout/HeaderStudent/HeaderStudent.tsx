@@ -6,40 +6,37 @@ import { Avatar, Badge } from '@mui/material';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useNotificationStore } from '@/stores/useNotificationStore';
-import styles from './Header.module.scss';
+import styles from './HeaderStudent.module.scss';
 
-export function Header() {
+const HOME_PATH = '/student/schedule';
+const RATING_PATH = '/student/rating';
+const NOTIFICATIONS_PATH = '/student/notifications';
+const PROFILE_PATH = '/student/profile';
+
+export function HeaderStudent() {
   const { user } = useAuthStore();
   const { unreadCount } = useNotificationStore();
   const pathname = usePathname();
 
-  const isTeacher = user?.role === 'teacher';
-  const schedulePath = isTeacher ? '/teacher/schedule' : '/student/schedule';
-  const calendarPath = schedulePath;
-  const secondaryPath = isTeacher ? '/teacher/subjects' : '/student/rating';
-  const notificationsPath = isTeacher ? '/teacher/notifications' : '/student/notifications';
-  const profilePath = isTeacher ? '/teacher/profile' : '/student/profile';
   const avatarLabel = user
     ? `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.trim()
     : 'МИ';
-  const isHomePage = pathname === schedulePath;
+  const isHomePage = pathname === HOME_PATH;
 
   return (
     <header className={styles.root}>
       <div className={styles.inner}>
-        <Link href={schedulePath} className={styles.logo}>
+        <Link href={HOME_PATH} className={styles.logo}>
           Мой ИВМиИТ
         </Link>
 
         <nav className={styles.nav}>
           <Link
-            href={schedulePath}
+            href={HOME_PATH}
             className={`${styles.homeLink} ${isHomePage ? styles.homeLinkActive : ''}`}
             aria-current={isHomePage ? 'page' : undefined}
           >
@@ -47,20 +44,12 @@ export function Header() {
             Главная
           </Link>
 
-          <Link href={calendarPath} className={styles.navIconLink} aria-label="Календарь">
+          <Link href={HOME_PATH} className={styles.navIconLink} aria-label="Расписание">
             <CalendarMonthOutlinedIcon sx={{ fontSize: 28 }} />
           </Link>
 
-          <Link
-            href={secondaryPath}
-            className={styles.navIconLink}
-            aria-label={isTeacher ? 'Предметы' : 'Рейтинг'}
-          >
-            {isTeacher ? (
-              <DescriptionOutlinedIcon sx={{ fontSize: 28 }} />
-            ) : (
-              <BarChartRoundedIcon sx={{ fontSize: 28 }} />
-            )}
+          <Link href={RATING_PATH} className={styles.navIconLink} aria-label="Рейтинг">
+            <BarChartRoundedIcon sx={{ fontSize: 28 }} />
           </Link>
         </nav>
 
@@ -69,25 +58,19 @@ export function Header() {
             <DarkModeOutlinedIcon sx={{ fontSize: 28 }} />
           </button>
 
-          {isTeacher ? (
-            <Link href={profilePath} className={styles.actionButton} aria-label="Редактировать профиль">
-              <EditOutlinedIcon sx={{ fontSize: 28 }} />
-            </Link>
-          ) : (
-            <Link href={notificationsPath} className={styles.actionButton} aria-label="Уведомления">
-              <Badge
-                badgeContent={unreadCount || null}
-                color="error"
-                sx={{ '& .MuiBadge-badge': { fontSize: '10px', minWidth: '16px', height: '16px' } }}
-              >
-                <NotificationsNoneOutlinedIcon sx={{ fontSize: 28 }} />
-              </Badge>
-            </Link>
-          )}
+          <Link href={NOTIFICATIONS_PATH} className={styles.actionButton} aria-label="Уведомления">
+            <Badge
+              badgeContent={unreadCount || null}
+              color="error"
+              sx={{ '& .MuiBadge-badge': { fontSize: '10px', minWidth: '16px', height: '16px' } }}
+            >
+              <NotificationsNoneOutlinedIcon sx={{ fontSize: 28 }} />
+            </Badge>
+          </Link>
 
           <Avatar
             component={Link}
-            href={profilePath}
+            href={PROFILE_PATH}
             variant="rounded"
             className={styles.profileAvatar}
             sx={{
