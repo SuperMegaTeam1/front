@@ -1,0 +1,172 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
+
+.page {
+  min-height: 100vh;
+  background: $color-bg;
+  @include flex-center;
+  position: relative;
+  overflow: hidden;
+  padding: 40px $spacing-lg;
+}
+
+.decorCircle {
+  position: absolute;
+  left: -260px;
+  top: -120px;
+  width: 840px;
+  height: 840px;
+  border-radius: 50%;
+  background: rgba(219, 228, 231, 0.75);
+  pointer-events: none;
+}
+
+.decorFrame {
+  position: absolute;
+  right: -180px;
+  bottom: -220px;
+  width: 640px;
+  height: 640px;
+  border: 22px solid rgba(219, 228, 231, 0.66);
+  border-radius: 26px;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.content {
+  @include flex-column;
+  align-items: center;
+  gap: 32px;
+  z-index: 1;
+  width: 100%;
+  max-width: 760px;
+}
+
+.logoBlock {
+  @include flex-column;
+  align-items: center;
+  gap: 18px;
+}
+
+.logoIconWrap {
+  width: 128px;
+  height: 128px;
+  border-radius: 24px;
+  background: $color-surface-alt;
+  @include flex-center;
+}
+
+.title {
+  font-family: $font-family-heading !important;
+  font-weight: 800 !important;
+  font-size: clamp(44px, 4vw, 78px) !important;
+  color: $color-brand !important;
+  letter-spacing: -0.05em !important;
+}
+
+.subtitle {
+  font-size: clamp(24px, 1.8vw, 32px) !important;
+  color: rgba(88, 96, 100, 0.92) !important;
+  text-align: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 640px;
+  background: $color-surface;
+  border-radius: 26px;
+  box-shadow: 0 30px 70px rgba(146, 164, 183, 0.18);
+  padding: 48px 42px 36px;
+  @include flex-column;
+  gap: 34px;
+}
+
+.form {
+  @include flex-column;
+  gap: 30px;
+}
+
+.fields {
+  @include flex-column;
+  gap: 26px;
+}
+
+.field {
+  @include flex-column;
+  gap: 12px;
+}
+
+.label {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  color: rgba(88, 96, 100, 0.92) !important;
+}
+
+.errorText {
+  font-size: $font-size-sm !important;
+  color: #d32f2f !important;
+  margin-top: -10px !important;
+}
+
+.submitBtn {
+  background: $gradient-login !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 22px !important;
+  letter-spacing: 0.08em !important;
+  min-height: 78px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 18px 32px rgba(0, 75, 99, 0.2) !important;
+  transition: opacity $transition-fast, transform $transition-fast !important;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6 !important;
+    color: #ffffff !important;
+  }
+}
+
+.helperText {
+  font-size: clamp(16px, 1.1vw, 20px) !important;
+  line-height: 1.55 !important;
+  color: rgba(88, 96, 100, 0.86) !important;
+  text-align: center;
+  max-width: 420px;
+  margin: 0 auto !important;
+}
+
+.forgotLink {
+  font-size: clamp(20px, 1.4vw, 28px) !important;
+  color: rgba(88, 96, 100, 0.92) !important;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600 !important;
+}
+
+@include tablet {
+  .decorCircle {
+    left: -280px;
+    top: -240px;
+    width: 640px;
+    height: 640px;
+  }
+
+  .decorFrame {
+    display: none;
+  }
+
+  .card {
+    padding: 38px 28px 32px;
+  }
+
+  .logoIconWrap {
+    width: 96px;
+    height: 96px;
+  }
+}

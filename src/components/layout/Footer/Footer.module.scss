@@ -1,0 +1,198 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
+
+.root {
+  background: $color-surface;
+  color: $color-text-primary;
+  margin-top: auto;
+  border-top: 1px solid rgba(151, 169, 189, 0.22);
+}
+
+.inner {
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: 58px $content-padding 40px;
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  gap: clamp(32px, 4vw, 72px);
+
+  @include tablet {
+    grid-template-columns: 1fr;
+    gap: $spacing-xl;
+  }
+}
+
+.brand {
+  @include flex-column;
+  gap: $spacing-md;
+}
+
+.brandTitle {
+  font-family: $font-family-heading;
+  font-size: clamp(30px, 2.3vw, 46px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: $color-brand;
+}
+
+.brandSubtitle {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(43, 52, 55, 0.75);
+}
+
+.brandDesc {
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.7;
+  color: rgba(43, 52, 55, 0.82);
+}
+
+.brandIcons {
+  display: flex;
+  gap: 12px;
+  padding-top: 6px;
+}
+
+.brandIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(191, 232, 255, 0.4);
+  color: $color-brand;
+  @include flex-center;
+  font-weight: 800;
+  box-shadow: 0 10px 24px rgba(42, 101, 126, 0.08);
+}
+
+.brandCounter {
+  border-radius: 50%;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+  gap: clamp(18px, 3vw, 42px);
+
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.col {
+  @include flex-column;
+  gap: 18px;
+}
+
+.colHeading {
+  font-size: clamp(13px, 0.85vw, 15px);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $color-text-primary;
+}
+
+.colList {
+  list-style: none;
+  @include flex-column;
+  gap: 16px;
+}
+
+.colLink {
+  font-size: 15px;
+  color: rgba(43, 52, 55, 0.78);
+  text-decoration: none;
+  transition: color $transition-fast, transform $transition-fast;
+
+  &:hover {
+    color: $color-brand;
+    transform: translateX(2px);
+  }
+}
+
+.contactList {
+  list-style: none;
+  @include flex-column;
+  gap: 18px;
+}
+
+.contactItem {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 12px;
+  align-items: flex-start;
+  color: rgba(43, 52, 55, 0.82);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.bottom {
+  border-top: 1px solid rgba(151, 169, 189, 0.22);
+}
+
+.bottomInner {
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: 26px $content-padding 34px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+
+  @include tablet {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+}
+
+.bottomBrand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.bottomMark {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: $color-brand;
+  @include flex-center;
+}
+
+.bottomMarkText {
+  @include flex-column;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: rgba(43, 52, 55, 0.78);
+}
+
+.bottomCopy {
+  font-size: clamp(15px, 1vw, 18px);
+  color: rgba(43, 52, 55, 0.78);
+}
+
+.bottomLinks {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2vw, 40px);
+  flex-wrap: wrap;
+}
+
+.bottomLink {
+  font-size: clamp(15px, 1vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(43, 52, 55, 0.82);
+  text-decoration: none;
+
+  &:hover {
+    color: $color-brand;
+  }
+}
