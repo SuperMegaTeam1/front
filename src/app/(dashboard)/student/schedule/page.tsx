@@ -6,6 +6,7 @@ import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import { ScheduleLessonCard } from './ScheduleLessonCard';
+import type { DaySchedule } from './scheduleData';
 import { buildWeek, parseIsoDate, TODAY_DATE, TODAY_LESSONS, WEEK_BASE_NUMBER } from './scheduleData';
 import styles from './schedule.module.scss';
 
