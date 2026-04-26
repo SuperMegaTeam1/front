@@ -16,7 +16,7 @@ type DaySchedule = {
 };
 
 const TODAY_DATE = '2026-04-09';
-const WEEK_BASE_START = '2026-04-14';
+const WEEK_BASE_START = '2026-04-13';
 const WEEK_BASE_NUMBER = 16;
 
 const TODAY_LESSONS: ScheduleLessonCardData[] = [
@@ -276,7 +276,10 @@ export default function StudentSchedulePage() {
                 <span className={styles.weekBadge}>
                   {isEvenWeek ? 'Четная неделя' : 'Нечетная неделя'}
                 </span>
-                <span className={styles.weekPeriod}>Текущий период: {formatWeekRange(weekDays)}</span>
+                <span className={styles.weekPeriod}>
+                  <CalendarTodayOutlinedIcon sx={{ fontSize: 14 }} />
+                  Текущий период: {formatWeekRange(weekDays)}
+                </span>
               </div>
             )}
           </div>
