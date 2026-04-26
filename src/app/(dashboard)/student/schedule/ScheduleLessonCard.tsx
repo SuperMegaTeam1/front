@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Typography } from '@mui/material';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
@@ -21,6 +22,8 @@ function getLessonType(lesson: ScheduleLessonCardData) {
 }
 
 export function ScheduleLessonCard({ lesson }: ScheduleLessonCardProps) {
+  const router = useRouter();
+
   return (
     <article className={styles.lessonCard}>
       <div className={styles.timeBlock}>
@@ -47,7 +50,12 @@ export function ScheduleLessonCard({ lesson }: ScheduleLessonCardProps) {
         </div>
       </div>
 
-      <button type="button" className={styles.moreButton} aria-label={`Подробнее о занятии ${lesson.subjectName}`}>
+      <button
+        type="button"
+        className={styles.moreButton}
+        aria-label={`Перейти на страницу предмета ${lesson.subjectName}`}
+        onClick={() => router.push(`/student/subjects/${lesson.subjectId}`)}
+      >
         <MoreHorizRoundedIcon sx={{ fontSize: 22 }} />
       </button>
     </article>
