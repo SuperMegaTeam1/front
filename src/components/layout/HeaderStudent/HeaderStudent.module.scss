@@ -65,6 +65,13 @@
   gap: 12px;
 }
 
+.actionButtonExpanded {
+  width: auto;
+  min-width: 170px;
+  padding: 0 18px;
+  gap: 10px;
+}
+
 .navIconLinkActive,
 .actionButtonActive {
   background: rgba(191, 232, 255, 0.92);
@@ -73,6 +80,13 @@
 }
 
 .navText {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.actionText {
   font-size: 17px;
   font-weight: 700;
   line-height: 1;
@@ -131,7 +145,17 @@
     gap: 10px;
   }
 
+  .actionButtonExpanded {
+    min-width: 148px;
+    padding: 0 16px;
+    gap: 8px;
+  }
+
   .navText {
+    font-size: 15px;
+  }
+
+  .actionText {
     font-size: 15px;
   }
 }

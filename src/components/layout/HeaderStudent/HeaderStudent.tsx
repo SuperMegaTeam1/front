@@ -76,7 +76,7 @@ export function HeaderStudent() {
 
           <Link
             href={NOTIFICATIONS_PATH}
-            className={`${styles.actionButton} ${isNotificationsPage ? styles.actionButtonActive : ''}`}
+            className={`${styles.actionButton} ${isNotificationsPage ? `${styles.actionButtonActive} ${styles.actionButtonExpanded}` : ''}`}
             aria-label="Уведомления"
             aria-current={isNotificationsPage ? 'page' : undefined}
           >
@@ -87,6 +87,7 @@ export function HeaderStudent() {
             >
               <NotificationsNoneOutlinedIcon sx={{ fontSize: 28 }} />
             </Badge>
+            {isNotificationsPage && <span className={styles.actionText}>Уведомления</span>}
           </Link>
 
           <Avatar

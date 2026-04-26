@@ -1,0 +1,170 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
+
+.page {
+  min-height: calc(100vh - 96px);
+  background: $color-bg;
+}
+
+.container {
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: 34px $content-padding 88px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+
+  @include tablet {
+    padding: 24px 24px 64px;
+  }
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: center;
+  padding: 28px 36px;
+  border-radius: 18px;
+  background: rgba(241, 244, 246, 0.98);
+}
+
+.heroInner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  font-family: $font-family-heading !important;
+  font-size: clamp(26px, 2.3vw, 40px) !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -0.03em !important;
+  color: $color-text-primary !important;
+}
+
+.subtitle {
+  font-size: clamp(14px, 1vw, 18px);
+  font-weight: 700;
+  color: #97a7bd;
+}
+
+.card {
+  padding: 22px 22px 18px;
+  border-radius: 14px;
+  background: rgba(241, 244, 246, 0.88);
+  border: 1px solid rgba(227, 233, 236, 0.76);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.sectionIcon {
+  width: 28px;
+  height: 28px;
+  color: $color-brand;
+  @include flex-center;
+}
+
+.cardTitle {
+  font-family: $font-family-heading !important;
+  font-size: clamp(22px, 1.45vw, 30px) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  color: $color-text-primary !important;
+}
+
+.programGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px 42px;
+  padding: 10px 2px 2px;
+
+  @include tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field,
+.contactField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 56px;
+}
+
+.fieldLabel {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a7b6ca;
+}
+
+.fieldValue {
+  font-family: $font-family-heading;
+  font-size: clamp(18px, 1.2vw, 28px);
+  font-weight: 700;
+  line-height: 1.2;
+  color: $color-text-primary;
+}
+
+.contactCard {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 28px;
+  margin-top: 22px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contactValue {
+  font-size: clamp(18px, 1.1vw, 24px);
+  font-weight: 500;
+  line-height: 1.35;
+  color: $color-text-primary;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.logoutButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 6px;
+  background: #b6504a;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform $transition-fast, box-shadow $transition-fast, background $transition-fast;
+
+  &:hover {
+    background: #a74842;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 18px rgba(182, 80, 74, 0.2);
+  }
+}
