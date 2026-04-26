@@ -1,1 +1,169 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
 
+.card {
+  overflow: hidden;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid rgba(227, 233, 236, 0.95);
+  box-shadow: 0 14px 30px rgba(146, 164, 183, 0.08);
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 192px minmax(0, 1fr) 220px;
+  align-items: center;
+  min-height: 56px;
+  padding: 0 18px;
+  background: #e7eef3;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5f6f79;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 192px minmax(0, 1fr) 220px;
+  align-items: center;
+  min-height: 86px;
+  padding: 0 18px;
+  border-bottom: 1px solid rgba(227, 233, 236, 0.72);
+}
+
+.positionCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.positionBadge {
+  @include flex-center;
+  width: 30px;
+  height: 28px;
+  border-radius: 10px;
+  background: #eef3f6;
+  font-size: 15px;
+  font-weight: 700;
+  color: #4d5a62;
+}
+
+.positionGold {
+  background: #ffe9b1;
+  color: #ce8100;
+}
+
+.positionSilver {
+  background: #dde6f0;
+  color: #637a98;
+}
+
+.positionBronze {
+  background: #ffe2cc;
+  color: #d46a1e;
+}
+
+.awardIconGold {
+  font-size: 18px !important;
+  color: #f49a1b;
+}
+
+.awardIconSilver {
+  font-size: 18px !important;
+  color: #90a4bf;
+}
+
+.awardIconBronze {
+  font-size: 18px !important;
+  color: #d9782d;
+}
+
+.studentCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.avatar {
+  @include flex-center;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.studentName {
+  font-size: 15px;
+  font-weight: 600;
+  color: $color-text-primary;
+}
+
+.scoreCell {
+  font-size: 16px;
+  font-weight: 700;
+  color: $color-brand;
+}
+
+.showMoreButton {
+  @include flex-center;
+  gap: 6px;
+  width: 100%;
+  min-height: 54px;
+  border: none;
+  background: #eef3f6;
+  color: $color-brand;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background $transition-fast, color $transition-fast;
+
+  &:hover {
+    background: #e4edf2;
+  }
+}
+
+@include tablet {
+  .tableHeader,
+  .row {
+    grid-template-columns: 82px minmax(0, 1fr) 120px;
+    padding: 0 14px;
+  }
+}
+
+@include mobile {
+  .tableHeader {
+    grid-template-columns: 70px minmax(0, 1fr) 84px;
+    min-height: 48px;
+    padding: 0 10px;
+    font-size: 10px;
+  }
+
+  .row {
+    grid-template-columns: 70px minmax(0, 1fr) 84px;
+    min-height: 76px;
+    padding: 0 10px;
+    column-gap: 8px;
+  }
+
+  .studentName {
+    font-size: 14px;
+    line-height: 1.2;
+    white-space: normal;
+  }
+
+  .scoreCell {
+    font-size: 15px;
+    text-align: right;
+  }
+}

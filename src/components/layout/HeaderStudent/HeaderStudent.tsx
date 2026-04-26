@@ -62,11 +62,12 @@ export function HeaderStudent() {
 
           <Link
             href={RATING_PATH}
-            className={`${styles.navIconLink} ${isRatingPage ? styles.navIconLinkActive : ''}`}
+            className={`${styles.navIconLink} ${isRatingPage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
             aria-label="Рейтинг"
             aria-current={isRatingPage ? 'page' : undefined}
           >
             <BarChartRoundedIcon sx={{ fontSize: 28 }} />
+            {isRatingPage && <span className={styles.navText}>Рейтинг</span>}
           </Link>
         </nav>
 

@@ -7,7 +7,20 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { useAuthStore } from '@/stores/useAuthStore';
 import styles from './profile.module.scss';
 
-const PROGRAM_FIELDS = [
+type StudentProfileDetails = {
+  groupName?: string;
+  course?: string;
+  direction?: string;
+  semester?: string;
+  studyForm?: string;
+  email?: string;
+};
+
+const PROGRAM_FIELDS: Array<{
+  label: string;
+  key: keyof StudentProfileDetails;
+  fallback: string;
+}> = [
   { label: 'Группа', key: 'groupName', fallback: '09-411' },
   { label: 'Курс', key: 'course', fallback: '3 курс' },
   { label: 'Направление', key: 'direction', fallback: 'Программная инженерия' },
@@ -19,14 +32,7 @@ export default function StudentProfilePage() {
   const { user } = useAuthStore();
   const { logout } = useAuth();
 
-  const profile = user as (typeof user & {
-    groupName?: string;
-    course?: string;
-    direction?: string;
-    semester?: string;
-    studyForm?: string;
-    email?: string;
-  }) | null;
+  const profile = user as (typeof user & StudentProfileDetails) | null;
 
   const email = profile?.email ?? `${user?.login ?? 't.saf'}@stud.kpfu.ru`;
   const phone = user?.phone ?? '+7 900 123-45-67';
