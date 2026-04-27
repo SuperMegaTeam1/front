@@ -1,6 +1,8 @@
 # dependencies
 node_modules/
 
+# TODO: Добавьте .idea, .vscode, чтобы папки IDE не сохранялись в гите
+
 # Next.js
 .next/
 out/

@@ -121,6 +121,9 @@ const MOCK_NOTIFICATIONS = [
   },
 ];
 
+// TODO: Стоит разбить страницу на блоки, например: Greeting, SchedulePreview, RatingSummary, ChangesList.
+//  Старайтесь не писать большие компоненты, которые делают сразу всё.
+//  Если у компонента есть несколько логических блоков, лучше разбить его на несколько маленьких
 export default function StudentSchedulePage() {
   const { user } = useAuthStore();
 
