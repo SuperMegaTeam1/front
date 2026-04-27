@@ -20,6 +20,10 @@ export function useNotifications(page = 1) {
 
 /** Хук: счётчик непрочитанных (обновляется каждые 30 сек) */
 export function useUnreadCount() {
+  // TODO: А для чего тут доп. стор для счетчика? Почему не можете брать состояние из хука useUnreadCount?
+  //  Таким образом, оно по идее будет браться из кэша react-query:
+  //    React Query хранит результат по queryKey, последующие запросы с этим же ключом
+  //    получат одни и те же данные без отдельного Zustand-стора.
   const { setUnreadCount } = useNotificationStore();
 
   return useQuery({
