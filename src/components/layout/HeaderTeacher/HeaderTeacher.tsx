@@ -12,7 +12,9 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import styles from './HeaderTeacher.module.scss';
 
 const HOME_PATH = '/teacher/schedule';
+const LESSONS_PATH = '/teacher/lessons';
 const SUBJECTS_PATH = '/teacher/subjects';
+const MESSAGES_PATH = '/teacher/messages';
 const PROFILE_PATH = '/teacher/profile';
 
 export function HeaderTeacher() {
@@ -23,8 +25,9 @@ export function HeaderTeacher() {
     ? `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.trim()
     : 'МИ';
   const isHomePage = pathname === HOME_PATH;
-  const isCalendarPage = pathname.startsWith('/teacher/lesson/');
+  const isLessonsPage = pathname === LESSONS_PATH || pathname.startsWith('/teacher/lesson/');
   const isSubjectsPage = pathname === SUBJECTS_PATH || pathname.startsWith(`${SUBJECTS_PATH}/`);
+  const isMessagesPage = pathname === MESSAGES_PATH;
   const isProfilePage = pathname === PROFILE_PATH;
 
   return (
@@ -46,21 +49,23 @@ export function HeaderTeacher() {
           </Link>
 
           <Link
-            href={HOME_PATH}
-            className={`${styles.navIconLink} ${isCalendarPage ? styles.navIconLinkActive : ''}`}
+            href={LESSONS_PATH}
+            className={`${styles.navIconLink} ${isLessonsPage ? `${styles.navIconLinkActive} ${styles.navIconLinkHomeActive}` : ''}`}
             aria-label="Расписание"
-            aria-current={isCalendarPage ? 'page' : undefined}
+            aria-current={isLessonsPage ? 'page' : undefined}
           >
             <CalendarMonthOutlinedIcon sx={{ fontSize: 28 }} />
+            {isLessonsPage && <span className={styles.navText}>Расписание</span>}
           </Link>
 
           <Link
             href={SUBJECTS_PATH}
-            className={`${styles.navIconLink} ${isSubjectsPage ? styles.navIconLinkActive : ''}`}
+            className={`${styles.navIconLink} ${isSubjectsPage ? `${styles.navIconLinkActive} ${styles.navIconLinkHomeActive}` : ''}`}
             aria-label="Предметы"
             aria-current={isSubjectsPage ? 'page' : undefined}
           >
             <ArticleOutlinedIcon sx={{ fontSize: 28 }} />
+            {isSubjectsPage && <span className={styles.navText}>Предметы</span>}
           </Link>
         </nav>
 
@@ -70,12 +75,13 @@ export function HeaderTeacher() {
           </button>
 
           <Link
-            href={PROFILE_PATH}
-            className={`${styles.actionButton} ${isProfilePage ? styles.actionButtonActive : ''}`}
-            aria-label="Профиль"
-            aria-current={isProfilePage ? 'page' : undefined}
+            href={MESSAGES_PATH}
+            className={`${styles.actionButton} ${isMessagesPage ? `${styles.actionButtonActive} ${styles.navIconLinkHomeActive}` : ''}`}
+            aria-label="Сообщения"
+            aria-current={isMessagesPage ? 'page' : undefined}
           >
             <EditOutlinedIcon sx={{ fontSize: 28 }} />
+            {isMessagesPage && <span className={styles.navText}>Отправить</span>}
           </Link>
 
           <Avatar
