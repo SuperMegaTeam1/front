@@ -1,10 +1,11 @@
 'use client';
 
 import { useForm, Controller } from 'react-hook-form';
-import { TextField, Button, Typography, Link as MuiLink } from '@mui/material';
+import { Button, Typography, Link as MuiLink } from '@mui/material';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { useAuth } from '@/lib/hooks/useAuth';
 import type { LoginPayload } from '@/types/api';
+import { AuthTextField } from './AuthTextField';
 import styles from './login.module.scss';
 
 export default function LoginPage() {
@@ -14,30 +15,6 @@ export default function LoginPage() {
   });
 
   const onSubmit = (data: LoginPayload) => login(data);
-  const fieldSx = {
-    '& .MuiOutlinedInput-root': {
-      height: 72,
-      backgroundColor: '#dbe4e7',
-      borderRadius: '10px',
-      '& fieldset': { border: 'none' },
-      '&:hover fieldset': { border: 'none' },
-      '&.Mui-focused fieldset': {
-        border: '2px solid #2a657e',
-      },
-    },
-    '& .MuiInputBase-input': {
-      px: '22px',
-      py: '20px',
-      fontSize: '18px',
-      fontWeight: 500,
-      color: '#2b3437',
-    },
-    '& .MuiInputBase-input::placeholder': {
-      color: '#94a3b8',
-      opacity: 1,
-    },
-  };
-
   return (
     <div className={styles.page}>
       <div className={styles.decorCircle} />
@@ -62,14 +39,13 @@ export default function LoginPage() {
                   control={control}
                   rules={{ required: 'Введите логин' }}
                   render={({ field, fieldState }) => (
-                    <TextField
+                    <AuthTextField
                       {...field}
                       fullWidth
                       size="small"
                       placeholder="ivanov.i"
                       autoComplete="username"
                       error={!!fieldState.error}
-                      sx={fieldSx}
                     />
                   )}
                 />
@@ -82,7 +58,7 @@ export default function LoginPage() {
                   control={control}
                   rules={{ required: 'Введите пароль' }}
                   render={({ field, fieldState }) => (
-                    <TextField
+                    <AuthTextField
                       {...field}
                       type="password"
                       fullWidth
@@ -90,7 +66,6 @@ export default function LoginPage() {
                       placeholder="••••••••"
                       autoComplete="current-password"
                       error={!!fieldState.error}
-                      sx={fieldSx}
                     />
                   )}
                 />

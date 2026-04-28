@@ -1,4 +1,4 @@
-// TODO(auth): перейти на HttpOnly cookies — см. wiki/concepts/auth-strategy.md
+// TODO(auth): перейти на HttpOnly cookies - см. wiki/concepts/auth-strategy.md
 // После готовности бэка:
 //   - добавить сюда { withCredentials: true }
 //   - удалить request-интерсептор с Authorization: Bearer
@@ -21,7 +21,6 @@ const api = axios.create({
   },
 });
 
-// --- Интерцептор запросов: прикрепление JWT-токена ---
 api.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().accessToken;
@@ -33,19 +32,13 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// --- Интерцептор ответов: обработка ошибок авторизации ---
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Токен истёк или невалиден — выходим
       useAuthStore.getState().logout();
-
-      // Редирект на страницу логина (только на клиенте)
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
     }
+
     return Promise.reject(error);
   }
 );

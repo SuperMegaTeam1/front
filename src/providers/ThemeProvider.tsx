@@ -3,38 +3,29 @@
 import { createTheme, ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
 import { ruRU } from '@mui/material/locale';
 
-/**
- * MUI-тема проекта.
- *
- * ВАЖНО: значения здесь должны ПО ЗНАЧЕНИЯМ совпадать с `src/styles/_variables.scss`.
- * Если меняешь цвет — правь оба места. Иначе SCSS-блоки и MUI-компоненты
- * разойдутся по оттенку.
- */
 const theme = createTheme(
   {
     palette: {
       primary: {
-        main: '#2a657e',
-        light: '#bfe8ff',
-        dark: '#004b63',
+        main: 'var(--color-brand)',
+        light: 'var(--color-brand-light)',
+        dark: 'var(--color-brand-dark)',
       },
       secondary: {
-        main: '#7c4dff',
+        main: 'var(--color-secondary)',
       },
       background: {
-        default: '#f8f9fa',
-        paper: '#ffffff',
+        default: 'var(--color-bg)',
+        paper: 'var(--color-surface)',
       },
       text: {
-        primary: '#2b3437',
-        secondary: '#94a3b8',
+        primary: 'var(--color-text-primary)',
+        secondary: 'var(--color-text-secondary)',
       },
-      divider: '#e3e9ec',
+      divider: 'var(--color-divider)',
     },
     typography: {
-      // Основной шрифт — IBM Plex Sans (тело, инпуты, подписи)
       fontFamily: "var(--font-ibm-plex-sans), 'IBM Plex Sans', -apple-system, sans-serif",
-      // Заголовки — Manrope
       h1: { fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 800 },
       h2: { fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 800 },
       h3: { fontFamily: "var(--font-manrope), 'Manrope', sans-serif", fontWeight: 700 },
@@ -55,8 +46,8 @@ const theme = createTheme(
       MuiCard: {
         styleOverrides: {
           root: {
-            boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-            border: '1px solid rgba(227,233,236,0.4)',
+            boxShadow: 'var(--shadow-sm)',
+            border: '1px solid var(--color-border-soft)',
           },
         },
       },

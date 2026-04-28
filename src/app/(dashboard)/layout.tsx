@@ -1,3 +1,8 @@
+'use client';
+
+import { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/useAuthStore';
 import styles from './dashboard.module.scss';
 
 export default function DashboardLayout({
@@ -5,7 +10,22 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Header и main кладёт в per-role layout (teacher/layout.tsx, student/layout.tsx).
-  // Footer пока общий — подключается здесь же в конце.
+  const router = useRouter();
+  const pathname = usePathname();
+  const { isAuthenticated, hasHydrated } = useAuthStore();
+
+  useEffect(() => {
+    if (!hasHydrated || isAuthenticated) {
+      return;
+    }
+
+    const next = pathname ? `?next=${encodeURIComponent(pathname)}` : '';
+    router.replace(`/login${next}`);
+  }, [hasHydrated, isAuthenticated, pathname, router]);
+
+  if (!hasHydrated || !isAuthenticated) {
+    return null;
+  }
+
   return <div className={styles.root}>{children}</div>;
 }
