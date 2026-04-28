@@ -3,20 +3,24 @@
 @use '@/styles/typography' as *;
 
 .page {
-  background: $color-bg;
   min-height: calc(100vh - 96px);
+  background: $color-bg;
 }
 
 .container {
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: 44px $content-padding 72px;
+  padding: 34px $content-padding 88px;
   display: flex;
   flex-direction: column;
-  gap: 56px;
+  gap: 28px;
+
+  @include tablet {
+    padding: 24px 24px 64px;
+  }
 }
 
-.greeting {
+.hero {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 24px;
@@ -31,344 +35,390 @@
   }
 }
 
-.greetingBody {
+.heroWeek {
+  align-items: start;
+}
+
+.heroInner {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.greetingTitle {
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.title {
   font-family: $font-family-heading !important;
-  font-weight: 800 !important;
   font-size: clamp(26px, 2.3vw, 40px) !important;
+  font-weight: 800 !important;
   line-height: 1.1 !important;
   letter-spacing: -0.03em !important;
   color: $color-text-primary !important;
 }
 
-.greetingMeta {
+.subtitleRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #97a7bd;
+}
+
+.subtitle {
+  font-size: clamp(14px, 1vw, 18px);
+  font-weight: 700;
+  color: #97a7bd;
+}
+
+.weekInfo {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
-  font-size: clamp(14px, 1vw, 18px);
-  color: #97a7bd;
-
-  strong {
-    color: $color-brand;
-    font-weight: 700;
-  }
 }
 
-.metaDot {
-  color: #b1bfd0;
+.weekBadge,
+.weekPeriod {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-.greetingLink {
-  @include flex-center;
-  gap: 6px;
-  font-size: clamp(14px, 1vw, 16px);
-  font-weight: 600;
+.weekBadge {
   color: $color-brand;
-  text-decoration: none;
-  white-space: nowrap;
+}
+
+.weekPeriod {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #7f91aa;
+}
+
+.weekNavigation {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navButton {
+  min-height: 32px;
+  padding: 0 4px;
+  border: none;
+  background: transparent;
+  color: $color-brand;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  @include flex-center;
+  gap: 2px;
+  transition: opacity $transition-fast;
 
   &:hover {
-    opacity: 0.8;
+    opacity: 0.72;
   }
 }
 
-.scheduleStage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 28px;
-}
-
-.stageTag {
+.viewSwitch {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-height: 52px;
-  padding: 0 32px;
-  border-radius: 16px;
-  background: rgba(191, 232, 255, 0.98);
-  box-shadow: 0 8px 18px rgba(42, 101, 126, 0.1);
-  font-size: clamp(14px, 0.95vw, 18px);
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  color: $color-brand;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 14px;
+  background: rgba(235, 239, 243, 0.92);
+  border: 1px solid rgba(227, 233, 236, 0.92);
 }
 
-.stageLayout {
-  width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 170px) 60px minmax(0, 1fr) 60px minmax(0, 170px);
-  gap: 20px;
-  align-items: center;
-}
-
-.sideColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  opacity: 0.7;
-}
-
-.sideColumnLeft {
-  align-items: flex-start;
-}
-
-.sideColumnRight {
-  align-items: flex-end;
-}
-
-.sideLabel {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 92px;
-  min-height: 32px;
-  padding: 0 14px;
-  border-radius: 10px;
-  background: rgba(219, 228, 231, 0.55);
-  font-size: 12px;
+.viewButton {
+  min-width: 108px;
+  min-height: 34px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 11px;
+  background: transparent;
+  color: #9aaabd;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.16em;
-  color: #97a7bd;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background $transition-fast, color $transition-fast, box-shadow $transition-fast;
 }
 
-.todayColumn {
+.viewButtonActive {
+  background: #ffffff;
+  color: $color-brand;
+  box-shadow: 0 8px 18px rgba(42, 101, 126, 0.08);
+}
+
+.scheduleSection,
+.weekSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.weekSection {
+  gap: 22px;
+}
+
+.daySection {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-.arrowButton {
-  width: 52px;
-  height: 52px;
-  border: none;
-  border-radius: 14px;
-  background: rgba(191, 232, 255, 0.98);
-  box-shadow: 0 8px 18px rgba(42, 101, 126, 0.1);
-  color: $color-brand;
-  cursor: pointer;
-  @include flex-center;
+.dayHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
 
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 12px 24px rgba(42, 101, 126, 0.14);
+.dayLine {
+  height: 1px;
+  background: #c7d1dc;
+}
+
+.dayTitle {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #687b92;
+  text-align: center;
+}
+
+.lessonList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lessonCard {
+  display: grid;
+  grid-template-columns: 124px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  min-height: 82px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(227, 233, 236, 0.9);
+  box-shadow: 0 1px 0 rgba(219, 227, 233, 0.24);
+
+  @include tablet {
+    grid-template-columns: 1fr;
+    align-items: start;
   }
 }
 
-.sectionTitle {
-  font-family: $font-family-heading !important;
-  font-size: clamp(34px, 2.4vw, 52px) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.04em !important;
-  color: $color-text-primary !important;
+.lessonCardState {
+  min-height: 120px;
 }
 
-.insightsSection,
-.changesSection {
+.timeBlock {
   display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.insightsCard {
-  display: grid;
-  grid-template-columns: minmax(260px, 360px) minmax(220px, 280px) 1fr;
-  gap: 32px;
-  padding: 34px 40px;
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.98);
-  border: 1px solid rgba(227, 233, 236, 0.9);
-  box-shadow: 0 22px 50px rgba(146, 164, 183, 0.12);
-  align-items: stretch;
-}
-
-.primaryStat,
-.secondaryStat {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.secondaryStat {
-  padding-left: 20px;
-  border-left: 1px solid rgba(151, 169, 189, 0.28);
-}
-
-.subjectScores {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 28px;
-  padding-left: 20px;
-  border-left: 1px solid rgba(151, 169, 189, 0.28);
-}
-
-.primaryScore {
+  align-items: center;
+  gap: 4px;
   font-family: $font-family-heading;
-  font-weight: 800;
-  font-size: clamp(72px, 5vw, 116px);
-  line-height: 0.95;
-  letter-spacing: -0.05em;
-  color: $color-brand;
-}
-
-.primaryLabel {
-  margin-top: 18px;
   font-size: 18px;
   font-weight: 700;
-  letter-spacing: 0.18em;
-  color: #97a7bd;
-}
-
-.primaryLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 36px;
-  font-size: clamp(20px, 1.35vw, 28px);
-  font-weight: 700;
-  color: $color-brand;
-  text-decoration: none;
-}
-
-.secondaryValue {
-  font-family: $font-family-heading;
-  font-size: clamp(34px, 2.5vw, 62px);
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.04em;
+  line-height: 1.2;
   color: $color-text-primary;
+  white-space: nowrap;
 }
 
-.secondaryLabel {
-  margin-top: 12px;
-  font-size: clamp(18px, 1.2vw, 24px);
-  color: #97a7bd;
+.timeDash {
+  color: #66788d;
 }
 
-.subjectScoreRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  font-size: clamp(20px, 1.35vw, 32px);
-  color: $color-text-primary;
-
-  strong {
-    color: $color-text-primary;
-    font-weight: 700;
-  }
-}
-
-.subjectScoreRowDim {
-  color: #97a7bd;
-
-  strong {
-    color: #97a7bd;
-  }
-}
-
-.changesCard {
-  display: flex;
-  flex-direction: column;
-  padding: 20px 32px;
-  border-radius: 28px;
-  background: rgba(241, 244, 246, 0.98);
-}
-
-.changeItem {
-  display: grid;
-  grid-template-columns: 72px 1fr auto;
-  gap: 22px;
-  align-items: center;
-  padding: 24px 0;
-}
-
-.changeItemBorder {
-  border-bottom: 1px solid rgba(151, 169, 189, 0.2);
-}
-
-.changeIcon {
-  width: 56px;
-  height: 56px;
-  border-radius: 18px;
-  background: rgba(191, 232, 255, 0.8);
-  @include flex-center;
-}
-
-.changeBody {
+.lessonContent {
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 0;
 }
 
-.changeTitle {
-  font-weight: 700;
-  font-size: clamp(24px, 1.6vw, 38px);
-  line-height: 1.15;
-  color: $color-text-primary;
+.lessonTitle {
+  font-family: $font-family-heading !important;
+  font-size: clamp(24px, 1.55vw, 30px) !important;
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+  color: $color-text-primary !important;
 }
 
-.changeSubtitle {
-  font-size: clamp(18px, 1.2vw, 24px);
+.lessonMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  align-items: center;
+}
+
+.metaText,
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
   color: #97a7bd;
 }
 
-.changeTime {
-  font-size: clamp(18px, 1.1vw, 22px);
-  color: #97a7bd;
-  white-space: nowrap;
+.moreButton {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #8ea5bf;
+  cursor: pointer;
+  @include flex-center;
+  transition: background $transition-fast, color $transition-fast;
+
+  &:hover {
+    background: rgba(191, 232, 255, 0.3);
+    color: $color-brand;
+  }
+
+  @include tablet {
+    justify-self: start;
+    margin-top: 4px;
+  }
 }
 
-@include tablet {
+.emptyState {
+  min-height: 88px;
+  padding: 20px;
+  border-radius: 18px;
+  border: 1px dashed rgba(151, 167, 189, 0.55);
+  background: rgba(255, 255, 255, 0.55);
+  @include flex-column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.weekSection .emptyState {
+  min-height: 94px;
+  border-radius: 10px;
+  border: 1px dashed rgba(158, 173, 191, 0.72);
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.emptyTitle {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9aaabd;
+}
+
+.emptySubtitle,
+.stateText {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #7f91aa !important;
+}
+
+.weekSection .emptyTitle {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: #9fb0c3;
+}
+
+.weekSection .emptySubtitle {
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c0cad6 !important;
+}
+
+@include mobile {
   .container {
-    padding: 30px 24px 52px;
-    gap: 42px;
+    gap: 20px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
-  .stageLayout,
-  .insightsCard {
+  .hero {
+    padding: 22px 18px;
+    gap: 18px;
+  }
+
+  .heroActions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .weekNavigation {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .viewSwitch {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .viewButton {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .dayHeader {
     grid-template-columns: 1fr;
+    gap: 8px;
   }
 
-  .sideColumn {
-    order: 2;
-    opacity: 1;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+  .dayTitle {
+    order: -1;
+    text-align: left;
   }
 
-  .todayColumn {
-    order: 1;
+  .lessonCard {
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 20px;
   }
 
-  .arrowButton {
-    width: 56px;
-    height: 56px;
-    justify-self: center;
+  .timeBlock {
+    font-size: 16px;
   }
 
-  .secondaryStat,
-  .subjectScores {
-    padding-left: 0;
-    border-left: none;
-    padding-top: 18px;
-    border-top: 1px solid rgba(151, 169, 189, 0.24);
+  .lessonTitle {
+    font-size: 22px !important;
   }
 
-  .changeItem {
-    grid-template-columns: 56px 1fr;
+  .lessonMeta {
+    flex-wrap: nowrap;
+    gap: 8px 14px;
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
-  .changeTime {
-    grid-column: 2;
+  .metaText,
+  .metaItem {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  .moreButton {
+    margin-top: 2px;
   }
 }
