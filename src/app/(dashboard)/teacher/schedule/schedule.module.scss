@@ -3,232 +3,396 @@
 @use '@/styles/typography' as *;
 
 .page {
-  background: $color-bg;
-  min-height: calc(100vh - 96px);
+  min-height: calc(100vh - 116px);
+  background: $color-surface;
+  color: $color-text-primary;
 }
 
 .container {
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: 44px $content-padding 72px;
-  display: flex;
-  flex-direction: column;
-  gap: 56px;
+  padding: 44px 44px 72px;
 }
 
-.greeting {
+.header {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 24px;
-  align-items: center;
-  padding: 28px 36px;
-  border-radius: 18px;
-  background: rgba(241, 244, 246, 0.98);
-
-  @include tablet {
-    grid-template-columns: 1fr;
-    align-items: start;
-  }
-}
-
-.greetingBody {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.greetingTitle {
-  font-family: $font-family-heading !important;
-  font-weight: 800 !important;
-  font-size: clamp(26px, 2.3vw, 40px) !important;
-  line-height: 1.1 !important;
-  letter-spacing: -0.03em !important;
-  color: $color-text-primary !important;
-}
-
-.greetingMeta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  font-size: clamp(14px, 1vw, 18px);
-  color: #97a7bd;
-
-  strong {
-    color: $color-brand;
-    font-weight: 700;
-  }
-}
-
-.metaDot {
-  color: #b1bfd0;
-}
-
-.greetingLink {
-  @include flex-center;
-  gap: 6px;
-  font-size: clamp(14px, 1vw, 16px);
-  font-weight: 600;
-  color: $color-brand;
-  text-decoration: none;
-  white-space: nowrap;
-
-  &:hover {
-    opacity: 0.8;
-  }
-}
-
-.scheduleStage {
-  display: flex;
-  flex-direction: column;
+  grid-template-columns: minmax(420px, 1fr) auto minmax(420px, 1fr);
   align-items: center;
   gap: 28px;
+  min-height: 98px;
+  margin-bottom: 76px;
+  padding: 12px 12px 12px 20px;
+  background: $color-surface-alt;
+  border: 1px solid rgba(227, 233, 236, 0.94);
+  border-radius: 8px;
 }
 
-.stageTag {
-  display: inline-flex;
-  align-items: center;
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-self: stretch;
   justify-content: center;
-  min-height: 52px;
-  padding: 0 32px;
-  border-radius: 16px;
-  background: rgba(191, 232, 255, 0.98);
-  box-shadow: 0 8px 18px rgba(42, 101, 126, 0.1);
-  font-size: clamp(14px, 0.95vw, 18px);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: $font-family-heading;
+  font-size: 54px;
   font-weight: 800;
-  letter-spacing: 0.18em;
-  color: $color-brand;
+  line-height: 0.95;
+  color: #263135;
 }
 
-.stageLayout {
-  width: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 170px) 60px minmax(0, 1fr) 60px minmax(0, 170px);
-  gap: 20px;
-  align-items: center;
-}
-
-.sideColumn {
+.metaLine {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  opacity: 0.7;
-}
-
-.sideColumnLeft {
-  align-items: flex-start;
-}
-
-.sideColumnRight {
-  align-items: flex-end;
-}
-
-.sideLabel {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-width: 92px;
-  min-height: 32px;
-  padding: 0 14px;
-  border-radius: 10px;
-  background: rgba(219, 228, 231, 0.55);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  color: #97a7bd;
-}
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #95a5b8;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
 
-.todayColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+  strong {
+    flex: 0 0 auto;
+    color: $color-brand;
+  }
 
-.arrowButton {
-  width: 52px;
-  height: 52px;
-  border: none;
-  border-radius: 14px;
-  background: rgba(191, 232, 255, 0.98);
-  box-shadow: 0 8px 18px rgba(42, 101, 126, 0.1);
-  color: $color-brand;
-  cursor: pointer;
-  @include flex-center;
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 12px 24px rgba(42, 101, 126, 0.14);
+  span:last-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
-.subjectSection {
+.metaDivider {
+  flex: 0 0 auto;
+  width: 1px;
+  height: 14px;
+  background: rgba(151, 169, 189, 0.62);
+}
+
+.periodControls {
+  grid-column: 2;
+  justify-self: center;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  align-items: center;
+  width: 420px;
+  min-height: 48px;
+  border: 1px solid rgba(227, 233, 236, 0.92);
+  border-radius: 10px;
+  background: rgba(248, 249, 250, 0.98);
+  box-shadow: 0 8px 20px rgba(146, 164, 183, 0.08);
+  overflow: hidden;
+}
+
+.periodButton {
+  height: 48px;
+  padding: 0 22px;
+  border: none;
+  background: transparent;
+  color: $color-brand;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background $transition-fast, color $transition-fast;
+
+  &:hover {
+    background: rgba(191, 232, 255, 0.28);
+  }
+
+  &:disabled {
+    color: #b5c2d1;
+    cursor: not-allowed;
+  }
+
+  &:disabled:hover {
+    background: transparent;
+  }
+}
+
+.periodDivider {
+  width: 1px;
+  height: 28px;
+  background: rgba(151, 169, 189, 0.35);
+}
+
+.viewSwitch {
+  grid-column: 3;
+  justify-self: end;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 396px;
+  height: 68px;
+  padding: 4px;
+  border: 1px solid rgba(227, 233, 236, 0.92);
+  border-radius: 16px;
+  background: rgba(241, 244, 246, 0.98);
+  box-shadow: 0 8px 22px rgba(146, 164, 183, 0.08);
+}
+
+.viewButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  color: #95a5b8;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color $transition-fast, background $transition-fast, box-shadow $transition-fast;
+
+  &:hover {
+    color: $color-brand;
+  }
+}
+
+.viewButtonActive {
+  background: $color-surface;
+  color: $color-brand;
+  box-shadow: 0 6px 16px rgba(146, 164, 183, 0.14);
+}
+
+.todayList,
+.dayLessons,
+.weekList {
   display: flex;
   flex-direction: column;
+}
+
+.todayList {
   gap: 26px;
 }
 
-.sectionHeader {
+.weekList {
+  gap: 58px;
+}
+
+.weekDay {
   display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 18px;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.sectionTitle {
-  font-family: $font-family-heading !important;
-  font-size: clamp(34px, 2.4vw, 52px) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.04em !important;
-  color: $color-text-primary !important;
+.dayLessons {
+  gap: 22px;
 }
 
-.sectionLink {
-  font-size: clamp(18px, 1.2vw, 24px);
-  font-weight: 700;
-  color: $color-brand;
-  text-decoration: none;
+.dayDivider {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 20px;
 
-  &:hover {
-    opacity: 0.8;
+  &::before,
+  &::after {
+    content: '';
+    height: 1px;
+    background: rgba(227, 233, 236, 0.95);
   }
 }
 
-.subjectsGrid {
+.dayLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 22px;
+  padding: 0 12px;
+  background: rgba(241, 244, 246, 0.98);
+  color: #344044;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.lessonCard {
+  min-height: 138px;
+  padding: 34px 34px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px;
+  grid-template-columns: 184px minmax(0, 1fr) 40px;
+  gap: 26px;
+  align-items: center;
+  border: 1px solid rgba(227, 233, 236, 0.94);
+  border-radius: 8px;
+  background: #f1f4f6;
+  box-shadow: 0 14px 28px rgba(146, 164, 183, 0.08);
+}
+
+.lessonTime {
+  font-family: $font-family-heading;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  color: #2b3437;
+  white-space: nowrap;
+}
+
+.lessonBody {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.lessonTitle {
+  margin: 0;
+  font-family: $font-family-heading;
+  font-size: 27px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #2b3437;
+}
+
+.lessonMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #94a3b8;
+}
+
+.room {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.moreButton {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #9badc4;
+  border-radius: 50%;
+  background: transparent;
+  color: #9badc4;
+  cursor: pointer;
+  @include flex-center;
+  transition: color $transition-fast, border-color $transition-fast, background $transition-fast;
+
+  &:hover {
+    color: $color-brand;
+    border-color: $color-brand;
+    background: rgba(191, 232, 255, 0.24);
+  }
+}
+
+.emptyDay {
+  min-height: 164px;
+  border-radius: 8px;
+  background: #f1f4f6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #9badc4;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+
+  p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+  }
+
+  span {
+    font-size: 14px;
+    font-weight: 600;
+  }
 }
 
 @include tablet {
   .container {
-    padding: 30px 24px 52px;
-    gap: 42px;
+    padding: 36px 24px 56px;
   }
 
-  .stageLayout {
+  .header {
     grid-template-columns: 1fr;
+    align-items: start;
+    min-height: auto;
+    margin-bottom: 34px;
+    padding: 18px;
+  }
+
+  .periodControls,
+  .viewSwitch {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .periodControls,
+  .viewSwitch {
+    width: min(100%, 420px);
+  }
+
+  .lessonCard {
+    grid-template-columns: 1fr 44px;
     gap: 18px;
   }
 
-  .sideColumn {
-    order: 2;
-    opacity: 1;
-    flex-direction: row;
+  .lessonTime {
+    grid-column: 1 / -1;
+  }
+}
+
+@include mobile {
+  .title {
+    font-size: 40px;
+  }
+
+  .metaLine {
+    align-items: flex-start;
     flex-wrap: wrap;
-    justify-content: center;
+    line-height: 1.35;
   }
 
-  .todayColumn {
-    order: 1;
+  .periodControls,
+  .viewSwitch {
+    width: 100%;
+    min-width: 0;
   }
 
-  .arrowButton {
-    width: 56px;
-    height: 56px;
-    justify-self: center;
+  .periodButton {
+    min-width: 0;
+    padding: 0 10px;
+    font-size: 12px;
   }
 
-  .subjectsGrid {
-    grid-template-columns: 1fr;
+  .lessonCard {
+    min-height: auto;
+    padding: 24px 20px;
+    border-radius: 12px;
+  }
+
+  .lessonTitle {
+    font-size: 24px;
+  }
+
+  .lessonMeta {
+    gap: 12px;
+    font-size: 15px;
   }
 }

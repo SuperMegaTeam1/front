@@ -11,8 +11,8 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useAuthStore } from '@/stores/useAuthStore';
 import styles from './HeaderTeacher.module.scss';
 
-const HOME_PATH = '/teacher/schedule';
-const LESSONS_PATH = '/teacher/lessons';
+const HOME_PATH = '/teacher/home';
+const SCHEDULE_PATH = '/teacher/schedule';
 const SUBJECTS_PATH = '/teacher/subjects';
 const MESSAGES_PATH = '/teacher/messages';
 const PROFILE_PATH = '/teacher/profile';
@@ -25,7 +25,7 @@ export function HeaderTeacher() {
     ? `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.trim()
     : 'МИ';
   const isHomePage = pathname === HOME_PATH;
-  const isLessonsPage = pathname === LESSONS_PATH || pathname.startsWith('/teacher/lesson/');
+  const isSchedulePage = pathname === SCHEDULE_PATH || pathname.startsWith('/teacher/lesson/');
   const isSubjectsPage = pathname === SUBJECTS_PATH || pathname.startsWith(`${SUBJECTS_PATH}/`);
   const isMessagesPage = pathname === MESSAGES_PATH;
   const isProfilePage = pathname === PROFILE_PATH;
@@ -49,13 +49,13 @@ export function HeaderTeacher() {
           </Link>
 
           <Link
-            href={LESSONS_PATH}
-            className={`${styles.navIconLink} ${isLessonsPage ? `${styles.navIconLinkActive} ${styles.navIconLinkHomeActive}` : ''}`}
+            href={SCHEDULE_PATH}
+            className={`${styles.navIconLink} ${isSchedulePage ? `${styles.navIconLinkActive} ${styles.navIconLinkHomeActive}` : ''}`}
             aria-label="Расписание"
-            aria-current={isLessonsPage ? 'page' : undefined}
+            aria-current={isSchedulePage ? 'page' : undefined}
           >
             <CalendarMonthOutlinedIcon sx={{ fontSize: 28 }} />
-            {isLessonsPage && <span className={styles.navText}>Расписание</span>}
+            {isSchedulePage && <span className={styles.navText}>Расписание</span>}
           </Link>
 
           <Link

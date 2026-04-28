@@ -21,7 +21,7 @@ export function useAuth() {
       if (user.role === 'student') {
         router.push('/student/schedule');
       } else {
-        router.push('/teacher/schedule');
+        router.push('/teacher/home');
       }
     },
   });

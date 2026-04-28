@@ -1,211 +1,463 @@
 'use client';
 
-import Link from 'next/link';
-import { Typography } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useState } from 'react';
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import CalculateOutlinedIcon from '@mui/icons-material/CalculateOutlined';
-import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
-import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { LessonCard } from '@/components/shared/LessonCard/LessonCard';
-import { SubjectCard } from '@/components/shared/SubjectCard/SubjectCard';
-import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
 import styles from './schedule.module.scss';
 
-const MOCK_DAYS = [
-  {
-    label: 'Вчера',
-    date: '2026-04-22',
-    lessons: [
-      {
-        id: 1,
-        startTime: '08:30',
-        endTime: '10:00',
-        subjectName: 'Базы данных',
-        meta: 'Лекция • 09-351, 09-352.',
-        room: 'Ауд. 1005',
-      },
-      {
-        id: 2,
-        startTime: '10:15',
-        endTime: '11:45',
-        subjectName: 'Дискретная математика',
-        meta: 'Практика • 09-234.',
-        room: 'Ауд. 602',
-      },
-    ],
-  },
-  {
-    label: 'Сегодня',
-    date: '2026-04-23',
-    lessons: [
-      {
-        id: 3,
-        startTime: '10:20',
-        endTime: '11:50',
-        subjectName: 'Базы данных',
-        meta: 'Лекция • 09-352, 09-353.',
-        room: 'Ауд. 1101',
-        isActive: true,
-      },
-      {
-        id: 4,
-        startTime: '12:10',
-        endTime: '13:40',
-        subjectName: 'Дискретная математика',
-        meta: 'Практика • 09-234.',
-        room: 'Ауд. 602',
-      },
-      {
-        id: 5,
-        startTime: '14:00',
-        endTime: '15:30',
-        subjectName: 'Программная инженерия',
-        meta: 'Практика • 08-222.',
-        room: 'Ауд. 310',
-      },
-    ],
-  },
-  {
-    label: 'Завтра',
-    date: '2026-04-24',
-    lessons: [
-      {
-        id: 6,
-        startTime: '10:20',
-        endTime: '11:50',
-        subjectName: 'Базы данных',
-        meta: 'Лекция • 09-352, 09-353.',
-        room: 'Ауд. 1101',
-      },
-      {
-        id: 7,
-        startTime: '12:10',
-        endTime: '13:40',
-        subjectName: 'Практикум',
-        meta: 'Группа • 09-251.',
-        room: 'Ауд. 518',
-      },
-    ],
-  },
-];
+type ViewMode = 'today' | 'week';
 
-const MOCK_SUBJECTS = [
+interface TeacherLesson {
+  id: number;
+  time: string;
+  title: string;
+  type: string;
+  room: string;
+  groups: string;
+}
+
+interface ScheduleDay {
+  id: string;
+  label: string;
+  date: string;
+  lessons: TeacherLesson[];
+}
+
+interface ScheduleWeek {
+  id: string;
+  parity: string;
+  period: string;
+  days: ScheduleDay[];
+}
+
+const TODAY_LESSONS: TeacherLesson[] = [
   {
     id: 1,
-    name: 'Математический анализ',
-    examType: 'ЭКЗАМЕН' as const,
-    groups: ['09-351', '09-352'],
-    icon: <CalculateOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'brand' as const,
+    time: '08:30 — 10:00',
+    title: 'Математический анализ',
+    type: 'Лекция',
+    room: 'Ауд. 1108',
+    groups: '09-352, 09-353',
   },
   {
     id: 2,
-    name: 'Дискретная математика',
-    examType: 'ЗАЧЕТ' as const,
-    groups: ['09-251', '09-252'],
-    icon: <HubOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'violet' as const,
+    time: '10:20 — 11:50',
+    title: 'Базы данных',
+    type: 'Лекция',
+    room: 'Ауд. 1101',
+    groups: '09-352, 09-353',
   },
   {
     id: 3,
-    name: 'Программная инженерия',
-    examType: 'ЭКЗАМЕН' as const,
-    groups: ['09-351'],
-    icon: <CodeOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'mint' as const,
+    time: '12:10 — 13:40',
+    title: 'Дискретная математика',
+    type: 'Практика',
+    room: 'Ауд. 602',
+    groups: '09-352',
+  },
+  {
+    id: 4,
+    time: '14:00 — 15:30',
+    title: 'Программная инженерия',
+    type: 'Лабораторная',
+    room: 'Ауд. 310',
+    groups: '09-352, 09-353',
   },
 ];
 
-export default function TeacherSchedulePage() {
-  const { user } = useAuthStore();
+const MOCK_WEEKS: ScheduleWeek[] = [
+  {
+    id: '2025-04-07',
+    parity: 'Нечетная неделя',
+    period: '7–13 апреля',
+    days: [
+      {
+        id: 'monday-2025-04-07',
+        label: 'Понедельник',
+        date: '7 апреля',
+        lessons: [
+          {
+            id: 101,
+            time: '10:20 — 11:50',
+            title: 'Базы данных',
+            type: 'Лекция',
+            room: 'Ауд. 1101',
+            groups: '09-352, 09-353',
+          },
+        ],
+      },
+      {
+        id: 'tuesday-2025-04-08',
+        label: 'Вторник',
+        date: '8 апреля',
+        lessons: [
+          {
+            id: 102,
+            time: '08:30 — 10:00',
+            title: 'Дискретная математика',
+            type: 'Практика',
+            room: 'Ауд. 602',
+            groups: '09-352',
+          },
+          {
+            id: 103,
+            time: '12:10 — 13:40',
+            title: 'Программная инженерия',
+            type: 'Лабораторная',
+            room: 'Ауд. 310',
+            groups: '09-352, 09-353',
+          },
+        ],
+      },
+      {
+        id: 'wednesday-2025-04-09',
+        label: 'Среда',
+        date: '9 апреля',
+        lessons: TODAY_LESSONS,
+      },
+      {
+        id: 'thursday-2025-04-10',
+        label: 'Четверг',
+        date: '10 апреля',
+        lessons: [],
+      },
+      {
+        id: 'friday-2025-04-11',
+        label: 'Пятница',
+        date: '11 апреля',
+        lessons: [
+          {
+            id: 104,
+            time: '14:00 — 15:30',
+            title: 'Операционные системы',
+            type: 'Практика',
+            room: 'Ауд. 205',
+            groups: '09-352',
+          },
+        ],
+      },
+      {
+        id: 'saturday-2025-04-12',
+        label: 'Суббота',
+        date: '12 апреля',
+        lessons: [],
+      },
+    ],
+  },
+  {
+    id: '2025-04-14',
+    parity: 'Четная неделя',
+    period: '14–20 апреля',
+    days: [
+      {
+        id: 'monday-2025-04-14',
+        label: 'Понедельник',
+        date: '14 апреля',
+        lessons: TODAY_LESSONS.slice(0, 2),
+      },
+      {
+        id: 'tuesday-2025-04-15',
+        label: 'Вторник',
+        date: '15 апреля',
+        lessons: TODAY_LESSONS.slice(2),
+      },
+      {
+        id: 'wednesday-2025-04-16',
+        label: 'Среда',
+        date: '16 апреля',
+        lessons: [],
+      },
+      {
+        id: 'thursday-2025-04-17',
+        label: 'Четверг',
+        date: '17 апреля',
+        lessons: [
+          {
+            id: 5,
+            time: '08:30 — 10:00',
+            title: 'Численные методы',
+            type: 'Лекция',
+            room: 'Ауд. 1109',
+            groups: '09-352, 09-353',
+          },
+        ],
+      },
+      {
+        id: 'friday-2025-04-18',
+        label: 'Пятница',
+        date: '18 апреля',
+        lessons: [
+          {
+            id: 6,
+            time: '10:20 — 11:50',
+            title: 'Операционные системы',
+            type: 'Практика',
+            room: 'Ауд. 205',
+            groups: '09-352',
+          },
+        ],
+      },
+      {
+        id: 'saturday-2025-04-19',
+        label: 'Суббота',
+        date: '19 апреля',
+        lessons: [],
+      },
+    ],
+  },
+  {
+    id: '2025-04-21',
+    parity: 'Нечетная неделя',
+    period: '21–27 апреля',
+    days: [
+      {
+        id: 'monday-2025-04-21',
+        label: 'Понедельник',
+        date: '21 апреля',
+        lessons: [
+          {
+            id: 201,
+            time: '08:30 — 10:00',
+            title: 'Математический анализ',
+            type: 'Лекция',
+            room: 'Ауд. 1108',
+            groups: '09-352, 09-353',
+          },
+          {
+            id: 202,
+            time: '12:10 — 13:40',
+            title: 'Базы данных',
+            type: 'Лабораторная',
+            room: 'Ауд. 1101',
+            groups: '09-352',
+          },
+        ],
+      },
+      {
+        id: 'tuesday-2025-04-22',
+        label: 'Вторник',
+        date: '22 апреля',
+        lessons: [],
+      },
+      {
+        id: 'wednesday-2025-04-23',
+        label: 'Среда',
+        date: '23 апреля',
+        lessons: [
+          {
+            id: 203,
+            time: '10:20 — 11:50',
+            title: 'Дискретная математика',
+            type: 'Практика',
+            room: 'Ауд. 602',
+            groups: '09-352',
+          },
+        ],
+      },
+      {
+        id: 'thursday-2025-04-24',
+        label: 'Четверг',
+        date: '24 апреля',
+        lessons: [
+          {
+            id: 204,
+            time: '14:00 — 15:30',
+            title: 'Программная инженерия',
+            type: 'Лабораторная',
+            room: 'Ауд. 310',
+            groups: '09-352, 09-353',
+          },
+        ],
+      },
+      {
+        id: 'friday-2025-04-25',
+        label: 'Пятница',
+        date: '25 апреля',
+        lessons: [
+          {
+            id: 205,
+            time: '08:30 — 10:00',
+            title: 'Численные методы',
+            type: 'Лекция',
+            room: 'Ауд. 1109',
+            groups: '09-352, 09-353',
+          },
+        ],
+      },
+      {
+        id: 'saturday-2025-04-26',
+        label: 'Суббота',
+        date: '26 апреля',
+        lessons: [],
+      },
+    ],
+  },
+];
 
-  const previousDay = MOCK_DAYS[0];
-  const today = MOCK_DAYS[1];
-  const nextDay = MOCK_DAYS[2];
-  const todayLessonsCount = today.lessons.length;
-  const todayDateStr = formatDateFull(today.date);
-  const todayWeekDay = getWeekDay(today.date);
-  const firstName = user?.firstName ?? 'Дмитрий';
-  const patronymic = user?.patronymic ?? 'Александрович';
-  const fullGreeting = `${firstName} ${patronymic}`.trim();
+const CURRENT_WEEK_INDEX = 1;
+
+const getWeekButtonLabel = (direction: 'previous' | 'next', week: ScheduleWeek | undefined) => {
+  const action = direction === 'previous' ? 'Показать предыдущую неделю' : 'Показать следующую неделю';
+
+  return week ? `${action}: ${week.period}` : action;
+};
+
+function LessonRow({ lesson }: { lesson: TeacherLesson }) {
+  return (
+    <article className={styles.lessonCard}>
+      <time className={styles.lessonTime}>{lesson.time}</time>
+
+      <div className={styles.lessonBody}>
+        <h2 className={styles.lessonTitle}>{lesson.title}</h2>
+        <div className={styles.lessonMeta}>
+          <span>{lesson.type}</span>
+          <span className={styles.room}>
+            <LocationOnOutlinedIcon sx={{ fontSize: 20 }} />
+            {lesson.room}
+          </span>
+          <span>{lesson.groups}</span>
+        </div>
+      </div>
+
+      <button type="button" className={styles.moreButton} aria-label={`Действия: ${lesson.title}`}>
+        <MoreHorizRoundedIcon sx={{ fontSize: 24 }} />
+      </button>
+    </article>
+  );
+}
+
+function DayDivider({ day }: { day: ScheduleDay }) {
+  return (
+    <div className={styles.dayDivider}>
+      <span className={styles.dayLabel}>
+        {day.label}, {day.date}
+      </span>
+    </div>
+  );
+}
+
+function EmptyDay() {
+  return (
+    <div className={styles.emptyDay}>
+      <p>Нет пар</p>
+      <span>Свободный от занятий день</span>
+    </div>
+  );
+}
+
+export default function TeacherLessonsPage() {
+  const [viewMode, setViewMode] = useState<ViewMode>('today');
+  const [selectedWeekIndex, setSelectedWeekIndex] = useState(CURRENT_WEEK_INDEX);
+
+  const isToday = viewMode === 'today';
+  const selectedWeek = MOCK_WEEKS[selectedWeekIndex] ?? MOCK_WEEKS[CURRENT_WEEK_INDEX];
+  const previousWeek = MOCK_WEEKS[selectedWeekIndex - 1];
+  const nextWeek = MOCK_WEEKS[selectedWeekIndex + 1];
+
+  const handlePreviousWeek = () => {
+    setSelectedWeekIndex((index) => Math.max(index - 1, 0));
+  };
+
+  const handleNextWeek = () => {
+    setSelectedWeekIndex((index) => Math.min(index + 1, MOCK_WEEKS.length - 1));
+  };
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <section className={styles.greeting}>
-          <div className={styles.greetingBody}>
-            <Typography className={styles.greetingTitle}>
-              Добрый день, {fullGreeting}
-            </Typography>
-            <div className={styles.greetingMeta}>
-              <span>{todayWeekDay}, {todayDateStr}</span>
-              <span className={styles.metaDot}>·</span>
-              <span>Неделя 10</span>
-              <span className={styles.metaDot}>·</span>
-              <strong>{todayLessonsCount} занятия сегодня</strong>
-            </div>
+        <header className={styles.header}>
+          <div className={styles.titleBlock}>
+            <h1 className={styles.title}>Расписание</h1>
+            {isToday ? (
+              <div className={styles.metaLine}>
+                <CalendarTodayOutlinedIcon sx={{ fontSize: 18 }} />
+                <span>Среда, 9 апреля</span>
+              </div>
+            ) : (
+              <div className={styles.metaLine}>
+                <strong>{selectedWeek.parity}</strong>
+                <span className={styles.metaDivider} />
+                <CalendarTodayOutlinedIcon sx={{ fontSize: 18 }} />
+                <span>{selectedWeek.period}</span>
+              </div>
+            )}
           </div>
 
-          <Link href="#schedule" className={styles.greetingLink}>
-            Перейти в расписание <ArrowForwardIcon sx={{ fontSize: 28 }} />
-          </Link>
-        </section>
-
-        <section id="schedule" className={styles.scheduleStage}>
-          <div className={styles.stageTag}>ПАРЫ СЕГОДНЯ</div>
-
-          <div className={styles.stageLayout}>
-            <div className={`${styles.sideColumn} ${styles.sideColumnLeft}`}>
-              <div className={styles.sideLabel}>{previousDay.label.toUpperCase()}</div>
-              {previousDay.lessons.map((lesson) => (
-                <LessonCard key={lesson.id} {...lesson} variant="preview" />
-              ))}
+          {!isToday && (
+            <div className={styles.periodControls}>
+              <button
+                type="button"
+                className={styles.periodButton}
+                onClick={handlePreviousWeek}
+                disabled={!previousWeek}
+                aria-label={getWeekButtonLabel('previous', previousWeek)}
+              >
+                <ChevronLeftRoundedIcon sx={{ fontSize: 22 }} />
+                Предыдущая
+              </button>
+              <span className={styles.periodDivider} />
+              <button
+                type="button"
+                className={styles.periodButton}
+                onClick={handleNextWeek}
+                disabled={!nextWeek}
+                aria-label={getWeekButtonLabel('next', nextWeek)}
+              >
+                Следующая
+                <ChevronRightRoundedIcon sx={{ fontSize: 22 }} />
+              </button>
             </div>
+          )}
 
-            <button type="button" className={styles.arrowButton} aria-label="Предыдущий день">
-              <ChevronLeftRoundedIcon sx={{ fontSize: 26 }} />
+          <div className={styles.viewSwitch} role="tablist" aria-label="Вид расписания">
+            <button
+              type="button"
+              className={`${styles.viewButton} ${isToday ? styles.viewButtonActive : ''}`}
+              onClick={() => setViewMode('today')}
+              aria-selected={isToday}
+              role="tab"
+            >
+              Сегодня
             </button>
-
-            <div className={styles.todayColumn}>
-              {today.lessons.map((lesson) => (
-                <LessonCard key={lesson.id} {...lesson} variant="hero" />
-              ))}
-            </div>
-
-            <button type="button" className={styles.arrowButton} aria-label="Следующий день">
-              <ChevronRightRoundedIcon sx={{ fontSize: 26 }} />
+            <button
+              type="button"
+              className={`${styles.viewButton} ${!isToday ? styles.viewButtonActive : ''}`}
+              onClick={() => setViewMode('week')}
+              aria-selected={!isToday}
+              role="tab"
+            >
+              Неделя
             </button>
-
-            <div className={`${styles.sideColumn} ${styles.sideColumnRight}`}>
-              <div className={styles.sideLabel}>{nextDay.label.toUpperCase()}</div>
-              {nextDay.lessons.map((lesson) => (
-                <LessonCard key={lesson.id} {...lesson} variant="preview" />
-              ))}
-            </div>
           </div>
-        </section>
+        </header>
 
-        <section className={styles.subjectSection}>
-          <div className={styles.sectionHeader}>
-            <Typography className={styles.sectionTitle}>Мои предметы</Typography>
-            <Link href="/teacher/subjects" className={styles.sectionLink}>
-              Все предметы
-            </Link>
-          </div>
-
-          <div className={styles.subjectsGrid}>
-            {MOCK_SUBJECTS.map((subject) => (
-              <SubjectCard
-                key={subject.id}
-                {...subject}
-                href={`/teacher/subjects/${subject.id}`}
-              />
+        {isToday ? (
+          <section className={styles.todayList} aria-label="Расписание на сегодня">
+            {TODAY_LESSONS.map((lesson) => (
+              <LessonRow key={lesson.id} lesson={lesson} />
             ))}
-          </div>
-        </section>
+          </section>
+        ) : (
+          <section className={styles.weekList} aria-label="Расписание на неделю" aria-live="polite">
+            {selectedWeek.days.map((day) => (
+              <div key={day.id} className={styles.weekDay}>
+                <DayDivider day={day} />
+                {day.lessons.length > 0 ? (
+                  <div className={styles.dayLessons}>
+                    {day.lessons.map((lesson) => (
+                      <LessonRow key={lesson.id} lesson={lesson} />
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyDay />
+                )}
+              </div>
+            ))}
+          </section>
+        )}
       </div>
     </div>
   );

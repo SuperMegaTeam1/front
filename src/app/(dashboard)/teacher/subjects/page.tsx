@@ -116,7 +116,7 @@ export default function TeacherSubjectsPage() {
                 {subject.groups.map((group) => (
                   <Link
                     key={group.id}
-                    href={`/teacher/subjects/${subject.id}/gradebook/${group.id}`}
+                    href={`/teacher/subjects/${subject.id}/${group.id}`}
                     className={styles.groupLink}
                   >
                     {group.name}
