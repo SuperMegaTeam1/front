@@ -43,6 +43,9 @@ function formatWeekRange(days: DaySchedule[]) {
   return `${startLabel} — ${endLabel}`;
 }
 
+// TODO: Стоит разбить страницу на блоки, например: Greeting, SchedulePreview, RatingSummary, ChangesList.
+//  Старайтесь не писать большие компоненты, которые делают сразу всё.
+//  Если у компонента есть несколько логических блоков, лучше разбить его на несколько маленьких
 export default function StudentSchedulePage() {
   const [view, setView] = useState<ScheduleView>('today');
   const [weekOffset, setWeekOffset] = useState(0);

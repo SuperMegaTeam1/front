@@ -38,6 +38,7 @@ const WEEK_SCHEDULE = [
   { label: 'Приём студентов', value: 'Чт 15:00-17:00' },
 ];
 
+// TODO: Тут тот же коммент про разбиение на компоненты, как в StudentSchedulePage
 export default function TeacherProfilePage() {
   const { user } = useAuthStore();
   const teacher = user?.role === 'teacher' ? (user as Teacher) : FALLBACK_TEACHER;

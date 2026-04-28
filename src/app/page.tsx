@@ -1,6 +1,7 @@
 import { Stack, Typography } from '@mui/material';
 import { StackCheckClient } from '@/components/stack-check/StackCheckClient';
 
+// TODO: Кажется эта страница уже не нужна
 export default function HomePage() {
   return (
     <main>

@@ -10,6 +10,8 @@ import { ruRU } from '@mui/material/locale';
  * Если меняешь цвет — правь оба места. Иначе SCSS-блоки и MUI-компоненты
  * разойдутся по оттенку.
  */
+// TODO: Не стоит дублировать токены и в MUI, и в SCSS: цвета/радиусы разъедутся.
+//  Как вариант, можно вынести токены в CSS variables и читать их и в theme, и в SCSS.
 const theme = createTheme(
   {
     palette: {

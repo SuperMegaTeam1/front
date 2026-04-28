@@ -41,6 +41,10 @@ api.interceptors.response.use(
       // Токен истёк или невалиден — выходим
       useAuthStore.getState().logout();
 
+      // TODO: Это не так критично, но Axios по хорошему не должен управлять навигацией, тем более тут будет жесткий редирект (не SPA переход)
+      //  Как вариант: тут только чистить состояние стора auth и вернуть ошибку, а редирект делать
+      //  в AuthGuard/layout через useRouter, когда isAuthenticated в сторе стал false.
+
       // Редирект на страницу логина (только на клиенте)
       if (typeof window !== 'undefined') {
         window.location.href = '/login';
