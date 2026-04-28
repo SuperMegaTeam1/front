@@ -2,27 +2,28 @@
 
 import { createTheme, ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
 import { ruRU } from '@mui/material/locale';
+import { tokens } from '@/theme/tokens';
 
 const theme = createTheme(
   {
     palette: {
       primary: {
-        main: 'var(--color-brand)',
-        light: 'var(--color-brand-light)',
-        dark: 'var(--color-brand-dark)',
+        main: tokens.colorBrand,
+        light: tokens.colorBrandLight,
+        dark: tokens.colorBrandDark,
       },
       secondary: {
-        main: 'var(--color-secondary)',
+        main: tokens.colorSecondary,
       },
       background: {
-        default: 'var(--color-bg)',
-        paper: 'var(--color-surface)',
+        default: tokens.colorBg,
+        paper: tokens.colorSurface,
       },
       text: {
-        primary: 'var(--color-text-primary)',
-        secondary: 'var(--color-text-secondary)',
+        primary: tokens.colorTextPrimary,
+        secondary: tokens.colorTextSecondary,
       },
-      divider: 'var(--color-divider)',
+      divider: tokens.colorDivider,
     },
     typography: {
       fontFamily: "var(--font-ibm-plex-sans), 'IBM Plex Sans', -apple-system, sans-serif",
