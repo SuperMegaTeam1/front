@@ -1,0 +1,335 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
+
+.page {
+  min-height: calc(100vh - 116px);
+  background: $color-surface;
+  color: $color-text-primary;
+}
+
+.container {
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: 44px $content-padding 72px;
+}
+
+.header {
+  min-height: 122px;
+  margin-bottom: 28px;
+  padding: 14px 20px;
+  background: $color-surface-alt;
+  border: 1px solid rgba(227, 233, 236, 0.94);
+  border-radius: 8px;
+
+  h1 {
+    margin: 0;
+    font-family: $font-family-heading;
+    font-size: clamp(54px, 4vw, 78px);
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+    color: #263135;
+  }
+
+  p {
+    margin: 16px 0 0;
+    color: #9badc4;
+    font-size: clamp(24px, 1.8vw, 36px);
+    font-weight: 500;
+    line-height: 1;
+  }
+}
+
+.gradebookCard {
+  overflow: hidden;
+  border: 1px solid rgba(227, 233, 236, 0.96);
+  border-radius: 8px;
+  background: $color-surface;
+  box-shadow: 0 18px 42px rgba(43, 52, 55, 0.14);
+}
+
+.tableHeader,
+.tableRow {
+  display: grid;
+  grid-template-columns: minmax(360px, 1.9fr) repeat(9, minmax(82px, 1fr)) 120px;
+  align-items: center;
+}
+
+.tableHeader {
+  min-height: 126px;
+  background: $color-surface-alt;
+  color: #334044;
+  font-size: clamp(16px, 1vw, 20px);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.studentHeader {
+  padding-left: 38px;
+}
+
+.dateHeader,
+.totalHeader {
+  text-align: center;
+}
+
+.totalHeader {
+  padding-right: 22px;
+}
+
+.tableBody {
+  background: $color-surface;
+}
+
+.tableRow {
+  min-height: 104px;
+
+  &:not(:last-child) {
+    .markSlot,
+    .totalCell {
+      border-bottom: 1px solid rgba(151, 169, 189, 0.25);
+    }
+  }
+}
+
+.studentCell {
+  height: 100%;
+  padding-left: 38px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: #263135;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.violet {
+  background: #e4dbff;
+}
+
+.blue {
+  background: #dff1fa;
+}
+
+.sky {
+  background: #bfe8ff;
+}
+
+.lilac {
+  background: #d7d0ec;
+}
+
+.gray {
+  background: #e7eef2;
+}
+
+.studentName {
+  color: #334044;
+  font-family: $font-family-heading;
+  font-size: clamp(22px, 1.45vw, 30px);
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.markSlot {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gradeCell {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: #e7eef2;
+  color: #263135;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-family-heading;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.gradeCellAbsent {
+  background: #ffd8d5;
+  color: #c81e28;
+}
+
+.totalCell {
+  height: 100%;
+  padding-right: 34px;
+  color: #263135;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-family: $font-family-heading;
+  font-size: clamp(26px, 1.75vw, 34px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 48px;
+}
+
+.sendButton {
+  min-width: 300px;
+  height: 72px;
+  padding: 0 34px;
+  border: none;
+  border-radius: 8px;
+  background: $color-brand;
+  color: $color-surface;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: $font-family-heading;
+  font-size: clamp(22px, 1.5vw, 30px);
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 8px 18px rgba(43, 52, 55, 0.2);
+  transition: background $transition-fast, transform $transition-fast;
+
+  &:hover {
+    background: $color-brand-dark;
+    transform: translateY(-1px);
+  }
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 36px;
+  margin-top: 26px;
+}
+
+.summaryCard {
+  min-height: 190px;
+  padding: 42px 38px;
+  border: 1px solid rgba(227, 233, 236, 0.96);
+  border-radius: 8px;
+  background: $color-surface-alt;
+  color: #263135;
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  h2 {
+    font-family: $font-family-heading;
+    font-size: clamp(24px, 1.6vw, 32px);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  strong {
+    display: block;
+    margin-top: 18px;
+    font-family: $font-family-heading;
+    font-size: clamp(48px, 3.3vw, 64px);
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  p {
+    margin-top: 24px;
+    color: #334044;
+    font-size: clamp(18px, 1.2vw, 24px);
+    font-weight: 400;
+  }
+}
+
+.averageCard {
+  background: #bfe8ff;
+}
+
+.progressTrack {
+  height: 9px;
+  margin-top: 34px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(42, 101, 126, 0.28);
+}
+
+.progressFill {
+  display: block;
+  width: 84%;
+  height: 100%;
+  border-radius: inherit;
+  background: $color-brand-dark;
+}
+
+.nextLessonCard {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  background: $color-surface;
+}
+
+.nextLessonIcon {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background: #e4dbff;
+  color: #263135;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+@include tablet {
+  .container {
+    padding: 36px 24px 56px;
+  }
+
+  .gradebookCard {
+    overflow-x: auto;
+  }
+
+  .tableHeader,
+  .tableRow {
+    min-width: 1360px;
+  }
+
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@include mobile {
+  .header h1 {
+    font-size: 42px;
+  }
+
+  .header p {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+
+  .sendButton {
+    width: 100%;
+  }
+}
