@@ -1,129 +1,144 @@
-import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined';
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
-import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
+'use client';
+
+import { useState } from 'react';
+import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { PageHero } from '@/components/ui';
 import styles from './lesson.module.scss';
 
-const LESSONS = [
+interface Student {
+  id: number;
+  fullName: string;
+}
+
+interface Group {
+  id: string;
+  name: string;
+  students: Student[];
+}
+
+const LESSON = {
+  subject: 'Математический анализ',
+  type: 'Лекция',
+  date: '03.04.2026',
+  startTime: '08:30',
+  endTime: '10:00',
+};
+
+const GROUPS: Group[] = [
   {
-    id: 1,
-    type: 'Лекция',
-    title: 'Введение в математический анализ',
-    date: '03.04.2024',
-    time: '09:00 — 10:30',
-    room: 'Ауд. 302',
-    groups: '09-351, 09-352',
-    status: 'Проведено',
+    id: '09-351',
+    name: '09-351',
+    students: [
+      { id: 1, fullName: 'Иванова Мария Алексеевна' },
+      { id: 2, fullName: 'Кузнецов Денис Андреевич' },
+      { id: 3, fullName: 'Лебедев Кирилл Львович' },
+      { id: 4, fullName: 'Морозова Софья Геннадьевна' },
+      { id: 5, fullName: 'Николаев Павел Романович' },
+      { id: 6, fullName: 'Орлова Виктория Юрьевна' },
+    ],
   },
   {
-    id: 2,
-    type: 'Практика',
-    title: 'Пределы и непрерывность функций',
-    date: '10.04.2024',
-    time: '10:40 — 12:10',
-    room: 'Ауд. 414',
-    groups: '09-352',
-    status: 'Проведено',
-  },
-  {
-    id: 3,
-    type: 'Контрольная',
-    title: 'Производные и правила дифференцирования',
-    date: '17.04.2024',
-    time: '09:00 — 10:30',
-    room: 'Ауд. 302',
-    groups: '09-351, 09-352',
-    status: 'Запланировано',
+    id: '09-352',
+    name: '09-352',
+    students: [
+      { id: 1, fullName: 'Александров Артем Игоревич' },
+      { id: 2, fullName: 'Белов Максим Сергеевич' },
+      { id: 3, fullName: 'Васильева Елена Дмитриевна' },
+      { id: 4, fullName: 'Громов Иван Павлович' },
+      { id: 5, fullName: 'Дмитриев Олег Борисович' },
+      { id: 6, fullName: 'Егорова Анна Викторовна' },
+    ],
   },
 ];
 
-const MATERIALS = [
-  'Конспект лекции',
-  'Задания для практики',
-  'Критерии оценивания',
-];
+function GroupGradebook({
+  group,
+  scores,
+  onScoreChange,
+}: {
+  group: Group;
+  scores: Record<number, string>;
+  onScoreChange: (studentId: number, value: string) => void;
+}) {
+  return (
+    <section className={styles.groupSection}>
+      <header className={styles.groupHeader}>
+        <h2 className={styles.groupTitle}>Группа {group.name}</h2>
+        <span className={styles.studentsBadge}>{group.students.length} студентов</span>
+      </header>
+
+      <div className={styles.gradebookCard}>
+        <div className={styles.tableHeader}>
+          <span className={styles.numCol}>№</span>
+          <span className={styles.nameCol}>ФИО СТУДЕНТА</span>
+          <span className={styles.scoreCol}>БАЛЛЫ/Н</span>
+        </div>
+
+        <div className={styles.tableBody}>
+          {group.students.map((student, index) => (
+            <div key={student.id} className={styles.row}>
+              <span className={styles.numCell}>{index + 1}</span>
+              <span className={styles.nameCell}>{student.fullName}</span>
+              <input
+                type="text"
+                className={styles.scoreInput}
+                placeholder="—"
+                value={scores[student.id] ?? ''}
+                onChange={(event) => onScoreChange(student.id, event.target.value)}
+                aria-label={`Балл для ${student.fullName}`}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function TeacherLessonPage() {
+  const [scoresByGroup, setScoresByGroup] = useState<Record<string, Record<number, string>>>({});
+
+  const handleScoreChange = (groupId: string, studentId: number, value: string) => {
+    setScoresByGroup((prev) => ({
+      ...prev,
+      [groupId]: { ...(prev[groupId] ?? {}), [studentId]: value },
+    }));
+  };
+
+  const handleSubmit = () => {
+    // TODO: отправка баллов
+  };
+
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
       <div className={styles.container}>
-        <PageHero title="Мои предметы" subtitle="3 семестр" />
+        <PageHero
+          title={`${LESSON.subject} — ${LESSON.type}`}
+          meta={
+            <>
+              <CalendarTodayOutlinedIcon sx={{ fontSize: 14 }} />
+              <span>{LESSON.date} · {LESSON.startTime} – {LESSON.endTime}</span>
+            </>
+          }
+        />
 
-        <section className={styles.heroCard}>
-          <div>
-            <span className={styles.kicker}>Математический анализ</span>
-            <h2>Занятия по предмету</h2>
-            <p>Моковая страница для просмотра разных типов занятий, групп и учебных материалов.</p>
-          </div>
+        {GROUPS.map((group) => (
+          <GroupGradebook
+            key={group.id}
+            group={group}
+            scores={scoresByGroup[group.id] ?? {}}
+            onScoreChange={(studentId, value) => handleScoreChange(group.id, studentId, value)}
+          />
+        ))}
 
-          <div className={styles.heroStats}>
-            <div>
-              <strong>3</strong>
-              <span>занятия</span>
-            </div>
-            <div>
-              <strong>48</strong>
-              <span>студентов</span>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.lessonsGrid} aria-label="Список занятий">
-          {LESSONS.map((lesson) => (
-            <article key={lesson.id} className={styles.lessonCard}>
-              <div className={styles.cardHeader}>
-                <span className={styles.lessonType}>{lesson.type}</span>
-                <span className={styles.status}>{lesson.status}</span>
-              </div>
-
-              <h2>{lesson.title}</h2>
-
-              <div className={styles.lessonMeta}>
-                <span>
-                  <CalendarMonthOutlinedIcon sx={{ fontSize: 23 }} />
-                  {lesson.date} • {lesson.time}
-                </span>
-                <span>
-                  <LocationOnOutlinedIcon sx={{ fontSize: 23 }} />
-                  {lesson.room}
-                </span>
-                <span>
-                  <Groups2OutlinedIcon sx={{ fontSize: 23 }} />
-                  {lesson.groups}
-                </span>
-              </div>
-            </article>
-          ))}
-        </section>
-
-        <section className={styles.bottomGrid}>
-          <article className={styles.panel}>
-            <div className={styles.panelIcon}>
-              <MenuBookOutlinedIcon sx={{ fontSize: 34 }} />
-            </div>
-            <div>
-              <h2>Материалы</h2>
-              <ul>
-                {MATERIALS.map((material) => (
-                  <li key={material}>{material}</li>
-                ))}
-              </ul>
-            </div>
-          </article>
-
-          <article className={styles.panel}>
-            <div className={styles.panelIcon}>
-              <TaskAltRoundedIcon sx={{ fontSize: 34 }} />
-            </div>
-            <div>
-              <h2>Следующая задача</h2>
-              <p>Подготовить ведомость посещаемости и отправить баллы группе 09-352.</p>
-            </div>
-          </article>
-        </section>
+        <div className={styles.actions}>
+          <button type="button" className={styles.submitButton} onClick={handleSubmit}>
+            <SendRoundedIcon sx={{ fontSize: 18 }} />
+            Отправить баллы
+          </button>
+        </div>
       </div>
-    </main>
+    </div>
   );
 }
