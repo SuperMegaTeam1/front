@@ -3,6 +3,7 @@
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined';
+import { useAuth } from '@/lib/hooks/useAuth';
 import { PageHero, InfoCard, FieldItem, LogoutButton } from '@/components/ui';
 import styles from './profile.module.scss';
 
@@ -20,6 +21,8 @@ const TEACHER_PROFILE = {
 };
 
 export default function TeacherProfilePage() {
+  const { logout } = useAuth();
+
   return (
     <div className={styles.page}>
       <div className={styles.container}>
@@ -65,7 +68,7 @@ export default function TeacherProfilePage() {
         </div>
 
         <div className={styles.actions}>
-          <LogoutButton onClick={() => {}} />
+          <LogoutButton onClick={() => logout()} />
         </div>
       </div>
     </div>

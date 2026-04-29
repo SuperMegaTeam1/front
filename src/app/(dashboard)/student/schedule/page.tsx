@@ -6,8 +6,10 @@ import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import { useRouter } from 'next/navigation';
 import { PageHero, ViewSwitch, ScheduleCard, DayDivider, EmptyDayState } from '@/components/ui';
+import { useDaySchedule } from '@/lib/hooks/useSchedule';
+import type { ScheduleLessonResult } from '@/lib/api/types';
 import type { DaySchedule } from './scheduleData';
-import { buildWeek, parseIsoDate, TODAY_DATE, TODAY_LESSONS, WEEK_BASE_NUMBER } from './scheduleData';
+import { buildWeek, parseIsoDate, WEEK_BASE_NUMBER } from './scheduleData';
 import styles from './schedule.module.scss';
 
 type ScheduleView = 'today' | 'week';
@@ -16,6 +18,11 @@ const VIEW_OPTIONS: Array<{ value: ScheduleView; label: string }> = [
   { value: 'today', label: 'Сегодня' },
   { value: 'week', label: 'Неделя' },
 ];
+
+function getLocalIsoDate(date = new Date()) {
+  const timezoneOffset = date.getTimezoneOffset() * 60_000;
+  return new Date(date.getTime() - timezoneOffset).toISOString().slice(0, 10);
+}
 
 function formatHeadlineDate(dateStr: string) {
   const date = parseIsoDate(dateStr);
@@ -41,23 +48,38 @@ function formatWeekRange(days: DaySchedule[]) {
   return `${startDay}–${endDay} ${monthName}`;
 }
 
+function formatTeacherName(lesson: ScheduleLessonResult) {
+  return [lesson.teacherLastName, lesson.teacherFirstName, lesson.teacherFatherName]
+    .filter(Boolean)
+    .join(' ');
+}
+
 export default function StudentSchedulePage() {
   const router = useRouter();
   const [view, setView] = useState<ScheduleView>('today');
   const [weekOffset, setWeekOffset] = useState(0);
+  const todayDate = getLocalIsoDate();
+
+  const {
+    data: todaySchedule,
+    isLoading: isTodayScheduleLoading,
+    error: todayScheduleError,
+  } = useDaySchedule(todayDate);
 
   const todayLessons = useMemo(
-    () => TODAY_LESSONS.slice().sort((a, b) => a.startTime.localeCompare(b.startTime)),
-    []
+    () => (todaySchedule?.items ?? []).slice().sort((a, b) => a.startsAt.localeCompare(b.startsAt)),
+    [todaySchedule?.items]
   );
+
   const weekDays = useMemo(() => buildWeek(weekOffset), [weekOffset]);
-  const weekNumber = WEEK_BASE_NUMBER + weekOffset;
+  const weekNumber = todaySchedule?.weekNumber ?? WEEK_BASE_NUMBER + weekOffset;
   const isEvenWeek = weekNumber % 2 === 0;
+  const headlineDate = todaySchedule?.date ?? todayDate;
 
   const heroMeta = view === 'today' ? (
     <>
       <CalendarTodayOutlinedIcon sx={{ fontSize: 14 }} />
-      <span>{formatHeadlineDate(TODAY_DATE)}</span>
+      <span>{formatHeadlineDate(headlineDate)}</span>
     </>
   ) : (
     <>
@@ -101,16 +123,20 @@ export default function StudentSchedulePage() {
 
         {view === 'today' ? (
           <section className={styles.lessonList} aria-label="Расписание на сегодня">
-            {todayLessons.length > 0 ? (
+            {isTodayScheduleLoading ? (
+              <EmptyDayState title="Загружаем расписание" subtitle="Получаем данные с бэка" />
+            ) : todayScheduleError ? (
+              <EmptyDayState title="Не удалось загрузить расписание" subtitle="Проверьте запуск бэка и авторизацию" />
+            ) : todayLessons.length > 0 ? (
               todayLessons.map((lesson) => (
                 <ScheduleCard
-                  key={lesson.id}
-                  startTime={lesson.startTime}
-                  endTime={lesson.endTime}
+                  key={lesson.lessonsId}
+                  startTime={lesson.startsAt}
+                  endTime={lesson.endsAt}
                   subjectName={lesson.subjectName}
-                  lessonType={lesson.lessonType}
-                  room={lesson.room}
-                  teacherName={lesson.teacherName}
+                  lessonType={lesson.type ?? undefined}
+                  room={lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined}
+                  teacherName={formatTeacherName(lesson)}
                   onMore={() => router.push(`/student/subjects/${lesson.subjectId}`)}
                   moreLabel={`Перейти к ${lesson.subjectName}`}
                 />

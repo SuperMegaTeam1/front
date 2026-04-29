@@ -1,11 +1,10 @@
 import api from './axios';
-import type { ApiResponse } from '@/types/api';
-import type { ScheduleDay, ScheduleWeek } from '@/types/schedule';
+import type { TodayScheduleResult } from './types';
 
-/** Расписание на конкретный день */
-export const getScheduleByDate = (date: string) =>
-  api.get<ApiResponse<ScheduleDay>>('/schedule/day', { params: { date } });
+export function getTodaySchedule(date?: string) {
+  return api.get<TodayScheduleResult>('/schedule/today', {
+    params: date ? { date } : undefined,
+  });
+}
 
-/** Расписание на неделю */
-export const getWeekSchedule = (date: string) =>
-  api.get<ApiResponse<ScheduleWeek>>('/schedule/week', { params: { date } });
+export const getScheduleByDate = getTodaySchedule;
