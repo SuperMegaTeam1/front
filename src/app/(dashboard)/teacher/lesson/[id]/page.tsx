@@ -3,6 +3,7 @@ import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
+import { PageHero } from '@/components/ui';
 import styles from './lesson.module.scss';
 
 const LESSONS = [
@@ -48,12 +49,7 @@ export default function TeacherLessonPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <header className={styles.header}>
-          <div className={styles.titleBlock}>
-            <h1 className={styles.title}>Мои предметы</h1>
-            <p className={styles.metaLine}>3 семестр</p>
-          </div>
-        </header>
+        <PageHero title="Мои предметы" subtitle="3 семестр" />
 
         <section className={styles.heroCard}>
           <div>

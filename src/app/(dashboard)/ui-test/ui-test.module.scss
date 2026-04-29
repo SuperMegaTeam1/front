@@ -1,0 +1,95 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.page {
+  min-height: calc(100vh - 96px);
+  background: $color-bg;
+}
+
+.container {
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: 40px $content-padding 88px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+
+  @include tablet {
+    padding: 24px 24px 64px;
+  }
+}
+
+.sectionLabel {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #97a7bd;
+  letter-spacing: 0.04em;
+
+  a {
+    color: $color-brand;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.groupTitle {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a7b6ca;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.lessonList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px 36px;
+
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fieldGrid2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 28px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}

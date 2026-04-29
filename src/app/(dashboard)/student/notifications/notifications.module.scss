@@ -1,0 +1,70 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
+
+.page {
+  min-height: calc(100vh - 96px);
+  background: $color-bg;
+}
+
+.container {
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: 32px $content-padding 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @include tablet {
+    padding: 24px 24px 56px;
+    gap: 20px;
+  }
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 54px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.groupLabel {
+  padding-left: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #a7b6ca;
+}
+
+.groupItems {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@include mobile {
+  .groups {
+    gap: 50px;
+  }
+
+  .group {
+    gap: 18px;
+  }
+
+  .groupLabel {
+    padding-left: 4px;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    color: rgba(43, 52, 55, 0.92);
+  }
+
+  .groupItems {
+    gap: 28px;
+  }
+}

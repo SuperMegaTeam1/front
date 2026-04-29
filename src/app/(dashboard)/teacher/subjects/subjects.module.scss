@@ -11,18 +11,15 @@
 .container {
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: 44px $content-padding 72px;
-}
+  padding: 32px $content-padding 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 
-.header {
-  display: grid;
-  align-items: center;
-  min-height: 98px;
-  padding: 12px 20px;
-  margin-bottom: 76px;
-  background: $color-surface-alt;
-  border: 1px solid rgba(227, 233, 236, 0.94);
-  border-radius: 8px;
+  @include tablet {
+    padding: 24px 24px 56px;
+    gap: 20px;
+  }
 }
 
 .titleBlock {

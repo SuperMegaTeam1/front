@@ -19,7 +19,7 @@ export function useAuth() {
 
       // Редирект по роли
       if (user.role === 'student') {
-        router.push('/student/schedule');
+        router.push('/student/home');
       } else {
         router.push('/teacher/home');
       }

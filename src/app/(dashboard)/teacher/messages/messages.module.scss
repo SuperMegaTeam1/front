@@ -11,7 +11,15 @@
 .container {
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: 44px $content-padding 72px;
+  padding: 32px $content-padding 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @include tablet {
+    padding: 24px 24px 56px;
+    gap: 20px;
+  }
 }
 
 .header {

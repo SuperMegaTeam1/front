@@ -11,6 +11,7 @@ import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { LessonCard } from '@/components/shared/LessonCard/LessonCard';
 import { SubjectCard } from '@/components/shared/SubjectCard/SubjectCard';
+import { PageHero } from '@/components/ui';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
 import styles from './home.module.scss';
 
@@ -135,24 +136,23 @@ export default function TeacherSchedulePage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <section className={styles.greeting}>
-          <div className={styles.greetingBody}>
-            <Typography className={styles.greetingTitle}>
-              Добрый день, {fullGreeting}
-            </Typography>
-            <div className={styles.greetingMeta}>
+        <PageHero
+          title={`Добрый день, ${fullGreeting}`}
+          meta={
+            <>
               <span>{todayWeekDay}, {todayDateStr}</span>
-              <span className={styles.metaDot}>·</span>
+              <span>·</span>
               <span>Неделя 10</span>
-              <span className={styles.metaDot}>·</span>
-              <strong>{todayLessonsCount} занятия сегодня</strong>
-            </div>
-          </div>
-
-          <Link href="#schedule" className={styles.greetingLink}>
-            Перейти в расписание <ArrowForwardIcon sx={{ fontSize: 28 }} />
-          </Link>
-        </section>
+              <span>·</span>
+              <strong style={{ color: '#2a657e' }}>{todayLessonsCount} занятия сегодня</strong>
+            </>
+          }
+          action={
+            <Link href="#schedule" className={styles.greetingLink}>
+              Перейти в расписание <ArrowForwardIcon sx={{ fontSize: 22 }} />
+            </Link>
+          }
+        />
 
         <section id="schedule" className={styles.scheduleStage}>
           <div className={styles.stageTag}>ПАРЫ СЕГОДНЯ</div>

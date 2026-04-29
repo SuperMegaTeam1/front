@@ -12,8 +12,8 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { useNotificationStore } from '@/stores/useNotificationStore';
 import styles from './HeaderStudent.module.scss';
 
-const HOME_PATH = '/student/schedule';
-const SUBJECTS_PATH = '/student/subjects';
+const HOME_PATH = '/student/home';
+const SCHEDULE_PATH = '/student/schedule';
 const RATING_PATH = '/student/rating';
 const NOTIFICATIONS_PATH = '/student/notifications';
 const PROFILE_PATH = '/student/profile';
@@ -27,7 +27,7 @@ export function HeaderStudent() {
     ? `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.trim()
     : 'МИ';
   const isHomePage = pathname === HOME_PATH;
-  const isSubjectsPage = pathname === SUBJECTS_PATH || pathname.startsWith(`${SUBJECTS_PATH}/`);
+  const isSchedulePage = pathname === SCHEDULE_PATH;
   const isRatingPage = pathname === RATING_PATH;
   const isNotificationsPage = pathname === NOTIFICATIONS_PATH;
   const isProfilePage = pathname === PROFILE_PATH;
@@ -42,7 +42,7 @@ export function HeaderStudent() {
         <nav className={styles.nav} aria-label="Основная навигация студента">
           <Link
             href={HOME_PATH}
-            className={`${styles.navIconLink} ${isHomePage ? `${styles.navIconLinkActive} ${styles.navIconLinkHomeActive}` : ''}`}
+            className={`${styles.navIconLink} ${isHomePage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
             aria-label="Главная"
             aria-current={isHomePage ? 'page' : undefined}
           >
@@ -51,21 +51,23 @@ export function HeaderStudent() {
           </Link>
 
           <Link
-            href={SUBJECTS_PATH}
-            className={`${styles.navIconLink} ${isSubjectsPage ? styles.navIconLinkActive : ''}`}
-            aria-label="Предметы"
-            aria-current={isSubjectsPage ? 'page' : undefined}
+            href={SCHEDULE_PATH}
+            className={`${styles.navIconLink} ${isSchedulePage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
+            aria-label="Расписание"
+            aria-current={isSchedulePage ? 'page' : undefined}
           >
             <CalendarMonthOutlinedIcon sx={{ fontSize: 28 }} />
+            {isSchedulePage && <span className={styles.navText}>Расписание</span>}
           </Link>
 
           <Link
             href={RATING_PATH}
-            className={`${styles.navIconLink} ${isRatingPage ? styles.navIconLinkActive : ''}`}
+            className={`${styles.navIconLink} ${isRatingPage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
             aria-label="Рейтинг"
             aria-current={isRatingPage ? 'page' : undefined}
           >
             <BarChartRoundedIcon sx={{ fontSize: 28 }} />
+            {isRatingPage && <span className={styles.navText}>Рейтинг</span>}
           </Link>
         </nav>
 
@@ -76,7 +78,7 @@ export function HeaderStudent() {
 
           <Link
             href={NOTIFICATIONS_PATH}
-            className={`${styles.actionButton} ${isNotificationsPage ? styles.actionButtonActive : ''}`}
+            className={`${styles.actionButton} ${isNotificationsPage ? `${styles.actionButtonActive} ${styles.actionButtonExpanded}` : ''}`}
             aria-label="Уведомления"
             aria-current={isNotificationsPage ? 'page' : undefined}
           >
@@ -87,6 +89,7 @@ export function HeaderStudent() {
             >
               <NotificationsNoneOutlinedIcon sx={{ fontSize: 28 }} />
             </Badge>
+            {isNotificationsPage && <span className={styles.actionText}>Уведомления</span>}
           </Link>
 
           <Avatar

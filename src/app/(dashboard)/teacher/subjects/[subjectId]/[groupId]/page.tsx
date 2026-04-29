@@ -1,5 +1,6 @@
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import { PageHero } from '@/components/ui';
 import styles from './gradebook.module.scss';
 
 type GradeValue = '2' | '3' | '4' | '5' | 'Н' | '—' | '';
@@ -64,10 +65,7 @@ export default function TeacherGroupGradebookPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <header className={styles.header}>
-          <h1>Журнал группы 09-352</h1>
-          <p>Математический анализ — 3 семестр</p>
-        </header>
+        <PageHero title="Журнал группы 09-352" subtitle="Математический анализ — 3 семестр" />
 
         <section className={styles.gradebookCard} aria-label="Журнал оценок группы 09-352">
           <div className={styles.tableHeader}>

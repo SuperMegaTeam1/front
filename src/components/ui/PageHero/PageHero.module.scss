@@ -1,0 +1,77 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
+
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 36px;
+  border-radius: 18px;
+  background: rgba(241, 244, 246, 0.98);
+  border: 1px solid rgba(227, 233, 236, 0.94);
+
+  @include tablet {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 22px 24px;
+  }
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: $font-family-heading;
+  font-size: clamp(28px, 2.4vw, 44px);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: $color-text-primary;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: clamp(13px, 0.9vw, 17px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #97a7bd;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #97a7bd;
+}
+
+.center {
+  flex-shrink: 0;
+  margin-left: auto;
+  margin-right: auto;
+
+  @include tablet {
+    margin: 0;
+    align-self: stretch;
+  }
+}
+
+.action {
+  flex-shrink: 0;
+
+  @include tablet {
+    align-self: stretch;
+  }
+}

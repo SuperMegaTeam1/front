@@ -1,0 +1,51 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.page {
+  min-height: calc(100vh - 96px);
+  background: $color-bg;
+}
+
+.container {
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: 32px $content-padding 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @include tablet {
+    padding: 24px 24px 56px;
+    gap: 20px;
+  }
+}
+
+.programGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px 36px;
+
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 28px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+}

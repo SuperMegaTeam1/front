@@ -4,6 +4,7 @@ import { useState } from 'react';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
+import { PageHero } from '@/components/ui';
 import styles from './messages.module.scss';
 
 interface TeacherGroup {
@@ -38,10 +39,7 @@ export default function TeacherMessagesPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <header className={styles.header}>
-          <h1>Уведомления</h1>
-          <p>Отправить уведомление</p>
-        </header>
+        <PageHero title="Уведомления" subtitle="Отправить уведомление" />
 
         <section className={styles.composerCard} aria-label="Отправить уведомление студентам">
           <div className={styles.groupSection}>

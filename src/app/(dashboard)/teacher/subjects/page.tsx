@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { PageHero } from '@/components/ui';
 import CalculateOutlinedIcon from '@mui/icons-material/CalculateOutlined';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
@@ -74,12 +75,7 @@ export default function TeacherSubjectsPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <header className={styles.header}>
-          <div className={styles.titleBlock}>
-            <h1 className={styles.title}>Мои предметы</h1>
-            <p className={styles.metaLine}>4 семестр</p>
-          </div>
-        </header>
+        <PageHero title="Мои предметы" subtitle="4 семестр" />
 
         <section className={styles.subjectsGrid} aria-label="Выбор группы по предмету">
           {SUBJECTS.map((subject) => (

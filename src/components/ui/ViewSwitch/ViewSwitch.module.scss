@@ -1,0 +1,48 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.root {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  padding: 4px;
+  border-radius: 16px;
+  background: rgba(241, 244, 246, 0.98);
+  border: 1px solid rgba(227, 233, 236, 0.92);
+  box-shadow: 0 8px 22px rgba(146, 164, 183, 0.08);
+  min-width: 220px;
+
+  @include mobile {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 13px;
+  background: transparent;
+  color: #95a5b8;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color $transition-fast, background $transition-fast, box-shadow $transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    color: $color-brand;
+  }
+}
+
+.buttonActive {
+  background: $color-surface;
+  color: $color-brand;
+  box-shadow: 0 6px 16px rgba(146, 164, 183, 0.14);
+}

@@ -1,0 +1,42 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
+
+.root {
+  padding: 28px 32px 24px;
+  border-radius: 14px;
+  background: rgba(241, 244, 246, 0.88);
+  border: 1px solid rgba(227, 233, 236, 0.76);
+}
+
+.white {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-brand;
+}
+
+.title {
+  margin: 0;
+  font-family: $font-family-heading;
+  font-size: clamp(20px, 1.4vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: $color-text-primary;
+}
+
+.body {
+  min-width: 0;
+}
