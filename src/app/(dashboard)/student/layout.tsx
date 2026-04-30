@@ -11,8 +11,9 @@ export default function StudentLayout({
   return (
     <AuthGuard allowedRole="student">
       <HeaderStudent />
-      <main className={styles.main}>{children}</main>
+      <main className={`${styles.main} ${styles.studentMain}`}>{children}</main>
       <Footer />
+      <div className={styles.studentMobileNavSpacer} aria-hidden="true" />
     </AuthGuard>
   );
 }

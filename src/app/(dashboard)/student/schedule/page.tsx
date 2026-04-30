@@ -171,7 +171,13 @@ export default function StudentSchedulePage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <PageHero title="Расписание" meta={heroMeta} center={heroCenter} action={heroAction} />
+        <PageHero
+          className={styles.scheduleHero}
+          title="Расписание"
+          meta={heroMeta}
+          center={heroCenter}
+          action={heroAction}
+        />
 
         {view === 'today' ? (
           <section className={styles.lessonList} aria-label="Расписание на сегодня">

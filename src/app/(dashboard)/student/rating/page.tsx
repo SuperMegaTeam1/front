@@ -13,6 +13,8 @@ const AVATAR_COLORS = [
   'linear-gradient(135deg, #76b2c2 0%, #3d798b 100%)',
 ];
 
+const DEFAULT_FILTER_LABEL = 'Все предметы';
+
 function getAvatarLabel(firstName: string, lastName: string) {
   return `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase();
 }
@@ -39,37 +41,40 @@ export default function StudentRatingPage() {
 
   const groupName = rating?.groupName ?? '...';
   const currentStudentScore = rating?.totalGrade ?? 0;
-  const currentStudentPosition = rating?.ratingPosition ?? 0;
+  const activeStudentsCount = rows.length;
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
         <PageHero
+          className={styles.ratingHero}
           title={`Рейтинг группы ${groupName}`}
-          subtitle="Данные загружены из /students/me/rating"
+          subtitle="Академическая успеваемость за текущий семестр"
         />
 
         <section className={styles.overview}>
           <article className={styles.statCard}>
-            <span className={styles.statLabel}>Мой балл</span>
+            <span className={styles.statLabel}>Средний балл</span>
             <span className={styles.statValue}>
               {isLoading ? '...' : currentStudentScore.toFixed(1)}
             </span>
           </article>
 
           <article className={styles.statCard}>
-            <span className={styles.statLabel}>Место</span>
-            <span className={styles.statValue}>
-              {isLoading ? '...' : currentStudentPosition || '-'}
-            </span>
+            <span className={styles.statLabel}>Студентов</span>
+            <span className={styles.statValue}>{isLoading ? '...' : activeStudentsCount}</span>
+            <span className={styles.statHint}>Активный поток</span>
           </article>
 
           <article className={styles.filterCard}>
             <span className={styles.filterTitle}>Фильтр по предметам</span>
 
             <div className={styles.filterList}>
-              <button type="button" className={`${styles.filterButton} ${styles.filterButtonActive}`}>
-                Все предметы
+              <button
+                type="button"
+                className={`${styles.filterButton} ${styles.filterButtonActive}`}
+              >
+                {DEFAULT_FILTER_LABEL}
               </button>
             </div>
           </article>
@@ -86,7 +91,7 @@ export default function StudentRatingPage() {
           <RatingTable
             rows={rows}
             visibleCount={rows.length}
-            totalCount={rows.length}
+            totalCount={activeStudentsCount}
           />
         )}
       </div>

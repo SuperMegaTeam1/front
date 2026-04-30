@@ -69,6 +69,10 @@
   color: #b1bfd0;
 }
 
+.heroMetaStrong {
+  color: $color-brand;
+}
+
 .greetingLink {
   @include flex-center;
   gap: 6px;
@@ -411,9 +415,79 @@
 }
 
 @include mobile {
+  .page {
+    min-height: calc(100vh - 73px);
+  }
+
+  .container {
+    padding: 24px 20px 28px;
+    gap: 26px;
+  }
+
+  .homeHero {
+    gap: 4px;
+    min-height: 138px;
+    padding: 24px 20px 20px;
+    border-radius: 5px;
+    background: rgba(241, 244, 246, 0.98);
+
+    h1 {
+      max-width: 100%;
+      font-size: 25px;
+      line-height: 1.03;
+      letter-spacing: -0.055em;
+    }
+
+    > div:first-child {
+      gap: 8px;
+    }
+
+    > div:first-child > div {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+      font-size: 12px;
+      line-height: 1.22;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    > div:last-child {
+      justify-self: start;
+    }
+  }
+
+  .heroMetaItem,
+  .heroMetaStrong {
+    display: block;
+  }
+
+  .heroMetaDot {
+    display: none;
+  }
+
+  .greetingLink {
+    justify-content: flex-start;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .scheduleStage {
+    gap: 14px;
+  }
+
+  .stageTag {
+    min-height: 29px;
+    padding: 0 19px;
+    border-radius: 8px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    box-shadow: 0 7px 14px rgba(42, 101, 126, 0.1);
+  }
+
   .stageLayout {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    display: block;
   }
 
   .sideColumn,
@@ -423,5 +497,127 @@
 
   .todayColumn {
     order: initial;
+    gap: 12px;
+  }
+
+  .sectionTitle {
+    font-size: 22px !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  .insightsSection,
+  .changesSection {
+    gap: 14px;
+  }
+
+  .insightsCard {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px 16px;
+    padding: 24px 22px 22px;
+    border-radius: 5px;
+    box-shadow: 0 12px 26px rgba(146, 164, 183, 0.1);
+  }
+
+  .primaryStat,
+  .secondaryStat {
+    justify-content: flex-start;
+  }
+
+  .secondaryStat {
+    padding-left: 0;
+    border-left: none;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .primaryScore {
+    font-size: 33px;
+    line-height: 0.95;
+  }
+
+  .primaryLabel {
+    margin-top: 5px;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  .primaryLink {
+    margin-top: 18px;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .secondaryValue {
+    margin-top: 7px;
+    font-size: 17px;
+    line-height: 1;
+  }
+
+  .secondaryLabel {
+    margin-top: 5px;
+    font-size: 9px;
+    line-height: 1.2;
+  }
+
+  .subjectScores {
+    grid-column: 1 / -1;
+    gap: 17px;
+    padding: 20px 0 0;
+    border-left: none;
+    border-top: 1px solid rgba(151, 169, 189, 0.24);
+  }
+
+  .subjectScoreRow {
+    gap: 14px;
+    font-size: 13px;
+
+    strong {
+      font-size: 13px;
+    }
+  }
+
+  .changesCard {
+    padding: 0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .changeItem {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 14px 12px;
+  }
+
+  .changeIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+
+    svg {
+      font-size: 17px !important;
+    }
+  }
+
+  .changeTitle {
+    font-size: 11px;
+    line-height: 1.22;
+  }
+
+  .changeSubtitle {
+    font-size: 9px;
+    line-height: 1.25;
+  }
+
+  .changeTime {
+    grid-column: auto;
+    align-self: center;
+    font-size: 8px;
+    line-height: 1.15;
+    text-align: right;
+    white-space: normal;
+    max-width: 42px;
   }
 }

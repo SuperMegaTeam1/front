@@ -12,7 +12,7 @@ import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { LessonCard, type LessonCardProps } from '@/components/shared/LessonCard/LessonCard';
-import { PageHero } from '@/components/ui';
+import { PageHero, ScheduleCard } from '@/components/ui';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
 import { useWeekSchedule } from '@/lib/hooks/useSchedule';
 import type { ScheduleLessonResult, WeekScheduleResult } from '@/lib/api/types';
@@ -176,6 +176,19 @@ function getStageTag(index: number, todayIndex: number, date: string) {
   return `РАСПИСАНИЕ НА ${getWeekDay(date).toUpperCase()}`;
 }
 
+function parseLessonMeta(meta?: string) {
+  if (!meta) {
+    return {};
+  }
+
+  const [lessonType, teacherName] = meta.split(' • ');
+
+  return {
+    lessonType,
+    teacherName,
+  };
+}
+
 function EmptyDay({
   isCompact = false,
   title = 'Пар нет',
@@ -252,14 +265,15 @@ export default function StudentHomePage() {
     <div className={styles.page}>
       <div className={styles.container}>
         <PageHero
+          className={styles.homeHero}
           title={`Добрый день, ${firstName}`}
           meta={
             <>
-              <span>{currentWeekDay}, {currentDateStr}</span>
-              <span>·</span>
-              <span>Неделя {weekNumber}</span>
-              <span>·</span>
-              <strong style={{ color: '#2a657e' }}>
+              <span className={styles.heroMetaItem}>{currentWeekDay}, {currentDateStr}</span>
+              <span className={styles.heroMetaDot}>·</span>
+              <span className={styles.heroMetaItem}>Неделя {weekNumber}</span>
+              <span className={styles.heroMetaDot}>·</span>
+              <strong className={styles.heroMetaStrong}>
                 {lessonsCountLabel} {currentDayLabel.toLowerCase()}
               </strong>
             </>
@@ -308,9 +322,21 @@ export default function StudentHomePage() {
               ) : weekScheduleError ? (
                 <EmptyDay title="Не удалось загрузить расписание" />
               ) : currentDay.lessons.length > 0 ? (
-                currentDay.lessons.map((lesson) => (
-                  <LessonCard key={lesson.id} {...lesson} variant="hero" />
-                ))
+                currentDay.lessons.map((lesson) => {
+                  const { lessonType, teacherName } = parseLessonMeta(lesson.meta);
+
+                  return (
+                    <ScheduleCard
+                      key={lesson.id}
+                      startTime={lesson.startTime}
+                      endTime={lesson.endTime}
+                      subjectName={lesson.subjectName}
+                      lessonType={lessonType}
+                      teacherName={teacherName}
+                      room={lesson.room}
+                    />
+                  );
+                })
               ) : (
                 <EmptyDay />
               )}

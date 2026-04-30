@@ -10,8 +10,7 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useNotificationStore } from '@/stores/useNotificationStore';
-import { HeaderStudentMobile } from './HeaderStudentMobile';
-import styles from './HeaderStudent.module.scss';
+import styles from './HeaderStudentMobile.module.scss';
 
 const HOME_PATH = '/student/home';
 const SCHEDULE_PATH = '/student/schedule';
@@ -19,7 +18,7 @@ const RATING_PATH = '/student/rating';
 const NOTIFICATIONS_PATH = '/student/notifications';
 const PROFILE_PATH = '/student/profile';
 
-export function HeaderStudent() {
+export function HeaderStudentMobile() {
   const { user } = useAuthStore();
   const { unreadCount } = useNotificationStore();
   const pathname = usePathname();
@@ -27,6 +26,7 @@ export function HeaderStudent() {
   const avatarLabel = user
     ? `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.trim()
     : 'МИ';
+
   const isHomePage = pathname === HOME_PATH;
   const isSchedulePage = pathname === SCHEDULE_PATH;
   const isRatingPage = pathname === RATING_PATH;
@@ -35,63 +35,30 @@ export function HeaderStudent() {
 
   return (
     <>
-    <header className={styles.root}>
-      <div className={styles.inner}>
+      <header className={styles.topBar}>
         <Link href={HOME_PATH} className={styles.logo}>
-          Мой ИВМиИТ
+          Мой
+          <span>ИВМиИТ</span>
         </Link>
-
-        <nav className={styles.nav} aria-label="Основная навигация студента">
-          <Link
-            href={HOME_PATH}
-            className={`${styles.navIconLink} ${isHomePage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
-            aria-label="Главная"
-            aria-current={isHomePage ? 'page' : undefined}
-          >
-            <HomeRoundedIcon sx={{ fontSize: 28 }} />
-            {isHomePage && <span className={styles.navText}>Главная</span>}
-          </Link>
-
-          <Link
-            href={SCHEDULE_PATH}
-            className={`${styles.navIconLink} ${isSchedulePage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
-            aria-label="Расписание"
-            aria-current={isSchedulePage ? 'page' : undefined}
-          >
-            <CalendarMonthOutlinedIcon sx={{ fontSize: 28 }} />
-            {isSchedulePage && <span className={styles.navText}>Расписание</span>}
-          </Link>
-
-          <Link
-            href={RATING_PATH}
-            className={`${styles.navIconLink} ${isRatingPage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
-            aria-label="Рейтинг"
-            aria-current={isRatingPage ? 'page' : undefined}
-          >
-            <BarChartRoundedIcon sx={{ fontSize: 28 }} />
-            {isRatingPage && <span className={styles.navText}>Рейтинг</span>}
-          </Link>
-        </nav>
 
         <div className={styles.actions}>
           <button type="button" className={styles.actionButton} aria-label="Сменить тему">
-            <DarkModeOutlinedIcon sx={{ fontSize: 28 }} />
+            <DarkModeOutlinedIcon sx={{ fontSize: 21 }} />
           </button>
 
           <Link
             href={NOTIFICATIONS_PATH}
-            className={`${styles.actionButton} ${isNotificationsPage ? `${styles.actionButtonActive} ${styles.actionButtonExpanded}` : ''}`}
+            className={`${styles.actionButton} ${isNotificationsPage ? styles.actionButtonActive : ''}`}
             aria-label="Уведомления"
             aria-current={isNotificationsPage ? 'page' : undefined}
           >
             <Badge
               badgeContent={unreadCount || null}
               color="error"
-              sx={{ '& .MuiBadge-badge': { fontSize: '10px', minWidth: '16px', height: '16px' } }}
+              sx={{ '& .MuiBadge-badge': { fontSize: '8px', minWidth: '13px', height: '13px' } }}
             >
-              <NotificationsNoneOutlinedIcon sx={{ fontSize: 28 }} />
+              <NotificationsNoneOutlinedIcon sx={{ fontSize: 21 }} />
             </Badge>
-            {isNotificationsPage && <span className={styles.actionText}>Уведомления</span>}
           </Link>
 
           <Avatar
@@ -101,23 +68,49 @@ export function HeaderStudent() {
             className={`${styles.profileAvatar} ${isProfilePage ? styles.profileAvatarActive : ''}`}
             sx={{
               bgcolor: '#201b2d',
-              width: 62,
-              height: 62,
-              fontSize: '20px',
-              fontWeight: 700,
+              width: 28,
+              height: 44,
+              fontSize: '11px',
+              fontWeight: 800,
               cursor: 'pointer',
               textDecoration: 'none',
-              borderRadius: '14px',
+              borderRadius: '7px',
             }}
             aria-current={isProfilePage ? 'page' : undefined}
           >
             {avatarLabel}
           </Avatar>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <HeaderStudentMobile />
+      <nav className={styles.bottomNav} aria-label="Мобильная навигация студента">
+        <Link
+          href={HOME_PATH}
+          className={`${styles.bottomLink} ${isHomePage ? styles.bottomLinkActive : ''}`}
+          aria-current={isHomePage ? 'page' : undefined}
+        >
+          <HomeRoundedIcon sx={{ fontSize: 21 }} />
+          <span>Главная</span>
+        </Link>
+
+        <Link
+          href={SCHEDULE_PATH}
+          className={`${styles.bottomLink} ${isSchedulePage ? styles.bottomLinkActive : ''}`}
+          aria-current={isSchedulePage ? 'page' : undefined}
+        >
+          <CalendarMonthOutlinedIcon sx={{ fontSize: 21 }} />
+          <span>Расписание</span>
+        </Link>
+
+        <Link
+          href={RATING_PATH}
+          className={`${styles.bottomLink} ${isRatingPage ? styles.bottomLinkActive : ''}`}
+          aria-current={isRatingPage ? 'page' : undefined}
+        >
+          <BarChartRoundedIcon sx={{ fontSize: 21 }} />
+          <span>Баллы</span>
+        </Link>
+      </nav>
     </>
   );
 }

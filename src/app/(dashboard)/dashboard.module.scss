@@ -16,12 +16,18 @@
   display: none;
 }
 
+.studentMobileNavSpacer {
+  display: none;
+}
+
 @include tablet {
-  .teacherMain {
+  .teacherMain,
+  .studentMain {
     padding-bottom: 12px;
   }
 
-  .teacherMobileNavSpacer {
+  .teacherMobileNavSpacer,
+  .studentMobileNavSpacer {
     display: block;
     min-height: calc(68px + env(safe-area-inset-bottom));
     background: $color-surface;
