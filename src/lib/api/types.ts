@@ -52,9 +52,15 @@ export interface ScheduleLessonResult {
 export interface TodayScheduleResult {
   date: string;
   dayName: string;
-  weekNumber: number;
-  lessonsWeek: number;
+  weekNumber: number | null;
+  lessonsWeek: number | null;
   items: ScheduleLessonResult[] | null;
+}
+
+export interface WeekScheduleResult {
+  dateStart: string;
+  dateEnd: string;
+  items: TodayScheduleResult[];
 }
 
 export interface TopStudentDto {

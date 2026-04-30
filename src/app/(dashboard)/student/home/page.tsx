@@ -14,31 +14,18 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { LessonCard, type LessonCardProps } from '@/components/shared/LessonCard/LessonCard';
 import { PageHero } from '@/components/ui';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
-import { buildWeek, WEEK_BASE_NUMBER } from '../schedule/scheduleData';
+import { useWeekSchedule } from '@/lib/hooks/useSchedule';
+import type { ScheduleLessonResult, WeekScheduleResult } from '@/lib/api/types';
 import styles from './home.module.scss';
 
 type HomeLesson = LessonCardProps & {
-  id: number;
+  id: string;
 };
 
 type HomeScheduleDay = {
   date: string;
   lessons: HomeLesson[];
 };
-
-const TODAY_INDEX = 1;
-
-const MOCK_DAYS: HomeScheduleDay[] = buildWeek(0).map((day) => ({
-  date: day.date,
-  lessons: day.lessons.map((lesson) => ({
-    id: lesson.id,
-    startTime: lesson.startTime,
-    endTime: lesson.endTime,
-    subjectName: lesson.subjectName,
-    meta: `${lesson.lessonType} • ${lesson.teacherName}`,
-    room: lesson.room,
-  })),
-}));
 
 const MOCK_GRADES = [
   { subject: 'Базы данных', score: 82 },
@@ -77,7 +64,85 @@ const MOCK_NOTIFICATIONS = [
   },
 ];
 
-function getRelativeDayLabel(offset: number) {
+function getLocalIsoDate(date = new Date()) {
+  const timezoneOffset = date.getTimezoneOffset() * 60_000;
+  return new Date(date.getTime() - timezoneOffset).toISOString().slice(0, 10);
+}
+
+function parseIsoDate(dateStr: string) {
+  return new Date(`${dateStr}T12:00:00`);
+}
+
+function toIsoDate(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function shiftIsoDate(dateStr: string, days: number) {
+  const date = parseIsoDate(dateStr);
+  date.setDate(date.getDate() + days);
+  return toIsoDate(date);
+}
+
+function getWeekStart(dateStr: string) {
+  const date = parseIsoDate(dateStr);
+  const day = date.getDay() || 7;
+  date.setDate(date.getDate() - day + 1);
+  return toIsoDate(date);
+}
+
+function buildEmptyWeek(anchorDate: string): HomeScheduleDay[] {
+  const monday = getWeekStart(anchorDate);
+
+  return Array.from({ length: 6 }, (_, index) => ({
+    date: shiftIsoDate(monday, index),
+    lessons: [],
+  }));
+}
+
+function getIsoWeekNumber(dateStr: string) {
+  const date = parseIsoDate(dateStr);
+  const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNumber = target.getUTCDay() || 7;
+
+  target.setUTCDate(target.getUTCDate() + 4 - dayNumber);
+
+  const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
+
+  return Math.ceil((((target.getTime() - yearStart.getTime()) / 86_400_000) + 1) / 7);
+}
+
+function formatTeacherName(lesson: ScheduleLessonResult) {
+  return [lesson.teacherLastName, lesson.teacherFirstName, lesson.teacherFatherName]
+    .filter(Boolean)
+    .join(' ');
+}
+
+function sortLessons(lessons: ScheduleLessonResult[] | null | undefined) {
+  return (lessons ?? []).slice().sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+}
+
+function mapLessonToHomeLesson(lesson: ScheduleLessonResult): HomeLesson {
+  const teacherName = formatTeacherName(lesson);
+  const meta = [lesson.type, teacherName].filter(Boolean).join(' • ');
+
+  return {
+    id: lesson.lessonsId,
+    startTime: lesson.startsAt,
+    endTime: lesson.endsAt,
+    subjectName: lesson.subjectName,
+    meta: meta || undefined,
+    room: lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined,
+  };
+}
+
+function mapWeekSchedule(schedule?: WeekScheduleResult): HomeScheduleDay[] {
+  return (schedule?.items ?? []).map((day) => ({
+    date: day.date,
+    lessons: sortLessons(day.items).map(mapLessonToHomeLesson),
+  }));
+}
+
+function getRelativeDayLabel(offset: number, fallbackDate: string) {
   if (offset === 0) {
     return 'Сегодня';
   }
@@ -90,11 +155,11 @@ function getRelativeDayLabel(offset: number) {
     return 'Завтра';
   }
 
-  return getWeekDay(MOCK_DAYS[TODAY_INDEX + offset]?.date ?? MOCK_DAYS[TODAY_INDEX].date);
+  return getWeekDay(fallbackDate);
 }
 
-function getStageTag(index: number) {
-  const offset = index - TODAY_INDEX;
+function getStageTag(index: number, todayIndex: number, date: string) {
+  const offset = index - todayIndex;
 
   if (offset === 0) {
     return 'ПАРЫ СЕГОДНЯ';
@@ -108,36 +173,68 @@ function getStageTag(index: number) {
     return 'ПАРЫ ЗАВТРА';
   }
 
-  return `РАСПИСАНИЕ НА ${getWeekDay(MOCK_DAYS[index].date).toUpperCase()}`;
+  return `РАСПИСАНИЕ НА ${getWeekDay(date).toUpperCase()}`;
 }
 
-function EmptyDay({ isCompact = false }: { isCompact?: boolean }) {
+function EmptyDay({
+  isCompact = false,
+  title = 'Пар нет',
+}: {
+  isCompact?: boolean;
+  title?: string;
+}) {
   return (
     <div className={isCompact ? styles.emptyPreview : styles.emptyState}>
-      <span>Пар нет</span>
+      <span>{title}</span>
     </div>
   );
 }
 
 export default function StudentHomePage() {
   const { user } = useAuthStore();
-  const [currentDayIndex, setCurrentDayIndex] = useState(TODAY_INDEX);
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
+  const todayDate = getLocalIsoDate();
 
-  const currentDay = MOCK_DAYS[currentDayIndex];
-  const previousDay = MOCK_DAYS[currentDayIndex - 1];
-  const nextDay = MOCK_DAYS[currentDayIndex + 1];
+  const {
+    data: weekSchedule,
+    isLoading: isWeekScheduleLoading,
+    error: weekScheduleError,
+  } = useWeekSchedule(todayDate);
+
+  const weekDays = useMemo(() => {
+    const backendDays = mapWeekSchedule(weekSchedule);
+
+    return backendDays.length > 0 ? backendDays : buildEmptyWeek(todayDate);
+  }, [todayDate, weekSchedule]);
+
+  const todayIndex = Math.max(0, weekDays.findIndex((day) => day.date === todayDate));
+  const currentDayIndex = Math.min(
+    selectedDayIndex ?? todayIndex,
+    Math.max(weekDays.length - 1, 0)
+  );
+  const currentDay = weekDays[currentDayIndex];
+  const previousDay = weekDays[currentDayIndex - 1];
+  const nextDay = weekDays[currentDayIndex + 1];
 
   const currentDateStr = formatDateFull(currentDay.date);
   const currentWeekDay = getWeekDay(currentDay.date);
-  const currentDayLabel = getRelativeDayLabel(currentDayIndex - TODAY_INDEX);
+  const currentDayLabel = getRelativeDayLabel(currentDayIndex - todayIndex, currentDay.date);
   const avgScore = 74.2;
   const ratingPos = 12;
   const totalStudents = 87;
   const groupName = (user as { groupName?: string })?.groupName ?? '09-411';
   const firstName = user?.firstName ?? 'Тимур';
-  const weekNumber = WEEK_BASE_NUMBER;
+  const weekNumber = getIsoWeekNumber(currentDay.date);
 
   const lessonsCountLabel = useMemo(() => {
+    if (isWeekScheduleLoading) {
+      return 'загружаем расписание';
+    }
+
+    if (weekScheduleError) {
+      return 'расписание недоступно';
+    }
+
     const count = currentDay.lessons.length;
 
     if (count === 1) {
@@ -149,7 +246,7 @@ export default function StudentHomePage() {
     }
 
     return `${count} занятий`;
-  }, [currentDay.lessons.length]);
+  }, [currentDay.lessons.length, isWeekScheduleLoading, weekScheduleError]);
 
   return (
     <div className={styles.page}>
@@ -175,13 +272,15 @@ export default function StudentHomePage() {
         />
 
         <section id="schedule" className={styles.scheduleStage}>
-          <div className={styles.stageTag}>{getStageTag(currentDayIndex)}</div>
+          <div className={styles.stageTag}>{getStageTag(currentDayIndex, todayIndex, currentDay.date)}</div>
 
           <div className={styles.stageLayout}>
             <div className={`${styles.sideColumn} ${styles.sideColumnLeft}`}>
               {previousDay ? (
                 <>
-                  <div className={styles.sideLabel}>{getRelativeDayLabel(currentDayIndex - TODAY_INDEX - 1).toUpperCase()}</div>
+                  <div className={styles.sideLabel}>
+                    {getRelativeDayLabel(currentDayIndex - todayIndex - 1, previousDay.date).toUpperCase()}
+                  </div>
                   {previousDay.lessons.length > 0 ? (
                     previousDay.lessons.map((lesson) => (
                       <LessonCard key={lesson.id} {...lesson} variant="preview" />
@@ -197,14 +296,18 @@ export default function StudentHomePage() {
               type="button"
               className={styles.arrowButton}
               aria-label="Показать предыдущий день"
-              onClick={() => setCurrentDayIndex((index) => Math.max(0, index - 1))}
+              onClick={() => setSelectedDayIndex((index) => Math.max(0, (index ?? currentDayIndex) - 1))}
               disabled={currentDayIndex === 0}
             >
               <ChevronLeftRoundedIcon sx={{ fontSize: 26 }} />
             </button>
 
             <div className={styles.todayColumn}>
-              {currentDay.lessons.length > 0 ? (
+              {isWeekScheduleLoading ? (
+                <EmptyDay title="Загружаем расписание" />
+              ) : weekScheduleError ? (
+                <EmptyDay title="Не удалось загрузить расписание" />
+              ) : currentDay.lessons.length > 0 ? (
                 currentDay.lessons.map((lesson) => (
                   <LessonCard key={lesson.id} {...lesson} variant="hero" />
                 ))
@@ -217,8 +320,8 @@ export default function StudentHomePage() {
               type="button"
               className={styles.arrowButton}
               aria-label="Показать следующий день"
-              onClick={() => setCurrentDayIndex((index) => Math.min(MOCK_DAYS.length - 1, index + 1))}
-              disabled={currentDayIndex === MOCK_DAYS.length - 1}
+              onClick={() => setSelectedDayIndex((index) => Math.min(weekDays.length - 1, (index ?? currentDayIndex) + 1))}
+              disabled={currentDayIndex === weekDays.length - 1}
             >
               <ChevronRightRoundedIcon sx={{ fontSize: 26 }} />
             </button>
@@ -226,7 +329,9 @@ export default function StudentHomePage() {
             <div className={`${styles.sideColumn} ${styles.sideColumnRight}`}>
               {nextDay ? (
                 <>
-                  <div className={styles.sideLabel}>{getRelativeDayLabel(currentDayIndex - TODAY_INDEX + 1).toUpperCase()}</div>
+                  <div className={styles.sideLabel}>
+                    {getRelativeDayLabel(currentDayIndex - todayIndex + 1, nextDay.date).toUpperCase()}
+                  </div>
                   {nextDay.lessons.length > 0 ? (
                     nextDay.lessons.map((lesson) => (
                       <LessonCard key={lesson.id} {...lesson} variant="preview" />

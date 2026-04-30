@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getTodaySchedule } from '@/lib/api/schedule.api';
+import { getTodaySchedule, getWeekSchedule } from '@/lib/api/schedule.api';
 
 export function useDaySchedule(date: string) {
   return useQuery({
@@ -11,12 +11,10 @@ export function useDaySchedule(date: string) {
   });
 }
 
-export function useWeekSchedule(date: string) {
+export function useWeekSchedule(date: string, shouldFetch = true) {
   return useQuery({
     queryKey: ['schedule', 'week', date],
-    queryFn: async () => {
-      throw new Error('Бэк пока не отдает расписание на неделю. Сейчас доступен только /schedule/today.');
-    },
-    enabled: false,
+    queryFn: () => getWeekSchedule(date).then((res) => res.data),
+    enabled: shouldFetch && !!date,
   });
 }

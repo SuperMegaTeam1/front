@@ -1,5 +1,5 @@
 import api from './axios';
-import type { TodayScheduleResult } from './types';
+import type { TodayScheduleResult, WeekScheduleResult } from './types';
 
 export function getTodaySchedule(date?: string) {
   return api.get<TodayScheduleResult>('/schedule/today', {
@@ -8,3 +8,9 @@ export function getTodaySchedule(date?: string) {
 }
 
 export const getScheduleByDate = getTodaySchedule;
+
+export function getWeekSchedule(date?: string) {
+  return api.get<WeekScheduleResult>('/schedule/week', {
+    params: date ? { date } : undefined,
+  });
+}

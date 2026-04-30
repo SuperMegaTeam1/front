@@ -6,13 +6,16 @@ import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import { useRouter } from 'next/navigation';
 import { PageHero, ViewSwitch, ScheduleCard, DayDivider, EmptyDayState } from '@/components/ui';
-import { useDaySchedule } from '@/lib/hooks/useSchedule';
-import type { ScheduleLessonResult } from '@/lib/api/types';
-import type { DaySchedule } from './scheduleData';
-import { buildWeek, parseIsoDate, WEEK_BASE_NUMBER } from './scheduleData';
+import { useDaySchedule, useWeekSchedule } from '@/lib/hooks/useSchedule';
+import type { ScheduleLessonResult, WeekScheduleResult } from '@/lib/api/types';
 import styles from './schedule.module.scss';
 
 type ScheduleView = 'today' | 'week';
+
+type WeekDaySchedule = {
+  date: string;
+  lessons: ScheduleLessonResult[];
+};
 
 const VIEW_OPTIONS: Array<{ value: ScheduleView; label: string }> = [
   { value: 'today', label: 'Сегодня' },
@@ -22,6 +25,48 @@ const VIEW_OPTIONS: Array<{ value: ScheduleView; label: string }> = [
 function getLocalIsoDate(date = new Date()) {
   const timezoneOffset = date.getTimezoneOffset() * 60_000;
   return new Date(date.getTime() - timezoneOffset).toISOString().slice(0, 10);
+}
+
+function parseIsoDate(dateStr: string) {
+  return new Date(`${dateStr}T12:00:00`);
+}
+
+function toIsoDate(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function shiftIsoDate(dateStr: string, days: number) {
+  const date = parseIsoDate(dateStr);
+  date.setDate(date.getDate() + days);
+  return toIsoDate(date);
+}
+
+function getWeekStart(dateStr: string) {
+  const date = parseIsoDate(dateStr);
+  const day = date.getDay() || 7;
+  date.setDate(date.getDate() - day + 1);
+  return toIsoDate(date);
+}
+
+function buildEmptyWeek(anchorDate: string): WeekDaySchedule[] {
+  const monday = getWeekStart(anchorDate);
+
+  return Array.from({ length: 6 }, (_, index) => ({
+    date: shiftIsoDate(monday, index),
+    lessons: [],
+  }));
+}
+
+function getIsoWeekNumber(dateStr: string) {
+  const date = parseIsoDate(dateStr);
+  const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNumber = target.getUTCDay() || 7;
+
+  target.setUTCDate(target.getUTCDate() + 4 - dayNumber);
+
+  const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
+
+  return Math.ceil((((target.getTime() - yearStart.getTime()) / 86_400_000) + 1) / 7);
 }
 
 function formatHeadlineDate(dateStr: string) {
@@ -38,14 +83,19 @@ function formatDayTitle(dateStr: string) {
   return `${weekday}, ${dayAndMonth}`.toUpperCase();
 }
 
-function formatWeekRange(days: DaySchedule[]) {
+function formatWeekRange(days: WeekDaySchedule[]) {
   const start = parseIsoDate(days[0].date);
-  const end = parseIsoDate(days[0].date);
-  end.setDate(end.getDate() + 6);
+  const end = parseIsoDate(days[days.length - 1].date);
   const startDay = start.getDate();
   const endDay = end.getDate();
-  const monthName = new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(end);
-  return `${startDay}–${endDay} ${monthName}`;
+  const startMonth = new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(start);
+  const endMonth = new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(end);
+
+  if (startMonth === endMonth) {
+    return `${startDay}-${endDay} ${endMonth}`;
+  }
+
+  return `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
 }
 
 function formatTeacherName(lesson: ScheduleLessonResult) {
@@ -54,11 +104,23 @@ function formatTeacherName(lesson: ScheduleLessonResult) {
     .join(' ');
 }
 
+function sortLessons(lessons: ScheduleLessonResult[] | null | undefined) {
+  return (lessons ?? []).slice().sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+}
+
+function mapWeekSchedule(schedule?: WeekScheduleResult): WeekDaySchedule[] {
+  return (schedule?.items ?? []).map((day) => ({
+    date: day.date,
+    lessons: sortLessons(day.items),
+  }));
+}
+
 export default function StudentSchedulePage() {
   const router = useRouter();
   const [view, setView] = useState<ScheduleView>('today');
   const [weekOffset, setWeekOffset] = useState(0);
   const todayDate = getLocalIsoDate();
+  const weekAnchorDate = useMemo(() => shiftIsoDate(todayDate, weekOffset * 7), [todayDate, weekOffset]);
 
   const {
     data: todaySchedule,
@@ -66,13 +128,22 @@ export default function StudentSchedulePage() {
     error: todayScheduleError,
   } = useDaySchedule(todayDate);
 
+  const {
+    data: weekSchedule,
+    isLoading: isWeekScheduleLoading,
+    error: weekScheduleError,
+  } = useWeekSchedule(weekAnchorDate, view === 'week');
+
   const todayLessons = useMemo(
-    () => (todaySchedule?.items ?? []).slice().sort((a, b) => a.startsAt.localeCompare(b.startsAt)),
+    () => sortLessons(todaySchedule?.items),
     [todaySchedule?.items]
   );
 
-  const weekDays = useMemo(() => buildWeek(weekOffset), [weekOffset]);
-  const weekNumber = todaySchedule?.weekNumber ?? WEEK_BASE_NUMBER + weekOffset;
+  const weekDays = useMemo(() => mapWeekSchedule(weekSchedule), [weekSchedule]);
+  const displayWeekDays = weekDays.length > 0 ? weekDays : buildEmptyWeek(weekAnchorDate);
+  const weekNumber = weekOffset === 0 && todaySchedule?.weekNumber
+    ? todaySchedule.weekNumber
+    : getIsoWeekNumber(weekAnchorDate);
   const isEvenWeek = weekNumber % 2 === 0;
   const headlineDate = todaySchedule?.date ?? todayDate;
 
@@ -86,7 +157,7 @@ export default function StudentSchedulePage() {
       <strong style={{ color: '#2a657e' }}>{isEvenWeek ? 'ЧЕТНАЯ НЕДЕЛЯ' : 'НЕЧЕТНАЯ НЕДЕЛЯ'}</strong>
       <span>·</span>
       <CalendarTodayOutlinedIcon sx={{ fontSize: 14 }} />
-      <span>{formatWeekRange(weekDays).toUpperCase()}</span>
+      <span>{formatWeekRange(displayWeekDays).toUpperCase()}</span>
     </>
   );
 
@@ -147,30 +218,36 @@ export default function StudentSchedulePage() {
           </section>
         ) : (
           <section className={styles.weekList} aria-label="Расписание на неделю">
-            {weekDays.map((day) => (
-              <div key={day.date} className={styles.weekDay}>
-                <DayDivider label={formatDayTitle(day.date)} />
-                {day.lessons.length > 0 ? (
-                  <div className={styles.dayLessons}>
-                    {day.lessons.map((lesson) => (
-                      <ScheduleCard
-                        key={lesson.id}
-                        startTime={lesson.startTime}
-                        endTime={lesson.endTime}
-                        subjectName={lesson.subjectName}
-                        lessonType={lesson.lessonType}
-                        room={lesson.room}
-                        teacherName={lesson.teacherName}
-                        onMore={() => router.push(`/student/subjects/${lesson.subjectId}`)}
-                        moreLabel={`Перейти к ${lesson.subjectName}`}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <EmptyDayState />
-                )}
-              </div>
-            ))}
+            {isWeekScheduleLoading ? (
+              <EmptyDayState title="Загружаем неделю" subtitle="Получаем расписание с бэка" />
+            ) : weekScheduleError ? (
+              <EmptyDayState title="Не удалось загрузить неделю" subtitle="Проверьте запуск бэка и авторизацию" />
+            ) : (
+              displayWeekDays.map((day) => (
+                <div key={day.date} className={styles.weekDay}>
+                  <DayDivider label={formatDayTitle(day.date)} />
+                  {day.lessons.length > 0 ? (
+                    <div className={styles.dayLessons}>
+                      {day.lessons.map((lesson) => (
+                        <ScheduleCard
+                          key={lesson.lessonsId}
+                          startTime={lesson.startsAt}
+                          endTime={lesson.endsAt}
+                          subjectName={lesson.subjectName}
+                          lessonType={lesson.type ?? undefined}
+                          room={lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined}
+                          teacherName={formatTeacherName(lesson)}
+                          onMore={() => router.push(`/student/subjects/${lesson.subjectId}`)}
+                          moreLabel={`Перейти к ${lesson.subjectName}`}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <EmptyDayState />
+                  )}
+                </div>
+              ))
+            )}
           </section>
         )}
       </div>

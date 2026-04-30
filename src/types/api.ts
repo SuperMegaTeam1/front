@@ -9,6 +9,7 @@ export type {
   StudentRatingResponse,
   TodayScheduleResult,
   TopStudentDto,
+  WeekScheduleResult,
 } from '@/lib/api/types';
 
 /**
