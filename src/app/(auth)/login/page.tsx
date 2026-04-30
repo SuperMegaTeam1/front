@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { TextField, Button, Typography, Link as MuiLink } from '@mui/material';
+import { TextField, Button, Typography } from '@mui/material';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { useAuth } from '@/lib/hooks/useAuth';
 import type { LoginPayload } from '@/types/api';
@@ -130,9 +130,6 @@ export default function LoginPage() {
           </Typography>
         </div>
 
-        <MuiLink href="#" className={styles.forgotLink} underline="hover">
-          Забыли пароль?
-        </MuiLink>
       </div>
     </div>
   );
