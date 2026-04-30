@@ -65,6 +65,10 @@
   }
 }
 
+.heroMetaStrong {
+  color: $color-brand;
+}
+
 .metaDot {
   color: #b1bfd0;
 }
@@ -210,30 +214,145 @@
     gap: 42px;
   }
 
-  .stageLayout {
-    grid-template-columns: 1fr;
-    gap: 18px;
+  .homeHero {
+    align-items: start;
+
+    > div:first-child > div {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
   }
 
-  .sideColumn {
-    order: 2;
-    opacity: 1;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
+  .heroMetaItem,
+  .heroMetaStrong {
+    display: block;
+  }
+
+  .heroMetaDot {
+    display: none;
+  }
+
+  .scheduleStage {
+    gap: 20px;
+  }
+
+  .stageLayout {
+    display: block;
+  }
+
+  .sideColumn,
+  .arrowButton {
+    display: none;
   }
 
   .todayColumn {
-    order: 1;
-  }
-
-  .arrowButton {
-    width: 56px;
-    height: 56px;
-    justify-self: center;
+    gap: 14px;
   }
 
   .subjectsGrid {
     grid-template-columns: 1fr;
+  }
+}
+
+@include mobile {
+  .page {
+    min-height: calc(100vh - 73px);
+  }
+
+  .container {
+    padding: 18px 20px 28px;
+    gap: 26px;
+  }
+
+  .homeHero {
+    gap: 4px;
+    min-height: 206px;
+    padding: 25px 19px 22px;
+    border-radius: 5px;
+    background: rgba(241, 244, 246, 0.98);
+
+    h1 {
+      max-width: 100%;
+      font-size: 25px;
+      line-height: 1.03;
+      letter-spacing: -0.055em;
+    }
+
+    > div:first-child {
+      gap: 8px;
+    }
+
+    > div:first-child > div {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+      font-size: 12px;
+      line-height: 1.22;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    > div:last-child {
+      justify-self: start;
+    }
+  }
+
+  .greetingLink {
+    justify-content: flex-start;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .scheduleStage {
+    gap: 14px;
+  }
+
+  .stageTag {
+    min-height: 29px;
+    padding: 0 19px;
+    border-radius: 8px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    box-shadow: 0 7px 14px rgba(42, 101, 126, 0.1);
+  }
+
+  .stageLayout {
+    display: block;
+  }
+
+  .sideColumn,
+  .arrowButton {
+    display: none;
+  }
+
+  .todayColumn {
+    gap: 12px;
+  }
+
+  .subjectSection {
+    gap: 14px;
+    margin-top: 6px;
+  }
+
+  .sectionHeader {
+    align-items: center;
+    gap: 12px;
+  }
+
+  .sectionTitle {
+    font-size: 22px !important;
+    letter-spacing: -0.045em !important;
+  }
+
+  .sectionLink {
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .subjectsGrid {
+    gap: 14px;
   }
 }

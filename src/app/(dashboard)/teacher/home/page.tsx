@@ -137,14 +137,15 @@ export default function TeacherSchedulePage() {
     <div className={styles.page}>
       <div className={styles.container}>
         <PageHero
+          className={styles.homeHero}
           title={`Добрый день, ${fullGreeting}`}
           meta={
             <>
-              <span>{todayWeekDay}, {todayDateStr}</span>
-              <span>·</span>
-              <span>Неделя 10</span>
-              <span>·</span>
-              <strong style={{ color: '#2a657e' }}>{todayLessonsCount} занятия сегодня</strong>
+              <span className={styles.heroMetaItem}>{todayWeekDay}, {todayDateStr}</span>
+              <span className={styles.heroMetaDot}>·</span>
+              <span className={styles.heroMetaItem}>Неделя 10</span>
+              <span className={styles.heroMetaDot}>·</span>
+              <strong className={styles.heroMetaStrong}>{todayLessonsCount} занятия сегодня</strong>
             </>
           }
           action={

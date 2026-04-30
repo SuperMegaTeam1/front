@@ -9,11 +9,12 @@ interface PageHeroProps {
   action?: ReactNode;
   center?: ReactNode;
   meta?: ReactNode;
+  className?: string;
 }
 
-export function PageHero({ title, subtitle, action, center, meta }: PageHeroProps) {
+export function PageHero({ title, subtitle, action, center, meta, className }: PageHeroProps) {
   return (
-    <section className={styles.root}>
+    <section className={[styles.root, className].filter(Boolean).join(' ')}>
       <div className={styles.inner}>
         <h1 className={styles.title}>{title}</h1>
         {subtitle && <p className={styles.subtitle}>{subtitle}</p>}

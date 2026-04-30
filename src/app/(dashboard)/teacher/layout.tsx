@@ -11,8 +11,9 @@ export default function TeacherLayout({
   return (
     <AuthGuard allowedRole="teacher">
       <HeaderTeacher />
-      <main className={styles.main}>{children}</main>
+      <main className={`${styles.main} ${styles.teacherMain}`}>{children}</main>
       <Footer />
+      <div className={styles.teacherMobileNavSpacer} aria-hidden="true" />
     </AuthGuard>
   );
 }

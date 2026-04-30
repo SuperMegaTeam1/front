@@ -1,4 +1,5 @@
 @use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
 
 .root {
   min-height: 100vh;
@@ -9,4 +10,20 @@
 .main {
   flex: 1;
   background: $color-bg;
+}
+
+.teacherMobileNavSpacer {
+  display: none;
+}
+
+@include tablet {
+  .teacherMain {
+    padding-bottom: 12px;
+  }
+
+  .teacherMobileNavSpacer {
+    display: block;
+    min-height: calc(68px + env(safe-area-inset-bottom));
+    background: $color-surface;
+  }
 }

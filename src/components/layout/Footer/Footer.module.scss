@@ -196,3 +196,91 @@
     color: $color-brand;
   }
 }
+
+@include mobile {
+  .inner {
+    padding: 32px 20px 28px;
+    gap: 30px;
+  }
+
+  .brand {
+    gap: 12px;
+  }
+
+  .brandTitle {
+    font-size: 20px;
+  }
+
+  .brandSubtitle {
+    font-size: 8px;
+    line-height: 1.25;
+  }
+
+  .brandDesc {
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .brandIcons {
+    gap: 8px;
+    padding-top: 2px;
+  }
+
+  .brandIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 5px;
+  }
+
+  .col {
+    gap: 13px;
+  }
+
+  .colHeading {
+    font-size: 11px;
+  }
+
+  .colList {
+    gap: 12px;
+  }
+
+  .colLink,
+  .contactItem {
+    font-size: 11px;
+  }
+
+  .contactList {
+    gap: 10px;
+  }
+
+  .contactItem {
+    grid-template-columns: 16px 1fr;
+    gap: 7px;
+    line-height: 1.45;
+  }
+
+  .bottomInner {
+    padding: 22px 20px 18px;
+    gap: 13px;
+  }
+
+  .bottomBrand {
+    gap: 9px;
+  }
+
+  .bottomMark {
+    width: 34px;
+    height: 34px;
+    border-radius: 5px;
+  }
+
+  .bottomMarkText,
+  .bottomCopy,
+  .bottomLink {
+    font-size: 10px;
+  }
+
+  .bottomLinks {
+    gap: 18px;
+  }
+}
