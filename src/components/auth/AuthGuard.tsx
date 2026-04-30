@@ -20,9 +20,33 @@ export function AuthGuard({ allowedRole, children }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { accessToken, refreshToken, user, setAuth, logout } = useAuthStore();
+  const [hasHydrated, setHasHydrated] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
+    const persistApi = useAuthStore.persist;
+
+    if (!persistApi) {
+      queueMicrotask(() => setHasHydrated(true));
+      return;
+    }
+
+    const unsubscribe = persistApi.onFinishHydration(() => {
+      setHasHydrated(true);
+    });
+
+    if (persistApi.hasHydrated()) {
+      queueMicrotask(() => setHasHydrated(true));
+    }
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydrated) {
+      return;
+    }
+
     let isMounted = true;
 
     async function checkAuth() {
@@ -59,9 +83,9 @@ export function AuthGuard({ allowedRole, children }: AuthGuardProps) {
     return () => {
       isMounted = false;
     };
-  }, [accessToken, allowedRole, logout, pathname, refreshToken, router, setAuth, user]);
+  }, [accessToken, allowedRole, hasHydrated, logout, pathname, refreshToken, router, setAuth, user]);
 
-  if (isChecking || !accessToken || !user || user.role !== allowedRole) {
+  if (!hasHydrated || isChecking || !accessToken || !user || user.role !== allowedRole) {
     return null;
   }
 
