@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
@@ -11,7 +12,7 @@ import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { LessonCard } from '@/components/shared/LessonCard/LessonCard';
 import { SubjectCard } from '@/components/shared/SubjectCard/SubjectCard';
-import { PageHero } from '@/components/ui';
+import { PageHero, ScheduleCard } from '@/components/ui';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
 import styles from './home.module.scss';
 
@@ -120,7 +121,21 @@ const MOCK_SUBJECTS = [
   },
 ];
 
+function parseLessonMeta(meta?: string) {
+  if (!meta) {
+    return {};
+  }
+
+  const [lessonType, groups] = meta.split(' • ');
+
+  return {
+    lessonType,
+    groups: groups?.replace(/\.$/, ''),
+  };
+}
+
 export default function TeacherSchedulePage() {
+  const router = useRouter();
   const { user } = useAuthStore();
 
   const previousDay = MOCK_DAYS[0];
@@ -171,9 +186,23 @@ export default function TeacherSchedulePage() {
             </button>
 
             <div className={styles.todayColumn}>
-              {today.lessons.map((lesson) => (
-                <LessonCard key={lesson.id} {...lesson} variant="hero" />
-              ))}
+              {today.lessons.map((lesson) => {
+                const { lessonType, groups } = parseLessonMeta(lesson.meta);
+
+                return (
+                  <ScheduleCard
+                    key={lesson.id}
+                    startTime={lesson.startTime}
+                    endTime={lesson.endTime}
+                    subjectName={lesson.subjectName}
+                    lessonType={lessonType}
+                    room={lesson.room}
+                    groups={groups}
+                    onMore={() => router.push(`/teacher/lesson/${lesson.id}`)}
+                    moreLabel={`Открыть занятие: ${lesson.subjectName}`}
+                  />
+                );
+              })}
             </div>
 
             <button type="button" className={styles.arrowButton} aria-label="Следующий день">

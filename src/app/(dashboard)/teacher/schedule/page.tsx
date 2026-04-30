@@ -1,10 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import { PageHero, ViewSwitch, ScheduleCard, DayDivider, EmptyDayState } from '@/components/ui';
+import { PageHero, ViewSwitch, WeekNavigation, ScheduleCard, DayDivider, EmptyDayState } from '@/components/ui';
 import styles from './schedule.module.scss';
 
 type ViewMode = 'today' | 'week';
@@ -90,6 +89,7 @@ const VIEW_OPTIONS: Array<{ value: ViewMode; label: string }> = [
 ];
 
 export default function TeacherSchedulePage() {
+  const router = useRouter();
   const [viewMode, setViewMode] = useState<ViewMode>('today');
   const [selectedWeekIndex, setSelectedWeekIndex] = useState(CURRENT_WEEK_INDEX);
 
@@ -113,29 +113,12 @@ export default function TeacherSchedulePage() {
   );
 
   const heroCenter = !isToday ? (
-    <div className={styles.periodControls}>
-      <button
-        type="button"
-        className={styles.periodButton}
-        onClick={() => setSelectedWeekIndex((i) => Math.max(i - 1, 0))}
-        disabled={!previousWeek}
-        aria-label="Предыдущая неделя"
-      >
-        <ChevronLeftRoundedIcon sx={{ fontSize: 18 }} />
-        Предыдущая
-      </button>
-      <span className={styles.periodDivider} />
-      <button
-        type="button"
-        className={styles.periodButton}
-        onClick={() => setSelectedWeekIndex((i) => Math.min(i + 1, MOCK_WEEKS.length - 1))}
-        disabled={!nextWeek}
-        aria-label="Следующая неделя"
-      >
-        Следующая
-        <ChevronRightRoundedIcon sx={{ fontSize: 18 }} />
-      </button>
-    </div>
+    <WeekNavigation
+      onPrevious={() => setSelectedWeekIndex((i) => Math.max(i - 1, 0))}
+      onNext={() => setSelectedWeekIndex((i) => Math.min(i + 1, MOCK_WEEKS.length - 1))}
+      isPreviousDisabled={!previousWeek}
+      isNextDisabled={!nextWeek}
+    />
   ) : undefined;
 
   const heroAction = <ViewSwitch options={VIEW_OPTIONS} value={viewMode} onChange={setViewMode} />;
@@ -143,7 +126,13 @@ export default function TeacherSchedulePage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <PageHero title="Расписание" meta={heroMeta} center={heroCenter} action={heroAction} />
+        <PageHero
+          className={styles.scheduleHero}
+          title="Расписание"
+          meta={heroMeta}
+          center={heroCenter}
+          action={heroAction}
+        />
 
         {isToday ? (
           <section className={styles.lessonList} aria-label="Расписание на сегодня">
@@ -156,7 +145,7 @@ export default function TeacherSchedulePage() {
                 lessonType={lesson.type}
                 room={lesson.room}
                 groups={lesson.groups}
-                onMore={() => {}}
+                onMore={() => router.push(`/teacher/lesson/${lesson.id}`)}
                 moreLabel={`Действия: ${lesson.title}`}
               />
             ))}
@@ -177,7 +166,7 @@ export default function TeacherSchedulePage() {
                         lessonType={lesson.type}
                         room={lesson.room}
                         groups={lesson.groups}
-                        onMore={() => {}}
+                        onMore={() => router.push(`/teacher/lesson/${lesson.id}`)}
                         moreLabel={`Действия: ${lesson.title}`}
                       />
                     ))}

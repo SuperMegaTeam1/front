@@ -32,43 +32,6 @@
   }
 }
 
-.weekNavigation {
-  display: grid;
-  grid-template-columns: 1fr 1px 1fr;
-  align-items: center;
-  min-height: 48px;
-  border: 1px solid rgba(227, 233, 236, 0.92);
-  border-radius: 10px;
-  background: rgba(248, 249, 250, 0.98);
-  box-shadow: 0 8px 20px rgba(146, 164, 183, 0.08);
-  overflow: hidden;
-}
-
-.navButton {
-  height: 48px;
-  padding: 0 18px;
-  border: none;
-  background: transparent;
-  color: $color-brand;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: background $transition-fast;
-
-  &:hover { background: rgba(191, 232, 255, 0.28); }
-}
-
-.navDivider {
-  height: 28px;
-  background: rgba(151, 169, 189, 0.35);
-}
-
 .lessonList {
   display: flex;
   flex-direction: column;
@@ -100,8 +63,4 @@
     padding-right: 16px;
   }
 
-  .weekNavigation {
-    width: 100%;
-    justify-content: space-between;
-  }
 }

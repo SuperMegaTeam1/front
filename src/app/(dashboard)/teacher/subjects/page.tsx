@@ -75,7 +75,7 @@ export default function TeacherSubjectsPage() {
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <PageHero title="Мои предметы" subtitle="4 семестр" />
+        <PageHero className={styles.subjectsHero} title="Мои предметы" subtitle="4 семестр" />
 
         <section className={styles.subjectsGrid} aria-label="Выбор группы по предмету">
           {SUBJECTS.map((subject) => (

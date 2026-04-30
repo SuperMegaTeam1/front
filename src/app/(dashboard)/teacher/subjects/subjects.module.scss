@@ -210,24 +210,128 @@
 }
 
 @include mobile {
-  .title {
-    font-size: 42px;
+  .page {
+    min-height: calc(100vh - 73px);
   }
 
-  .metaLine {
-    font-size: 13px;
+  .container {
+    padding: 24px 20px 52px;
+    gap: 26px;
+  }
+
+  .subjectsHero {
+    padding: 28px 30px 30px;
+    border: 1px solid rgba(227, 233, 236, 0.94);
+    border-radius: 24px;
+    background: rgba(241, 244, 246, 0.98);
+
+    h1 {
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: -0.045em;
+    }
+
+    p {
+      margin-top: 2px;
+      font-size: 16px;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      text-transform: none;
+    }
+  }
+
+  .subjectsGrid {
+    gap: 28px;
   }
 
   .subjectCard {
-    padding: 28px 22px 30px;
-  }
-
-  .cardTop,
-  .statsRow {
-    grid-template-columns: 1fr;
+    padding: 26px 24px 28px;
+    border-width: 1px;
+    border-color: rgba(155, 173, 196, 0.32);
+    border-radius: 24px;
   }
 
   .cardTop {
-    flex-direction: column;
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 18px;
+  }
+
+  .iconBox {
+    width: 64px;
+    height: 64px;
+    border-radius: 9px;
+
+    svg {
+      font-size: 34px !important;
+    }
+  }
+
+  .semesterBadge {
+    min-width: 114px;
+    min-height: 31px;
+    padding: 0 15px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+
+  .subjectInfo {
+    margin-top: 28px;
+
+    h2 {
+      font-size: 24px;
+      line-height: 1.12;
+      letter-spacing: -0.035em;
+    }
+  }
+
+  .groupsLine {
+    margin-top: 16px;
+    gap: 8px;
+    font-size: 17px;
+    color: #69767f;
+  }
+
+  .divider {
+    height: 1px;
+    margin: 24px 0 20px;
+    background: rgba(155, 173, 196, 0.3);
+  }
+
+  .statsRow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px;
+    margin-bottom: 20px;
+
+    div {
+      gap: 10px;
+    }
+
+    span {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+    }
+
+    strong {
+      font-size: 25px;
+    }
+  }
+
+  .groupLinks {
+    gap: 10px;
+  }
+
+  .groupLink {
+    min-height: 60px;
+    padding: 0 13px 0 15px;
+    border-width: 1px;
+    border-color: rgba(155, 173, 196, 0.45);
+    border-radius: 9px;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+
+    svg {
+      font-size: 30px !important;
+    }
   }
 }

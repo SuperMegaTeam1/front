@@ -57,6 +57,10 @@
   box-shadow: 0 18px 42px rgba(43, 52, 55, 0.14);
 }
 
+.mobileGradebook {
+  display: none;
+}
+
 .tableHeader,
 .tableRow {
   display: grid;
@@ -328,16 +332,273 @@
 }
 
 @include mobile {
-  .header h1 {
-    font-size: 42px;
+  .page {
+    min-height: calc(100vh - 73px);
   }
 
-  .header p {
-    font-size: 22px;
+  .container {
+    padding: 24px 20px 56px;
+    gap: 28px;
+  }
+
+  .gradebookHero {
+    padding: 28px 30px 30px;
+    border-radius: 24px;
+
+    h1 {
+      font-size: 34px;
+      line-height: 1.04;
+      letter-spacing: -0.052em;
+    }
+
+    p {
+      margin-top: 6px;
+      color: $color-brand;
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: -0.02em;
+      text-transform: none;
+    }
+  }
+
+  .desktopGradebook {
+    display: none;
+  }
+
+  .mobileGradebook {
+    display: block;
+    border-radius: 9px;
+    box-shadow: 0 18px 44px rgba(43, 52, 55, 0.18);
+  }
+
+  .mobileTableHeader,
+  .mobileTableRow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) repeat(2, 54px);
+    align-items: center;
+  }
+
+  .mobileTableHeader {
+    min-height: 76px;
+    padding: 0 14px 0 18px;
+    background: $color-surface-alt;
+    color: #334044;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
     line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .mobileStudentHeader {
+    text-align: left;
+  }
+
+  .mobileDateHeader {
+    text-align: center;
+  }
+
+  .mobileTableBody {
+    background: $color-surface;
+  }
+
+  .mobileTableRow {
+    min-height: 98px;
+    padding: 0 14px 0 18px;
+
+    &:not(:last-child) {
+      .mobileMarkSlot {
+        border-bottom: 1px solid rgba(151, 169, 189, 0.25);
+      }
+    }
+  }
+
+  .mobileStudentCell {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mobileStudentName {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    color: #263135;
+    font-family: $font-family-heading;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.16;
+    letter-spacing: -0.025em;
+  }
+
+  .mobileMarkSlot {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
+  }
+
+  .gradeCell {
+    width: 40px;
+    height: 40px;
+    border-radius: 9px;
+    font-size: 20px;
+  }
+
+  .mobilePagination {
+    min-height: 68px;
+    border-top: 1px solid rgba(151, 169, 189, 0.22);
+    background: $color-surface;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .paginationButton,
+  .paginationPage {
+    width: 40px;
+    height: 40px;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-family-heading;
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .paginationButton {
+    border: 2px solid #334044;
+    background: $color-surface;
+    color: #334044;
+    cursor: pointer;
+    transition: border-color $transition-fast, color $transition-fast, transform $transition-fast;
+
+    &:hover:not(:disabled) {
+      border-color: $color-brand;
+      color: $color-brand;
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      border-color: #d1dce2;
+      color: #c3cdd4;
+      cursor: not-allowed;
+    }
+  }
+
+  .paginationPage {
+    border: 2px solid $color-brand-dark;
+    background: $color-brand-dark;
+    color: $color-surface;
+  }
+
+  .actions {
+    justify-content: flex-end;
+    margin-top: -4px;
   }
 
   .sendButton {
-    width: 100%;
+    width: auto;
+    min-width: 210px;
+    height: 58px;
+    padding: 0 18px;
+    border-radius: 8px;
+    gap: 8px;
+    font-size: 18px;
+
+    svg {
+      font-size: 26px !important;
+    }
+  }
+
+  .summaryGrid {
+    gap: 32px;
+    margin-top: 0;
+  }
+
+  .summaryCard {
+    min-height: 174px;
+    padding: 34px 40px;
+    border-radius: 6px;
+
+    h2 {
+      font-size: 24px;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+
+    strong {
+      margin-top: 18px;
+      font-size: 48px;
+    }
+
+    p {
+      display: none;
+    }
+  }
+
+  .progressTrack {
+    margin-top: 32px;
+  }
+
+  .nextLessonCard {
+    min-height: 154px;
+    padding: 32px 28px;
+    gap: 22px;
+
+    p {
+      display: block;
+      margin-top: 8px;
+      color: #657783;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+  }
+
+  .nextLessonIcon {
+    width: 68px;
+    height: 68px;
+  }
+}
+
+@media (max-width: 380px) {
+  .mobileTableHeader,
+  .mobileTableRow {
+    grid-template-columns: minmax(0, 1fr) repeat(2, 50px);
+  }
+
+  .mobileTableHeader,
+  .mobileTableRow {
+    padding-right: 14px;
+    padding-left: 18px;
+  }
+
+  .mobileStudentCell {
+    gap: 10px;
+  }
+
+  .mobileStudentName {
+    font-size: 17px;
+  }
+
+  .gradeCell {
+    width: 38px;
+    height: 38px;
+    font-size: 19px;
+  }
+
+  .sendButton {
+    min-width: 200px;
   }
 }

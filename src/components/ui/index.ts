@@ -1,5 +1,6 @@
 export { PageHero } from './PageHero/PageHero';
 export { ViewSwitch } from './ViewSwitch/ViewSwitch';
+export { WeekNavigation } from './WeekNavigation/WeekNavigation';
 export { DayDivider } from './DayDivider/DayDivider';
 export { EmptyDayState } from './EmptyDayState/EmptyDayState';
 export { ScheduleCard } from './ScheduleCard/ScheduleCard';

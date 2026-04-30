@@ -2,10 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
-import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import { useRouter } from 'next/navigation';
-import { PageHero, ViewSwitch, ScheduleCard, DayDivider, EmptyDayState } from '@/components/ui';
+import { PageHero, ViewSwitch, WeekNavigation, ScheduleCard, DayDivider, EmptyDayState } from '@/components/ui';
 import { useDaySchedule, useWeekSchedule } from '@/lib/hooks/useSchedule';
 import type { ScheduleLessonResult, WeekScheduleResult } from '@/lib/api/types';
 import styles from './schedule.module.scss';
@@ -162,27 +160,10 @@ export default function StudentSchedulePage() {
   );
 
   const heroCenter = view === 'week' ? (
-    <div className={styles.weekNavigation}>
-      <button
-        type="button"
-        className={styles.navButton}
-        onClick={() => setWeekOffset((o) => o - 1)}
-        aria-label="Предыдущая неделя"
-      >
-        <ChevronLeftRoundedIcon sx={{ fontSize: 18 }} />
-        Предыдущая
-      </button>
-      <span className={styles.navDivider} />
-      <button
-        type="button"
-        className={styles.navButton}
-        onClick={() => setWeekOffset((o) => o + 1)}
-        aria-label="Следующая неделя"
-      >
-        Следующая
-        <ChevronRightRoundedIcon sx={{ fontSize: 18 }} />
-      </button>
-    </div>
+    <WeekNavigation
+      onPrevious={() => setWeekOffset((o) => o - 1)}
+      onNext={() => setWeekOffset((o) => o + 1)}
+    />
   ) : undefined;
 
   const heroAction = <ViewSwitch options={VIEW_OPTIONS} value={view} onChange={setView} />;

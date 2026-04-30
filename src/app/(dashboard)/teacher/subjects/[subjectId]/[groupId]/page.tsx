@@ -1,9 +1,15 @@
+'use client';
+
+import { useState } from 'react';
+import { useParams } from 'next/navigation';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
+import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { PageHero } from '@/components/ui';
 import styles from './gradebook.module.scss';
 
-type GradeValue = '2' | '3' | '4' | '5' | 'Н' | '—' | '';
+type GradeValue = '2' | '3' | '4' | '5' | 'Н' | 'У' | '—' | '';
 
 interface StudentGradeRow {
   initials: string;
@@ -13,6 +19,14 @@ interface StudentGradeRow {
   total: number;
 }
 
+const DATES_PER_MOBILE_PAGE = 2;
+
+const SUBJECT_TITLES: Record<string, string> = {
+  'mathematical-analysis': 'Математический анализ',
+  'discrete-math': 'Дискретная математика',
+  'software-engineering': 'Программная инженерия',
+};
+
 const LESSON_DATES = ['03.04', '10.04', '13.04', '20.04', '27.04', '04.05', '11.05', '18.05', '25.05'];
 
 const STUDENTS: StudentGradeRow[] = [
@@ -20,7 +34,7 @@ const STUDENTS: StudentGradeRow[] = [
     initials: 'АА',
     name: 'Александров Артем',
     avatarTone: 'violet',
-    grades: ['5', '', 'Н', '5', '', '5', '—', '—', '—'],
+    grades: ['5', '4', 'У', '5', '', '5', '—', '—', '—'],
     total: 18,
   },
   {
@@ -34,27 +48,27 @@ const STUDENTS: StudentGradeRow[] = [
     initials: 'ГД',
     name: 'Григорьев Дмитрий',
     avatarTone: 'sky',
-    grades: ['3', '4', '', 'Н', '', '3', '—', '—', '—'],
+    grades: ['3', '', '', 'У', '', '3', '—', '—', '—'],
     total: 13,
   },
   {
     initials: 'ИС',
     name: 'Иванова Софья',
     avatarTone: 'lilac',
-    grades: ['5', '', '5', '5', '', '5', '—', '—', '—'],
+    grades: ['5', '5', '5', '5', '', '5', '—', '—', '—'],
     total: 24,
   },
   {
     initials: 'КМ',
     name: 'Кузнецов Максим',
     avatarTone: 'gray',
-    grades: ['Н', 'Н', '2', '3', '', '2', '—', '—', '—'],
+    grades: ['У', 'У', '2', '3', '', '2', '—', '—', '—'],
     total: 8,
   },
 ];
 
 const getGradeClassName = (grade: GradeValue) => {
-  if (grade === 'Н') {
+  if (grade === 'Н' || grade === 'У') {
     return `${styles.gradeCell} ${styles.gradeCellAbsent}`;
   }
 
@@ -62,12 +76,36 @@ const getGradeClassName = (grade: GradeValue) => {
 };
 
 export default function TeacherGroupGradebookPage() {
+  const params = useParams<{ subjectId: string; groupId: string }>();
+  const subjectId = params.subjectId ?? 'mathematical-analysis';
+  const groupId = params.groupId ?? '09-352';
+  const subjectTitle = SUBJECT_TITLES[subjectId] ?? 'Математический анализ';
+  const mobilePageCount = Math.ceil(LESSON_DATES.length / DATES_PER_MOBILE_PAGE);
+  const [mobilePageIndex, setMobilePageIndex] = useState(0);
+  const visibleDateStart = mobilePageIndex * DATES_PER_MOBILE_PAGE;
+  const visibleDates = LESSON_DATES.slice(visibleDateStart, visibleDateStart + DATES_PER_MOBILE_PAGE);
+
+  const goToPreviousDates = () => {
+    setMobilePageIndex((current) => Math.max(0, current - 1));
+  };
+
+  const goToNextDates = () => {
+    setMobilePageIndex((current) => Math.min(mobilePageCount - 1, current + 1));
+  };
+
   return (
     <main className={styles.page}>
       <div className={styles.container}>
-        <PageHero title="Журнал группы 09-352" subtitle="Математический анализ — 3 семестр" />
+        <PageHero
+          className={styles.gradebookHero}
+          title={`Журнал группы ${groupId}`}
+          subtitle={`${subjectTitle} — 3 семестр`}
+        />
 
-        <section className={styles.gradebookCard} aria-label="Журнал оценок группы 09-352">
+        <section
+          className={`${styles.gradebookCard} ${styles.desktopGradebook}`}
+          aria-label={`Журнал оценок группы ${groupId}`}
+        >
           <div className={styles.tableHeader}>
             <div className={styles.studentHeader}>ФИО студента</div>
             {LESSON_DATES.map((date) => (
@@ -96,6 +134,61 @@ export default function TeacherGroupGradebookPage() {
           </div>
         </section>
 
+        <section
+          className={`${styles.gradebookCard} ${styles.mobileGradebook}`}
+          aria-label={`Мобильный журнал оценок группы ${groupId}`}
+        >
+          <div className={styles.mobileTableHeader}>
+            <div className={styles.mobileStudentHeader}>ФИО студента</div>
+            {visibleDates.map((date) => (
+              <div key={date} className={styles.mobileDateHeader}>{date}</div>
+            ))}
+          </div>
+
+          <div className={styles.mobileTableBody}>
+            {STUDENTS.map((student) => (
+              <div key={student.name} className={styles.mobileTableRow}>
+                <div className={styles.mobileStudentCell}>
+                  <span className={`${styles.avatar} ${styles[student.avatarTone]}`}>{student.initials}</span>
+                  <span className={styles.mobileStudentName}>{student.name}</span>
+                </div>
+
+                {visibleDates.map((date, index) => {
+                  const grade = student.grades[visibleDateStart + index] ?? '';
+
+                  return (
+                    <div key={`${student.name}-${date}`} className={styles.mobileMarkSlot}>
+                      <span className={getGradeClassName(grade)}>{grade}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+
+          <div className={styles.mobilePagination} aria-label="Переключение дат журнала">
+            <button
+              type="button"
+              className={styles.paginationButton}
+              onClick={goToPreviousDates}
+              disabled={mobilePageIndex === 0}
+              aria-label="Предыдущие даты"
+            >
+              <ChevronLeftRoundedIcon sx={{ fontSize: 34 }} />
+            </button>
+            <span className={styles.paginationPage}>{mobilePageIndex + 1}</span>
+            <button
+              type="button"
+              className={styles.paginationButton}
+              onClick={goToNextDates}
+              disabled={mobilePageIndex === mobilePageCount - 1}
+              aria-label="Следующие даты"
+            >
+              <ChevronRightRoundedIcon sx={{ fontSize: 34 }} />
+            </button>
+          </div>
+        </section>
+
         <div className={styles.actions}>
           <button type="button" className={styles.sendButton}>
             Отправить баллы
@@ -103,10 +196,10 @@ export default function TeacherGroupGradebookPage() {
           </button>
         </div>
 
-        <section className={styles.summaryGrid} aria-label="Сводка по группе">
+        <section className={styles.summaryGrid} aria-label={`Сводка по группе ${groupId}`}>
           <article className={`${styles.summaryCard} ${styles.averageCard}`}>
             <h2>Средний балл</h2>
-            <strong>4.2</strong>
+            <strong>67.3</strong>
             <div className={styles.progressTrack}>
               <span className={styles.progressFill} />
             </div>
