@@ -3,8 +3,8 @@
 import type { ReactNode } from 'react';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
-import { Typography } from '@mui/material';
 import { NotificationItem } from '@/components/shared/NotificationItem/NotificationItem';
+import { PageHero } from '@/components/ui';
 import styles from './notifications.module.scss';
 
 interface NotificationEntry {
@@ -51,11 +51,7 @@ export default function StudentNotificationsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <section className={styles.hero}>
-          <Typography component="h1" className={styles.title}>
-            Уведомления
-          </Typography>
-        </section>
+        <PageHero title="Уведомления" />
 
         <div className={styles.groups}>
           {NOTIFICATION_GROUPS.map((group) => (

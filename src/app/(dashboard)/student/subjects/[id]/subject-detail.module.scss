@@ -10,13 +10,14 @@
 .container {
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: 34px $content-padding 88px;
+  padding: 32px $content-padding 64px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
 
   @include tablet {
-    padding: 24px 24px 64px;
+    padding: 24px 24px 56px;
+    gap: 20px;
   }
 
   @include mobile {

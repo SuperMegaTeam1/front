@@ -91,7 +91,41 @@
 
 @include mobile {
   .root {
-    min-height: 220px;
-    padding: 24px;
+    gap: 18px;
+    min-height: 116px;
+    padding: 18px;
+    border-radius: 6px;
+    box-shadow: 0 9px 22px rgba(146, 164, 183, 0.12);
+  }
+
+  .topRow {
+    gap: 10px;
+  }
+
+  .iconWrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+  }
+
+  .examPill {
+    height: 22px;
+    padding: 0 10px;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  .body {
+    gap: 5px;
+  }
+
+  .name {
+    font-size: 16px;
+    line-height: 1.15;
+  }
+
+  .groups {
+    font-size: 11px;
+    line-height: 1.35;
   }
 }

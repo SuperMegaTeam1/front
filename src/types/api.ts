@@ -1,10 +1,26 @@
-/** Универсальный ответ API */
+export type {
+  AuthResponse,
+  AuthUserResponse,
+  BackendLoginRequest,
+  BackendRoleName,
+  BackendStatusResponse,
+  LoginPayload,
+  ScheduleLessonResult,
+  StudentRatingResponse,
+  TodayScheduleResult,
+  TopStudentDto,
+  WeekScheduleResult,
+} from '@/lib/api/types';
+
+/**
+ * Legacy-тип для старых моковых API-файлов.
+ * Реальный новый бэк возвращает плоский JSON без обертки { data }.
+ */
 export interface ApiResponse<T> {
   data: T;
   message?: string;
 }
 
-/** Ответ с пагинацией */
 export interface PaginatedResponse<T> {
   data: T[];
   page: number;
@@ -13,22 +29,8 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
-/** Ошибка API */
 export interface ApiError {
   status: number;
   message: string;
   errors?: Record<string, string[]>;
-}
-
-/** Данные для логина */
-export interface LoginPayload {
-  login: string;
-  password: string;
-}
-
-/** Ответ на успешный логин */
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: import('./user').User;
 }

@@ -1,0 +1,46 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.root {
+  min-height: 120px;
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px dashed rgba(151, 167, 189, 0.55);
+  background: rgba(255, 255, 255, 0.55);
+  @include flex-column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  color: #9badc4;
+}
+
+.compact {
+  min-height: 92px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px dashed rgba(151, 169, 189, 0.4);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #c0cad6;
+}
+
+.compactTitle {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
