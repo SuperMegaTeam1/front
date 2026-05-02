@@ -1,4 +1,5 @@
 import type { ScheduleLessonCardData } from './ScheduleLessonCard';
+import { shiftIsoDate } from '@/lib/utils/isoDate';
 
 export type DaySchedule = {
   date: string;
@@ -176,16 +177,6 @@ const WEEK_TEMPLATE: Omit<DaySchedule, 'date'>[] = [
     lessons: [],
   },
 ];
-
-export function parseIsoDate(dateStr: string) {
-  return new Date(`${dateStr}T12:00:00`);
-}
-
-export function shiftIsoDate(dateStr: string, days: number) {
-  const date = parseIsoDate(dateStr);
-  date.setDate(date.getDate() + days);
-  return date.toISOString().split('T')[0];
-}
 
 export function buildWeek(offset: number): DaySchedule[] {
   const startDate = shiftIsoDate(WEEK_BASE_START, offset * 7);
