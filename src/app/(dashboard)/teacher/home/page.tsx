@@ -2,21 +2,19 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import CalculateOutlinedIcon from '@mui/icons-material/CalculateOutlined';
 import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
 import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
+import { PageHero } from '@/components/ui';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { LessonCard } from '@/components/shared/LessonCard/LessonCard';
-import { SubjectCard } from '@/components/shared/SubjectCard/SubjectCard';
-import { PageHero, ScheduleCard } from '@/components/ui';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
 import styles from './home.module.scss';
+import { TeacherHomeScheduleSection } from './components/TeacherHomeScheduleSection';
+import { TeacherHomeSubjectsSection } from './components/TeacherHomeSubjectsSection';
+import type { TeacherHomeDay, TeacherHomeSubject } from './components/TeacherHome.types';
 
-const MOCK_DAYS = [
+const MOCK_DAYS: TeacherHomeDay[] = [
   {
     label: 'Вчера',
     date: '2026-04-22',
@@ -94,45 +92,32 @@ const MOCK_DAYS = [
   },
 ];
 
-const MOCK_SUBJECTS = [
+const MOCK_SUBJECTS: TeacherHomeSubject[] = [
   {
     id: 1,
     name: 'Математический анализ',
-    examType: 'ЭКЗАМЕН' as const,
+    examType: 'ЭКЗАМЕН',
     groups: ['09-351', '09-352'],
     icon: <CalculateOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'brand' as const,
+    iconVariant: 'brand',
   },
   {
     id: 2,
     name: 'Дискретная математика',
-    examType: 'ЗАЧЕТ' as const,
+    examType: 'ЗАЧЕТ',
     groups: ['09-251', '09-252'],
     icon: <HubOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'violet' as const,
+    iconVariant: 'violet',
   },
   {
     id: 3,
     name: 'Программная инженерия',
-    examType: 'ЭКЗАМЕН' as const,
+    examType: 'ЭКЗАМЕН',
     groups: ['09-351'],
     icon: <CodeOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'mint' as const,
+    iconVariant: 'mint',
   },
 ];
-
-function parseLessonMeta(meta?: string) {
-  if (!meta) {
-    return {};
-  }
-
-  const [lessonType, groups] = meta.split(' • ');
-
-  return {
-    lessonType,
-    groups: groups?.replace(/\.$/, ''),
-  };
-}
 
 export default function TeacherSchedulePage() {
   const router = useRouter();
@@ -170,72 +155,14 @@ export default function TeacherSchedulePage() {
           }
         />
 
-        <section id="schedule" className={styles.scheduleStage}>
-          <div className={styles.stageTag}>ПАРЫ СЕГОДНЯ</div>
+        <TeacherHomeScheduleSection
+          previousDay={previousDay}
+          currentDay={today}
+          nextDay={nextDay}
+          onLessonOpen={(lessonId) => router.push(`/teacher/lesson/${lessonId}`)}
+        />
 
-          <div className={styles.stageLayout}>
-            <div className={`${styles.sideColumn} ${styles.sideColumnLeft}`}>
-              <div className={styles.sideLabel}>{previousDay.label.toUpperCase()}</div>
-              {previousDay.lessons.map((lesson) => (
-                <LessonCard key={lesson.id} {...lesson} variant="preview" />
-              ))}
-            </div>
-
-            <button type="button" className={styles.arrowButton} aria-label="Предыдущий день">
-              <ChevronLeftRoundedIcon sx={{ fontSize: 26 }} />
-            </button>
-
-            <div className={styles.todayColumn}>
-              {today.lessons.map((lesson) => {
-                const { lessonType, groups } = parseLessonMeta(lesson.meta);
-
-                return (
-                  <ScheduleCard
-                    key={lesson.id}
-                    startTime={lesson.startTime}
-                    endTime={lesson.endTime}
-                    subjectName={lesson.subjectName}
-                    lessonType={lessonType}
-                    room={lesson.room}
-                    groups={groups}
-                    onMore={() => router.push(`/teacher/lesson/${lesson.id}`)}
-                    moreLabel={`Открыть занятие: ${lesson.subjectName}`}
-                  />
-                );
-              })}
-            </div>
-
-            <button type="button" className={styles.arrowButton} aria-label="Следующий день">
-              <ChevronRightRoundedIcon sx={{ fontSize: 26 }} />
-            </button>
-
-            <div className={`${styles.sideColumn} ${styles.sideColumnRight}`}>
-              <div className={styles.sideLabel}>{nextDay.label.toUpperCase()}</div>
-              {nextDay.lessons.map((lesson) => (
-                <LessonCard key={lesson.id} {...lesson} variant="preview" />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.subjectSection}>
-          <div className={styles.sectionHeader}>
-            <Typography className={styles.sectionTitle}>Мои предметы</Typography>
-            <Link href="/teacher/subjects" className={styles.sectionLink}>
-              Все предметы
-            </Link>
-          </div>
-
-          <div className={styles.subjectsGrid}>
-            {MOCK_SUBJECTS.map((subject) => (
-              <SubjectCard
-                key={subject.id}
-                {...subject}
-                href="/teacher/subjects"
-              />
-            ))}
-          </div>
-        </section>
+        <TeacherHomeSubjectsSection subjects={MOCK_SUBJECTS} />
       </div>
     </div>
   );
