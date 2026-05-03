@@ -52,6 +52,16 @@ const GROUPS: Group[] = [
   },
 ];
 
+function formatShortFullName(fullName: string) {
+  const [lastName, firstName, fatherName] = fullName.trim().split(/\s+/);
+
+  if (!lastName || !firstName || !fatherName) {
+    return fullName;
+  }
+
+  return `${lastName[0]}. ${firstName[0]}. ${fatherName}`;
+}
+
 function GroupGradebook({
   group,
   scores,
@@ -79,7 +89,7 @@ function GroupGradebook({
           {group.students.map((student, index) => (
             <div key={student.id} className={styles.row}>
               <span className={styles.numCell}>{index + 1}</span>
-              <span className={styles.nameCell}>{student.fullName}</span>
+              <span className={styles.nameCell}>{formatShortFullName(student.fullName)}</span>
               <input
                 type="text"
                 className={styles.scoreInput}
