@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { TextField, Button, Typography } from '@mui/material';
@@ -12,10 +12,11 @@ import styles from './login.module.scss';
 export default function LoginPage() {
   const router = useRouter();
   const { login, isLoggingIn, loginError, user, isAuthenticated } = useAuth();
+  const [isCooldownActive, setIsCooldownActive] = useState(false);
   const {
     control,
     handleSubmit,
-    formState: { errors, submitCount },
+    formState: { errors, isSubmitting, submitCount },
   } = useForm<LoginPayload>({
     defaultValues: { login: '', password: '' },
   });
@@ -28,13 +29,33 @@ export default function LoginPage() {
     router.replace(user.role === 'student' ? '/student/home' : '/teacher/home');
   }, [isAuthenticated, router, user]);
 
-  const hasEmptyFieldsError = submitCount > 0 && (!!errors.login || !!errors.password);
+  useEffect(() => {
+    if (isLoggingIn || !isCooldownActive) {
+      return;
+    }
 
-  const onSubmit = (data: LoginPayload) =>
-    login({
-      login: data.login.trim(),
-      password: data.password.trim(),
-    });
+    const timeoutId = window.setTimeout(() => {
+      setIsCooldownActive(false);
+    }, 1000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [isCooldownActive, isLoggingIn]);
+
+  const hasEmptyFieldsError = submitCount > 0 && (!!errors.login || !!errors.password);
+  const isSubmitDisabled = isSubmitting || isLoggingIn || isCooldownActive;
+
+  const onSubmit = async (data: LoginPayload) => {
+    setIsCooldownActive(true);
+
+    try {
+      await login({
+        login: data.login.trim(),
+        password: data.password.trim(),
+      });
+    } catch {
+      // Ошибка уже отображается через loginError из useAuth.
+    }
+  };
   const fieldSx = {
     '& .MuiOutlinedInput-root': {
       height: 72,
@@ -133,11 +154,11 @@ export default function LoginPage() {
             <Button
               type="submit"
               fullWidth
-              disabled={isLoggingIn}
+              disabled={isSubmitDisabled}
               className={styles.submitBtn}
               disableElevation
             >
-              {isLoggingIn ? 'ВХОДИМ...' : 'ВОЙТИ'}
+              {isSubmitDisabled ? 'ВХОДИМ...' : 'ВОЙТИ'}
             </Button>
           </form>
 
