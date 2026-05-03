@@ -10,7 +10,6 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import { useUnreadCount } from '@/lib/hooks/useNotifications';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { useNotificationStore } from '@/stores/useNotificationStore';
 import { HeaderStudentMobile } from './HeaderStudentMobile';
 import styles from './HeaderStudent.module.scss';
 
