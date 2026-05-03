@@ -12,7 +12,11 @@ import styles from './login.module.scss';
 export default function LoginPage() {
   const router = useRouter();
   const { login, isLoggingIn, loginError, user, isAuthenticated } = useAuth();
-  const { control, handleSubmit } = useForm<LoginPayload>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, submitCount },
+  } = useForm<LoginPayload>({
     defaultValues: { login: '', password: '' },
   });
 
@@ -24,7 +28,13 @@ export default function LoginPage() {
     router.replace(user.role === 'student' ? '/student/home' : '/teacher/home');
   }, [isAuthenticated, router, user]);
 
-  const onSubmit = (data: LoginPayload) => login(data);
+  const hasEmptyFieldsError = submitCount > 0 && (!!errors.login || !!errors.password);
+
+  const onSubmit = (data: LoginPayload) =>
+    login({
+      login: data.login.trim(),
+      password: data.password.trim(),
+    });
   const fieldSx = {
     '& .MuiOutlinedInput-root': {
       height: 72,
@@ -71,7 +81,9 @@ export default function LoginPage() {
                 <Controller
                   name="login"
                   control={control}
-                  rules={{ required: 'Введите логин' }}
+                  rules={{
+                    validate: (value) => value.trim().length > 0 || 'Введите данные для входа',
+                  }}
                   render={({ field, fieldState }) => (
                     <TextField
                       {...field}
@@ -91,7 +103,9 @@ export default function LoginPage() {
                 <Controller
                   name="password"
                   control={control}
-                  rules={{ required: 'Введите пароль' }}
+                  rules={{
+                    validate: (value) => value.trim().length > 0 || 'Введите данные для входа',
+                  }}
                   render={({ field, fieldState }) => (
                     <TextField
                       {...field}
@@ -108,9 +122,11 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {loginError && (
+            {(hasEmptyFieldsError || loginError) && (
               <Typography className={styles.errorText}>
-                Неверный логин или пароль. Попробуйте ещё раз.
+                {hasEmptyFieldsError
+                  ? 'Введите данные для входа'
+                  : 'Неверный логин или пароль. Попробуйте ещё раз.'}
               </Typography>
             )}
 
