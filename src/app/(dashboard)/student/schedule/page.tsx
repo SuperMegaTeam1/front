@@ -21,6 +21,13 @@ const VIEW_OPTIONS: Array<{ value: ScheduleView; label: string }> = [
   { value: 'week', label: 'Неделя' },
 ];
 
+const weekdayFormatter = new Intl.DateTimeFormat('ru-RU', { weekday: 'long' });
+const dayMonthFormatter = new Intl.DateTimeFormat('ru-RU', {
+  day: 'numeric',
+  month: 'long',
+});
+const monthFormatter = new Intl.DateTimeFormat('ru-RU', { month: 'long' });
+
 function buildEmptyWeek(anchorDate: string): WeekDaySchedule[] {
   const monday = getWeekStart(anchorDate);
 
@@ -30,17 +37,26 @@ function buildEmptyWeek(anchorDate: string): WeekDaySchedule[] {
   }));
 }
 
+function formatDayMonth(date: Date) {
+  return dayMonthFormatter.format(date);
+}
+
+function getMonthForDateContext(date: Date) {
+  return dayMonthFormatter.formatToParts(date)
+    .find((part) => part.type === 'month')?.value ?? monthFormatter.format(date);
+}
+
 function formatHeadlineDate(dateStr: string) {
   const date = parseIsoDate(dateStr);
-  const weekday = new Intl.DateTimeFormat('ru-RU', { weekday: 'long' }).format(date).toUpperCase();
-  const dayAndMonth = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(date).toUpperCase();
+  const weekday = weekdayFormatter.format(date).toUpperCase();
+  const dayAndMonth = formatDayMonth(date).toUpperCase();
   return `${weekday}, ${dayAndMonth}`;
 }
 
 function formatDayTitle(dateStr: string) {
   const date = parseIsoDate(dateStr);
-  const weekday = new Intl.DateTimeFormat('ru-RU', { weekday: 'long' }).format(date);
-  const dayAndMonth = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(date);
+  const weekday = weekdayFormatter.format(date);
+  const dayAndMonth = formatDayMonth(date);
   return `${weekday}, ${dayAndMonth}`.toUpperCase();
 }
 
@@ -49,14 +65,15 @@ function formatWeekRange(days: WeekDaySchedule[]) {
   const end = parseIsoDate(days[days.length - 1].date);
   const startDay = start.getDate();
   const endDay = end.getDate();
-  const startMonth = new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(start);
-  const endMonth = new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(end);
+  const isSameMonth =
+    start.getFullYear() === end.getFullYear() &&
+    start.getMonth() === end.getMonth();
 
-  if (startMonth === endMonth) {
-    return `${startDay}-${endDay} ${endMonth}`;
+  if (isSameMonth) {
+    return `${startDay}-${endDay} ${getMonthForDateContext(end)}`;
   }
 
-  return `${startDay} ${startMonth} - ${endDay} ${endMonth}`;
+  return `${formatDayMonth(start)} - ${formatDayMonth(end)}`;
 }
 
 function formatTeacherName(lesson: ScheduleLessonResult) {
