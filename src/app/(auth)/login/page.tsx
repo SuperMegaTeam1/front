@@ -2,12 +2,8 @@
 
 import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-<<<<<<< task_206
-import { Button, Typography, Link as MuiLink } from '@mui/material';
-=======
 import { useRouter } from 'next/navigation';
 import { TextField, Button, Typography } from '@mui/material';
->>>>>>> main
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { useAuth } from '@/lib/hooks/useAuth';
 import type { LoginPayload } from '@/types/api';
