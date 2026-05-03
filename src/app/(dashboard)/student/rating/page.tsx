@@ -92,6 +92,7 @@ export default function StudentRatingPage() {
             rows={rows}
             visibleCount={rows.length}
             totalCount={activeStudentsCount}
+            showAllLabel="Показать всех студентов"
           />
         )}
       </div>

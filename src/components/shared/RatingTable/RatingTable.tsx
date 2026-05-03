@@ -18,6 +18,7 @@ interface RatingTableProps {
   visibleCount: number;
   totalCount: number;
   onShowMore?: () => void;
+  showAllLabel?: string;
 }
 
 function getPositionTone(position: number) {
@@ -57,8 +58,10 @@ export function RatingTable({
   visibleCount,
   totalCount,
   onShowMore,
+  showAllLabel,
 }: RatingTableProps) {
   const hiddenCount = Math.max(totalCount - visibleCount, 0);
+  const shouldShowButton = !!showAllLabel || (hiddenCount > 0 && !!onShowMore);
 
   return (
     <section className={styles.card}>
@@ -90,9 +93,9 @@ export function RatingTable({
         ))}
       </div>
 
-      {hiddenCount > 0 && onShowMore ? (
+      {shouldShowButton ? (
         <button type="button" className={styles.showMoreButton} onClick={onShowMore}>
-          Показать еще {hiddenCount} {hiddenCount === 1 ? 'студента' : hiddenCount < 5 ? 'студента' : 'студентов'}
+          {showAllLabel ?? `Показать еще ${hiddenCount} ${hiddenCount === 1 ? 'студента' : hiddenCount < 5 ? 'студента' : 'студентов'}`}
           <KeyboardArrowDownRoundedIcon sx={{ fontSize: 20 }} />
         </button>
       ) : null}
