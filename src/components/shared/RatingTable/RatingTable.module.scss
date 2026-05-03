@@ -142,28 +142,87 @@
 }
 
 @include mobile {
+  .card {
+    border-radius: 7px;
+    box-shadow: 0 16px 36px rgba(43, 52, 55, 0.12);
+  }
+
   .tableHeader {
-    grid-template-columns: 70px minmax(0, 1fr) 84px;
-    min-height: 48px;
-    padding: 0 10px;
-    font-size: 10px;
+    grid-template-columns: 82px minmax(0, 1fr) 86px;
+    min-height: 68px;
+    padding: 0 16px;
+    font-size: 11px;
+    line-height: 1.2;
   }
 
   .row {
-    grid-template-columns: 70px minmax(0, 1fr) 84px;
-    min-height: 76px;
-    padding: 0 10px;
-    column-gap: 8px;
+    grid-template-columns: 82px minmax(0, 1fr) 86px;
+    min-height: 96px;
+    padding: 0 16px;
+    column-gap: 10px;
+  }
+
+  .positionBadge {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    font-size: 17px;
+  }
+
+  .awardIconGold,
+  .awardIconSilver,
+  .awardIconBronze {
+    font-size: 20px !important;
+  }
+
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    font-size: 12px;
   }
 
   .studentName {
-    font-size: 14px;
-    line-height: 1.2;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.12;
     white-space: normal;
   }
 
   .scoreCell {
-    font-size: 15px;
+    font-size: 22px;
+    font-weight: 800;
     text-align: right;
+  }
+
+  .showMoreButton {
+    min-height: 66px;
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 380px) {
+  .tableHeader,
+  .row {
+    grid-template-columns: 72px minmax(0, 1fr) 76px;
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .studentCell {
+    gap: 9px;
+  }
+
+  .avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .studentName {
+    font-size: 15px;
+  }
+
+  .scoreCell {
+    font-size: 19px;
   }
 }

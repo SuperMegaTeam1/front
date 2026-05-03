@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Typography } from '@mui/material';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import { PageHero } from '@/components/ui';
 import styles from './subject-detail.module.scss';
 
 type GradeEntry = {
@@ -147,17 +147,10 @@ export default function StudentSubjectDetailPage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <section className={styles.hero}>
-          <Typography component="h1" className={styles.title}>
-            {subject.name}
-          </Typography>
-
-          <div className={styles.meta}>
-            <span>{subject.teacher}</span>
-            <span className={styles.metaDivider}>|</span>
-            <span>{subject.department}</span>
-          </div>
-        </section>
+        <PageHero
+          title={subject.name}
+          subtitle={`${subject.teacher} · ${subject.department}`}
+        />
 
         <section className={styles.summaryGrid}>
           <article className={styles.progressCard}>

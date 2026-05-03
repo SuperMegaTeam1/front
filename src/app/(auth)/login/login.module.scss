@@ -141,14 +141,6 @@
   margin: 0 auto !important;
 }
 
-.forgotLink {
-  font-size: clamp(20px, 1.4vw, 28px) !important;
-  color: rgba(88, 96, 100, 0.92) !important;
-  text-align: center;
-  cursor: pointer;
-  font-weight: 600 !important;
-}
-
 @include tablet {
   .decorCircle {
     left: -280px;

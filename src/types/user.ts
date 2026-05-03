@@ -1,27 +1,29 @@
-/** Роль пользователя в системе */
 export type Role = 'student' | 'teacher';
+export type EntityId = string | number;
 
-/** Базовая информация о пользователе */
 export interface User {
-  id: number;
+  id: EntityId;
   login: string;
   firstName: string;
   lastName: string;
   patronymic: string;
   phone: string;
   role: Role;
+  email?: string;
+  studentId?: string | null;
+  teacherId?: string | null;
+  groupId?: EntityId | null;
+  groupName?: string | null;
 }
 
-/** Студент — расширение User с группой и рейтингом */
 export interface Student extends User {
   role: 'student';
-  groupId: number;
+  groupId: EntityId;
   groupName: string;
   overallRating: number | null;
 }
 
-/** Преподаватель — расширение User со списком предметов */
 export interface Teacher extends User {
   role: 'teacher';
-  subjectIds: number[];
+  subjectIds: EntityId[];
 }

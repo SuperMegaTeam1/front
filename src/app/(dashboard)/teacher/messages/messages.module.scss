@@ -1,0 +1,221 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
+
+.page {
+  min-height: calc(100vh - 116px);
+  background: $color-bg;
+  color: $color-text-primary;
+}
+
+.container {
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: 32px $content-padding 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @include tablet {
+    padding: 24px 24px 56px;
+    gap: 20px;
+  }
+}
+
+.header {
+  padding: 0 0 12px;
+  margin-bottom: 52px;
+  background: rgba(241, 244, 246, 0.98);
+
+  h1 {
+    margin: 0;
+    font-family: $font-family-heading;
+    font-size: clamp(54px, 4vw, 76px);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: #263135;
+  }
+
+  p {
+    margin: 14px 0 0;
+    color: #9badc4;
+    font-size: clamp(17px, 1.1vw, 22px);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+}
+
+.composerCard {
+  min-height: 1010px;
+  padding: 82px 76px 40px;
+  border-radius: 8px;
+  background: $color-surface;
+  box-shadow: 0 28px 70px rgba(43, 52, 55, 0.28);
+}
+
+.groupSection {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.sectionTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: $color-brand;
+
+  h2 {
+    margin: 0;
+    color: #334044;
+    font-family: $font-family-heading;
+    font-size: clamp(24px, 1.5vw, 34px);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+}
+
+.groupList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+}
+
+.groupButton {
+  min-width: 184px;
+  height: 78px;
+  padding: 0 42px;
+  border: none;
+  border-radius: 16px;
+  background: rgba(241, 244, 246, 0.98);
+  color: #9badc4;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: $font-family-heading;
+  font-size: clamp(27px, 1.75vw, 38px);
+  font-weight: 800;
+  line-height: 1;
+  transition: background $transition-fast, color $transition-fast, transform $transition-fast;
+
+  &:hover {
+    transform: translateY(-1px);
+    color: $color-brand;
+  }
+}
+
+.groupButtonActive {
+  background: #bfe8ff;
+  color: $color-brand;
+}
+
+.messageInput {
+  width: 100%;
+  min-height: 688px;
+  margin-top: 52px;
+  padding: 56px 52px;
+  border: 2px solid #9badc4;
+  border-radius: 8px;
+  background: rgba(241, 244, 246, 0.98);
+  color: #263135;
+  display: block;
+  resize: vertical;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(26px, 1.75vw, 36px);
+  font-weight: 400;
+  line-height: 1.5;
+  outline: none;
+
+  &::placeholder {
+    color: rgba(43, 52, 55, 0.24);
+  }
+
+  &:focus {
+    border-color: $color-brand;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 76px;
+}
+
+.sendButton {
+  min-width: 354px;
+  height: 104px;
+  padding: 0 58px;
+  border: none;
+  border-radius: 8px;
+  background: $color-brand;
+  color: $color-surface;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  font-family: $font-family-heading;
+  font-size: clamp(30px, 2vw, 42px);
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 10px 18px rgba(43, 52, 55, 0.2);
+  transition: background $transition-fast, opacity $transition-fast, transform $transition-fast;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background: $color-brand-dark;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+}
+
+@include tablet {
+  .container {
+    padding: 36px 24px 56px;
+  }
+
+  .composerCard {
+    min-height: auto;
+    padding: 42px 28px 32px;
+  }
+
+  .messageInput {
+    min-height: 420px;
+    padding: 34px 28px;
+  }
+
+  .actions {
+    margin-top: 40px;
+  }
+}
+
+@include mobile {
+  .container {
+    padding: 24px 20px 56px;
+  }
+
+  .header h1 {
+    font-size: 42px;
+  }
+
+  .groupButton,
+  .sendButton {
+    width: 100%;
+  }
+
+  .sendButton {
+    min-width: 0;
+    height: 76px;
+    font-size: 28px;
+  }
+}

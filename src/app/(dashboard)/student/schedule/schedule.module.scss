@@ -3,422 +3,113 @@
 @use '@/styles/typography' as *;
 
 .page {
-  min-height: calc(100vh - 96px);
+  min-height: calc(100vh - 116px);
   background: $color-bg;
 }
 
 .container {
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: 34px $content-padding 88px;
+  padding: 32px $content-padding 64px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
-
-  @include tablet {
-    padding: 24px 24px 64px;
-  }
-}
-
-.hero {
-  display: grid;
-  grid-template-columns: 1fr auto;
   gap: 24px;
-  align-items: center;
-  padding: 28px 36px;
-  border-radius: 18px;
-  background: rgba(241, 244, 246, 0.98);
 
   @include tablet {
-    grid-template-columns: 1fr;
-    align-items: start;
+    padding: 24px 24px 56px;
+    gap: 20px;
   }
 }
 
-.heroWeek {
-  align-items: start;
-}
-
-.heroInner {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.heroActions {
+.headerRight {
   display: flex;
   align-items: center;
-  gap: 18px;
-}
+  gap: 16px;
 
-.title {
-  font-family: $font-family-heading !important;
-  font-size: clamp(26px, 2.3vw, 40px) !important;
-  font-weight: 800 !important;
-  line-height: 1.1 !important;
-  letter-spacing: -0.03em !important;
-  color: $color-text-primary !important;
-}
-
-.subtitleRow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #97a7bd;
-}
-
-.subtitle {
-  font-size: clamp(14px, 1vw, 18px);
-  font-weight: 700;
-  color: #97a7bd;
-}
-
-.weekInfo {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-}
-
-.weekBadge,
-.weekPeriod {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.weekBadge {
-  color: $color-brand;
-}
-
-.weekPeriod {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #7f91aa;
-}
-
-.weekNavigation {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.navButton {
-  min-height: 32px;
-  padding: 0 4px;
-  border: none;
-  background: transparent;
-  color: $color-brand;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  @include flex-center;
-  gap: 2px;
-  transition: opacity $transition-fast;
-
-  &:hover {
-    opacity: 0.72;
+  @include tablet {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
   }
-}
-
-.viewSwitch {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px;
-  border-radius: 14px;
-  background: rgba(235, 239, 243, 0.92);
-  border: 1px solid rgba(227, 233, 236, 0.92);
-}
-
-.viewButton {
-  min-width: 108px;
-  min-height: 34px;
-  padding: 0 18px;
-  border: none;
-  border-radius: 11px;
-  background: transparent;
-  color: #9aaabd;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background $transition-fast, color $transition-fast, box-shadow $transition-fast;
-}
-
-.viewButtonActive {
-  background: #ffffff;
-  color: $color-brand;
-  box-shadow: 0 8px 18px rgba(42, 101, 126, 0.08);
-}
-
-.scheduleSection,
-.weekSection {
-  display: flex;
-  flex-direction: column;
-}
-
-.weekSection {
-  gap: 22px;
-}
-
-.daySection {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.dayHeader {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  gap: 12px;
-  align-items: center;
-}
-
-.dayLine {
-  height: 1px;
-  background: #c7d1dc;
-}
-
-.dayTitle {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #687b92;
-  text-align: center;
 }
 
 .lessonList {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
-.lessonCard {
-  display: grid;
-  grid-template-columns: 124px minmax(0, 1fr) auto;
-  gap: 18px;
-  align-items: center;
-  min-height: 82px;
-  padding: 18px 20px;
-  border-radius: 18px;
-  background: #ffffff;
-  border: 1px solid rgba(227, 233, 236, 0.9);
-  box-shadow: 0 1px 0 rgba(219, 227, 233, 0.24);
-
-  @include tablet {
-    grid-template-columns: 1fr;
-    align-items: start;
-  }
-}
-
-.lessonCardState {
-  min-height: 120px;
-}
-
-.timeBlock {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-family: $font-family-heading;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.2;
-  color: $color-text-primary;
-  white-space: nowrap;
-}
-
-.timeDash {
-  color: #66788d;
-}
-
-.lessonContent {
+.weekList {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  min-width: 0;
+  gap: 40px;
 }
 
-.lessonTitle {
-  font-family: $font-family-heading !important;
-  font-size: clamp(24px, 1.55vw, 30px) !important;
-  font-weight: 700 !important;
-  line-height: 1.15 !important;
-  color: $color-text-primary !important;
-}
-
-.lessonMeta {
+.weekDay {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px 18px;
-  align-items: center;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.metaText,
-.metaItem {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.4;
-  color: #97a7bd;
+.dayLessons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.moreButton {
-  width: 34px;
-  height: 34px;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-  color: #8ea5bf;
-  cursor: pointer;
-  @include flex-center;
-  transition: background $transition-fast, color $transition-fast;
-
-  &:hover {
-    background: rgba(191, 232, 255, 0.3);
-    color: $color-brand;
+@include tablet {
+  .scheduleHero {
+    overflow: hidden;
   }
 
-  @include tablet {
-    justify-self: start;
-    margin-top: 4px;
-  }
-}
-
-.emptyState {
-  min-height: 88px;
-  padding: 20px;
-  border-radius: 18px;
-  border: 1px dashed rgba(151, 167, 189, 0.55);
-  background: rgba(255, 255, 255, 0.55);
-  @include flex-column;
-  justify-content: center;
-  align-items: center;
-  gap: 6px;
-  text-align: center;
-}
-
-.weekSection .emptyState {
-  min-height: 94px;
-  border-radius: 10px;
-  border: 1px dashed rgba(158, 173, 191, 0.72);
-  background: rgba(255, 255, 255, 0.42);
-}
-
-.emptyTitle {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #9aaabd;
-}
-
-.emptySubtitle,
-.stateText {
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  color: #7f91aa !important;
-}
-
-.weekSection .emptyTitle {
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  color: #9fb0c3;
-}
-
-.weekSection .emptySubtitle {
-  font-size: 10px !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #c0cad6 !important;
-}
-
-@include mobile {
-  .container {
-    gap: 20px;
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  .hero {
-    padding: 22px 18px;
-    gap: 18px;
-  }
-
-  .heroActions {
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .weekNavigation {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .viewSwitch {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .viewButton {
-    flex: 1 1 0;
+  .scheduleHero > div {
     min-width: 0;
   }
 
-  .dayHeader {
-    grid-template-columns: 1fr;
-    gap: 8px;
+  .scheduleHero > div:nth-child(2),
+  .scheduleHero > div:nth-child(3) {
+    width: 100%;
+  }
+}
+
+@include mobile {
+  .page {
+    min-height: calc(100vh - 73px);
   }
 
-  .dayTitle {
-    order: -1;
-    text-align: left;
+  .container {
+    padding: 24px 20px 32px;
+    gap: 22px;
   }
 
-  .lessonCard {
-    gap: 14px;
-    padding: 16px 18px;
-    border-radius: 20px;
-  }
+  .scheduleHero {
+    padding: 28px 30px 30px;
+    border-radius: 24px;
 
-  .timeBlock {
-    font-size: 16px;
-  }
-
-  .lessonTitle {
-    font-size: 22px !important;
-  }
-
-  .lessonMeta {
-    flex-wrap: nowrap;
-    gap: 8px 14px;
-    overflow-x: auto;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
+    h1 {
+      font-size: 30px;
+      line-height: 1.05;
+      letter-spacing: -0.045em;
     }
-  }
 
-  .metaText,
-  .metaItem {
-    flex: 0 0 auto;
-    white-space: nowrap;
-    font-size: 13px;
-  }
+    > div:first-child {
+      gap: 12px;
+    }
 
-  .moreButton {
-    margin-top: 2px;
+    > div:first-child > div {
+      flex-wrap: wrap;
+      gap: 6px 8px;
+      font-size: 15px;
+      line-height: 1.25;
+      letter-spacing: 0.05em;
+    }
+
+    > div:nth-child(2) {
+      order: 3;
+    }
+
+    > div:nth-child(3) {
+      order: 2;
+    }
   }
 }

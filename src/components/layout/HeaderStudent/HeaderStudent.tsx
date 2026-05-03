@@ -10,6 +10,8 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import { useUnreadCount } from '@/lib/hooks/useNotifications';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useNotificationStore } from '@/stores/useNotificationStore';
+import { HeaderStudentMobile } from './HeaderStudentMobile';
 import styles from './HeaderStudent.module.scss';
 
 const HOME_PATH = '/student/home';
@@ -33,6 +35,7 @@ export function HeaderStudent() {
   const isProfilePage = pathname === PROFILE_PATH;
 
   return (
+    <>
     <header className={styles.root}>
       <div className={styles.inner}>
         <Link href={HOME_PATH} className={styles.logo}>
@@ -114,5 +117,8 @@ export function HeaderStudent() {
         </div>
       </div>
     </header>
+
+    <HeaderStudentMobile />
+    </>
   );
 }

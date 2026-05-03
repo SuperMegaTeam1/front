@@ -110,6 +110,49 @@
 }
 
 @include mobile {
+  .root {
+    border-radius: 5px;
+    box-shadow: 0 10px 24px rgba(146, 164, 183, 0.13);
+  }
+
+  .hero {
+    grid-template-columns: minmax(62px, 0.72fr) minmax(0, 1fr) minmax(38px, auto);
+    gap: 9px;
+    align-items: center;
+    min-height: 104px;
+    padding: 16px 11px;
+  }
+
+  .timeRange {
+    font-size: 11px;
+    line-height: 1;
+  }
+
+  .subject {
+    font-size: 16px;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    -webkit-line-clamp: 3;
+  }
+
+  .meta {
+    white-space: normal;
+    font-size: 9px;
+    line-height: 1.15;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .room {
+    align-self: center;
+    font-size: 12px;
+    line-height: 1.05;
+    white-space: normal;
+    text-align: right;
+  }
+
   .preview {
     width: 100%;
   }

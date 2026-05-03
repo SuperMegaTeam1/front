@@ -1,7 +1,13 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+<<<<<<< task_206
 import { Button, Typography, Link as MuiLink } from '@mui/material';
+=======
+import { useRouter } from 'next/navigation';
+import { TextField, Button, Typography } from '@mui/material';
+>>>>>>> main
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { useAuth } from '@/lib/hooks/useAuth';
 import type { LoginPayload } from '@/types/api';
@@ -9,10 +15,19 @@ import { AuthTextField } from './AuthTextField';
 import styles from './login.module.scss';
 
 export default function LoginPage() {
-  const { login, isLoggingIn, loginError } = useAuth();
+  const router = useRouter();
+  const { login, isLoggingIn, loginError, user, isAuthenticated } = useAuth();
   const { control, handleSubmit } = useForm<LoginPayload>({
     defaultValues: { login: '', password: '' },
   });
+
+  useEffect(() => {
+    if (!isAuthenticated || !user) {
+      return;
+    }
+
+    router.replace(user.role === 'student' ? '/student/home' : '/teacher/home');
+  }, [isAuthenticated, router, user]);
 
   const onSubmit = (data: LoginPayload) => login(data);
   return (
@@ -94,9 +109,6 @@ export default function LoginPage() {
           </Typography>
         </div>
 
-        <MuiLink href="#" className={styles.forgotLink} underline="hover">
-          Забыли пароль?
-        </MuiLink>
       </div>
     </div>
   );
