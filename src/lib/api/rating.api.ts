@@ -1,11 +1,11 @@
 import api from './axios';
-import type { ApiResponse } from '@/types/api';
-import type { RatingEntry, SubjectRating } from '@/types/rating';
+import type { StudentRatingResponse } from './types';
 
-/** Общий рейтинг студента */
-export const getOverallRating = () =>
-  api.get<ApiResponse<RatingEntry[]>>('/rating/overall');
+export function getMyStudentRating(subjectId?: string) {
+  return api.get<StudentRatingResponse>('/students/me/rating', {
+    params: subjectId ? { subjectId } : undefined,
+  });
+}
 
-/** Рейтинг по конкретному предмету */
-export const getSubjectRating = (subjectId: number) =>
-  api.get<ApiResponse<SubjectRating>>(`/rating/subject/${subjectId}`);
+export const getOverallRating = () => getMyStudentRating();
+export const getSubjectRating = (subjectId: string) => getMyStudentRating(subjectId);

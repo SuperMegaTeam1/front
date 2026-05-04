@@ -2,42 +2,27 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
-import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import AddchartRoundedIcon from '@mui/icons-material/AddchartRounded';
 import ApartmentRoundedIcon from '@mui/icons-material/ApartmentRounded';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { LessonCard, type LessonCardProps } from '@/components/shared/LessonCard/LessonCard';
+import { PageHero } from '@/components/ui';
+import type { ScheduleLessonResult, WeekScheduleResult } from '@/lib/api/types';
+import { useWeekSchedule } from '@/lib/hooks/useSchedule';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
-import { buildWeek, WEEK_BASE_NUMBER } from '../schedule/scheduleData';
+import { getIsoWeekNumber, getLocalIsoDate, getWeekStart, shiftIsoDate } from '@/lib/utils/isoDate';
+import { useAuthStore } from '@/stores/useAuthStore';
 import styles from './home.module.scss';
+import { StudentHomeInsightsSection } from './components/StudentHomeInsightsSection';
+import { StudentHomeRecentChangesSection } from './components/StudentHomeRecentChangesSection';
+import {
+  StudentHomeScheduleSection,
+  type StudentHomeScheduleDay,
+} from './components/StudentHomeScheduleSection';
 
-type HomeLesson = LessonCardProps & {
-  id: number;
-};
-
-type HomeScheduleDay = {
-  date: string;
-  lessons: HomeLesson[];
-};
-
-const TODAY_INDEX = 1;
-
-const MOCK_DAYS: HomeScheduleDay[] = buildWeek(0).map((day) => ({
-  date: day.date,
-  lessons: day.lessons.map((lesson) => ({
-    id: lesson.id,
-    startTime: lesson.startTime,
-    endTime: lesson.endTime,
-    subjectName: lesson.subjectName,
-    meta: `${lesson.lessonType} • ${lesson.teacherName}`,
-    room: lesson.room,
-  })),
-}));
+type HomeLesson = StudentHomeScheduleDay['lessons'][number];
+type HomeScheduleDay = StudentHomeScheduleDay;
 
 const MOCK_GRADES = [
   { subject: 'Базы данных', score: 82 },
@@ -76,67 +61,98 @@ const MOCK_NOTIFICATIONS = [
   },
 ];
 
-function getRelativeDayLabel(offset: number) {
-  if (offset === 0) {
-    return 'Сегодня';
-  }
+function buildEmptyWeek(anchorDate: string): HomeScheduleDay[] {
+  const monday = getWeekStart(anchorDate);
 
-  if (offset === -1) {
-    return 'Вчера';
-  }
-
-  if (offset === 1) {
-    return 'Завтра';
-  }
-
-  return getWeekDay(MOCK_DAYS[TODAY_INDEX + offset]?.date ?? MOCK_DAYS[TODAY_INDEX].date);
+  return Array.from({ length: 6 }, (_, index) => ({
+    date: shiftIsoDate(monday, index),
+    lessons: [],
+  }));
 }
 
-function getStageTag(index: number) {
-  const offset = index - TODAY_INDEX;
-
-  if (offset === 0) {
-    return 'ПАРЫ СЕГОДНЯ';
-  }
-
-  if (offset === -1) {
-    return 'ПАРЫ ВЧЕРА';
-  }
-
-  if (offset === 1) {
-    return 'ПАРЫ ЗАВТРА';
-  }
-
-  return `РАСПИСАНИЕ НА ${getWeekDay(MOCK_DAYS[index].date).toUpperCase()}`;
+function formatTeacherName(lesson: ScheduleLessonResult) {
+  return [lesson.teacherLastName, lesson.teacherFirstName, lesson.teacherFatherName]
+    .filter(Boolean)
+    .join(' ');
 }
 
-function EmptyDay({ isCompact = false }: { isCompact?: boolean }) {
-  return (
-    <div className={isCompact ? styles.emptyPreview : styles.emptyState}>
-      <span>Пар нет</span>
-    </div>
-  );
+function sortLessons(lessons: ScheduleLessonResult[] | null | undefined) {
+  return (lessons ?? []).slice().sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+}
+
+function mapLessonToHomeLesson(lesson: ScheduleLessonResult): HomeLesson {
+  const teacherName = formatTeacherName(lesson);
+  const meta = [lesson.type, teacherName].filter(Boolean).join(' • ');
+
+  return {
+    id: lesson.lessonsId,
+    startTime: lesson.startsAt,
+    endTime: lesson.endsAt,
+    subjectName: lesson.subjectName,
+    meta: meta || undefined,
+    room: lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined,
+  };
+}
+
+function mapWeekSchedule(schedule?: WeekScheduleResult): HomeScheduleDay[] {
+  return (schedule?.items ?? []).map((day) => ({
+    date: day.date,
+    lessons: sortLessons(day.items).map(mapLessonToHomeLesson),
+  }));
 }
 
 export default function StudentHomePage() {
   const { user } = useAuthStore();
-  const [currentDayIndex, setCurrentDayIndex] = useState(TODAY_INDEX);
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
+  const todayDate = getLocalIsoDate();
 
-  const currentDay = MOCK_DAYS[currentDayIndex];
-  const previousDay = MOCK_DAYS[currentDayIndex - 1];
-  const nextDay = MOCK_DAYS[currentDayIndex + 1];
+  const {
+    data: weekSchedule,
+    isLoading: isWeekScheduleLoading,
+    error: weekScheduleError,
+  } = useWeekSchedule(todayDate);
+
+  const weekDays = useMemo(() => {
+    const backendDays = mapWeekSchedule(weekSchedule);
+    return backendDays.length > 0 ? backendDays : buildEmptyWeek(todayDate);
+  }, [todayDate, weekSchedule]);
+
+  const todayIndex = Math.max(0, weekDays.findIndex((day) => day.date === todayDate));
+  const currentDayIndex = Math.min(
+    selectedDayIndex ?? todayIndex,
+    Math.max(weekDays.length - 1, 0)
+  );
+  const currentDay = weekDays[currentDayIndex];
+  const previousDay = weekDays[currentDayIndex - 1];
+  const nextDay = weekDays[currentDayIndex + 1];
 
   const currentDateStr = formatDateFull(currentDay.date);
   const currentWeekDay = getWeekDay(currentDay.date);
-  const currentDayLabel = getRelativeDayLabel(currentDayIndex - TODAY_INDEX);
+  const currentDayLabel =
+    currentDayIndex === todayIndex
+      ? 'Сегодня'
+      : currentDayIndex === todayIndex - 1
+        ? 'Вчера'
+        : currentDayIndex === todayIndex + 1
+          ? 'Завтра'
+          : getWeekDay(currentDay.date);
+
   const avgScore = 74.2;
   const ratingPos = 12;
   const totalStudents = 87;
   const groupName = (user as { groupName?: string })?.groupName ?? '09-411';
   const firstName = user?.firstName ?? 'Тимур';
-  const weekNumber = WEEK_BASE_NUMBER;
+  const weekNumber = getIsoWeekNumber(currentDay.date);
 
   const lessonsCountLabel = useMemo(() => {
+    if (isWeekScheduleLoading) {
+      return 'загружаем расписание';
+    }
+
+    if (weekScheduleError) {
+      return 'расписание недоступно';
+    }
+
     const count = currentDay.lessons.length;
 
     if (count === 1) {
@@ -148,146 +164,58 @@ export default function StudentHomePage() {
     }
 
     return `${count} занятий`;
-  }, [currentDay.lessons.length]);
+  }, [currentDay.lessons.length, isWeekScheduleLoading, weekScheduleError]);
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <section className={styles.greeting}>
-          <div className={styles.greetingBody}>
-            <Typography className={styles.greetingTitle}>
-              Добрый день, {firstName}
-            </Typography>
-            <div className={styles.greetingMeta}>
-              <span>{currentWeekDay}, {currentDateStr}</span>
-              <span className={styles.metaDot}>•</span>
-              <span>Неделя {weekNumber}</span>
-              <span className={styles.metaDot}>•</span>
-              <strong>{lessonsCountLabel} {currentDayLabel.toLowerCase()}</strong>
-            </div>
-          </div>
+        <PageHero
+          className={styles.homeHero}
+          title={`Добрый день, ${firstName}`}
+          meta={(
+            <>
+              <span className={styles.heroMetaItem}>{currentWeekDay}, {currentDateStr}</span>
+              <span className={styles.heroMetaDot}>·</span>
+              <span className={styles.heroMetaItem}>Неделя {weekNumber}</span>
+              <span className={styles.heroMetaDot}>·</span>
+              <strong className={styles.heroMetaStrong}>
+                {lessonsCountLabel} {currentDayLabel.toLowerCase()}
+              </strong>
+            </>
+          )}
+          action={(
+            <Link href="/student/schedule" className={styles.greetingLink}>
+              Перейти в расписание <ArrowForwardIcon sx={{ fontSize: 22 }} />
+            </Link>
+          )}
+        />
 
-          <Link href="/student/schedule" className={styles.greetingLink}>
-            Перейти в расписание <ArrowForwardIcon sx={{ fontSize: 28 }} />
-          </Link>
-        </section>
+        <StudentHomeScheduleSection
+          previousDay={previousDay}
+          currentDay={currentDay}
+          nextDay={nextDay}
+          currentDayIndex={currentDayIndex}
+          todayIndex={todayIndex}
+          totalDays={weekDays.length}
+          isLoading={isWeekScheduleLoading}
+          hasError={Boolean(weekScheduleError)}
+          onPrevious={() => {
+            setSelectedDayIndex((index) => Math.max(0, (index ?? currentDayIndex) - 1));
+          }}
+          onNext={() => {
+            setSelectedDayIndex((index) => Math.min(weekDays.length - 1, (index ?? currentDayIndex) + 1));
+          }}
+        />
 
-        <section id="schedule" className={styles.scheduleStage}>
-          <div className={styles.stageTag}>{getStageTag(currentDayIndex)}</div>
+        <StudentHomeInsightsSection
+          avgScore={avgScore}
+          ratingPos={ratingPos}
+          totalStudents={totalStudents}
+          groupName={groupName}
+          grades={MOCK_GRADES}
+        />
 
-          <div className={styles.stageLayout}>
-            <div className={`${styles.sideColumn} ${styles.sideColumnLeft}`}>
-              {previousDay ? (
-                <>
-                  <div className={styles.sideLabel}>{getRelativeDayLabel(currentDayIndex - TODAY_INDEX - 1).toUpperCase()}</div>
-                  {previousDay.lessons.length > 0 ? (
-                    previousDay.lessons.map((lesson) => (
-                      <LessonCard key={lesson.id} {...lesson} variant="preview" />
-                    ))
-                  ) : (
-                    <EmptyDay isCompact />
-                  )}
-                </>
-              ) : null}
-            </div>
-
-            <button
-              type="button"
-              className={styles.arrowButton}
-              aria-label="Показать предыдущий день"
-              onClick={() => setCurrentDayIndex((index) => Math.max(0, index - 1))}
-              disabled={currentDayIndex === 0}
-            >
-              <ChevronLeftRoundedIcon sx={{ fontSize: 26 }} />
-            </button>
-
-            <div className={styles.todayColumn}>
-              {currentDay.lessons.length > 0 ? (
-                currentDay.lessons.map((lesson) => (
-                  <LessonCard key={lesson.id} {...lesson} variant="hero" />
-                ))
-              ) : (
-                <EmptyDay />
-              )}
-            </div>
-
-            <button
-              type="button"
-              className={styles.arrowButton}
-              aria-label="Показать следующий день"
-              onClick={() => setCurrentDayIndex((index) => Math.min(MOCK_DAYS.length - 1, index + 1))}
-              disabled={currentDayIndex === MOCK_DAYS.length - 1}
-            >
-              <ChevronRightRoundedIcon sx={{ fontSize: 26 }} />
-            </button>
-
-            <div className={`${styles.sideColumn} ${styles.sideColumnRight}`}>
-              {nextDay ? (
-                <>
-                  <div className={styles.sideLabel}>{getRelativeDayLabel(currentDayIndex - TODAY_INDEX + 1).toUpperCase()}</div>
-                  {nextDay.lessons.length > 0 ? (
-                    nextDay.lessons.map((lesson) => (
-                      <LessonCard key={lesson.id} {...lesson} variant="preview" />
-                    ))
-                  ) : (
-                    <EmptyDay isCompact />
-                  )}
-                </>
-              ) : null}
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.insightsSection}>
-          <Typography className={styles.sectionTitle}>Успеваемость и рейтинг</Typography>
-
-          <div className={styles.insightsCard}>
-            <div className={styles.primaryStat}>
-              <div className={styles.primaryScore}>{avgScore}</div>
-              <div className={styles.primaryLabel}>СРЕДНИЙ БАЛЛ</div>
-              <Link href="/student/rating" className={styles.primaryLink}>
-                Смотреть подробный рейтинг <ArrowForwardIcon sx={{ fontSize: 22 }} />
-              </Link>
-            </div>
-
-            <div className={styles.secondaryStat}>
-              <div className={styles.secondaryValue}>{ratingPos} из {totalStudents}</div>
-              <div className={styles.secondaryLabel}>Группа {groupName}</div>
-            </div>
-
-            <div className={styles.subjectScores}>
-              {MOCK_GRADES.map((grade) => (
-                <div
-                  key={grade.subject}
-                  className={`${styles.subjectScoreRow} ${grade.score < 70 ? styles.subjectScoreRowDim : ''}`}
-                >
-                  <span>{grade.subject}</span>
-                  <strong>{grade.score}</strong>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.changesSection}>
-          <Typography className={styles.sectionTitle}>Последние изменения</Typography>
-
-          <div className={styles.changesCard}>
-            {MOCK_NOTIFICATIONS.map((notification, index) => (
-              <article
-                key={notification.id}
-                className={`${styles.changeItem} ${index < MOCK_NOTIFICATIONS.length - 1 ? styles.changeItemBorder : ''}`}
-              >
-                <div className={styles.changeIcon}>{notification.icon}</div>
-                <div className={styles.changeBody}>
-                  <p className={styles.changeTitle}>{notification.title}</p>
-                  <p className={styles.changeSubtitle}>{notification.subtitle}</p>
-                </div>
-                <span className={styles.changeTime}>{notification.time}</span>
-              </article>
-            ))}
-          </div>
-        </section>
+        <StudentHomeRecentChangesSection notifications={MOCK_NOTIFICATIONS} />
       </div>
     </div>
   );

@@ -19,7 +19,6 @@ const ICON_VARIANT_CLASS = {
 };
 
 export function SubjectCard({
-  id,
   name,
   examType,
   groups = [],
@@ -27,7 +26,7 @@ export function SubjectCard({
   icon,
   iconVariant = 'brand',
 }: SubjectCardProps) {
-  const linkHref = href ?? `/teacher/subjects/${id}`;
+  const linkHref = href ?? '/teacher/subjects';
   const groupsLabel = groups.length > 1 ? 'Группы' : 'Группа';
 
   return (

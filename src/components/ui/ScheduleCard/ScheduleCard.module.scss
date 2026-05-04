@@ -1,0 +1,131 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+@use '@/styles/typography' as *;
+
+.root {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  min-height: 100px;
+  padding: 24px 28px;
+  border-radius: 12px;
+  background: $color-surface;
+  border: 1px solid rgba(227, 233, 236, 0.94);
+  box-shadow: 0 8px 24px rgba(146, 164, 183, 0.08);
+  transition: box-shadow $transition-fast, transform $transition-fast;
+
+  &:hover {
+    box-shadow: 0 12px 30px rgba(146, 164, 183, 0.13);
+    transform: translateY(-1px);
+  }
+
+  @include tablet {
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    padding: 20px 20px;
+  }
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: $font-family-heading;
+  font-size: clamp(17px, 1.2vw, 22px);
+  font-weight: 700;
+  line-height: 1;
+  color: $color-text-primary;
+  white-space: nowrap;
+  align-self: center;
+
+  @include tablet {
+    grid-column: 1 / -1;
+    font-size: 17px;
+  }
+}
+
+.timeDash {
+  color: #66788d;
+  margin: 0 1px;
+}
+
+.body {
+  @include flex-column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: $font-family-heading;
+  font-size: clamp(18px, 1.4vw, 26px);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: $color-text-primary;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #97a7bd;
+  white-space: nowrap;
+}
+
+.extra {
+  margin-top: 4px;
+}
+
+.moreButton {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border: 2px solid rgba(155, 173, 196, 0.6);
+  border-radius: 50%;
+  background: transparent;
+  color: #9badc4;
+  cursor: pointer;
+  @include flex-center;
+  transition: color $transition-fast, border-color $transition-fast, background $transition-fast;
+  align-self: center;
+
+  &:hover {
+    color: $color-brand;
+    border-color: $color-brand;
+    background: rgba(191, 232, 255, 0.24);
+  }
+
+  @include tablet {
+    grid-row: 2;
+    grid-column: 2;
+    align-self: start;
+    margin-top: 2px;
+  }
+}
+
+@include mobile {
+  .root {
+    padding: 18px 16px;
+    border-radius: 14px;
+    gap: 12px;
+  }
+
+  .meta {
+    gap: 6px 12px;
+  }
+
+  .metaItem {
+    font-size: 13px;
+  }
+}

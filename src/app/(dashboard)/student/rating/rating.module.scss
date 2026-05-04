@@ -10,29 +10,15 @@
 .container {
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: 24px $content-padding 48px;
+  padding: 32px $content-padding 64px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
-}
+  gap: 24px;
 
-.hero {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.title {
-  font-family: $font-family-heading !important;
-  font-size: clamp(34px, 2.6vw, 52px) !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.05em !important;
-  color: $color-text-primary !important;
-}
-
-.subtitle {
-  font-size: 17px;
-  color: #67757f;
+  @include tablet {
+    padding: 24px 24px 56px;
+    gap: 20px;
+  }
 }
 
 .overview {
@@ -73,6 +59,14 @@
   letter-spacing: -0.04em;
   text-align: center;
   color: $color-brand;
+}
+
+.statHint {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+  color: #97a7bd;
 }
 
 .filterCard {
@@ -128,25 +122,143 @@
 }
 
 @include tablet {
-  .container {
-    padding: 24px 24px 40px;
+  .overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .overview {
-    grid-template-columns: 1fr;
+  .filterCard {
+    grid-column: 1 / -1;
   }
 }
 
 @include mobile {
-  .title {
-    font-size: 30px !important;
-  }
-
-  .subtitle {
-    font-size: 15px;
+  .page {
+    min-height: calc(100vh - 73px);
   }
 
   .container {
+    padding: 24px 20px 56px;
+    gap: 28px;
+  }
+
+  .ratingHero {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+
+    h1 {
+      font-size: 38px;
+      line-height: 1.15;
+      letter-spacing: -0.055em;
+    }
+
+    p {
+      margin-top: 12px;
+      max-width: 320px;
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.45;
+      letter-spacing: -0.025em;
+      text-transform: none;
+      color: #8f9fb5;
+    }
+  }
+
+  .overview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .statCard {
+    min-height: 176px;
+    padding: 26px 14px;
+    border-radius: 6px;
+    gap: 15px;
+    box-shadow: 0 16px 36px rgba(43, 52, 55, 0.12);
+  }
+
+  .statLabel {
+    font-size: 17px;
+    line-height: 1.32;
+    letter-spacing: 0.13em;
+    color: #9badc4;
+  }
+
+  .statValue {
+    font-size: 42px;
+  }
+
+  .statHint {
+    margin-top: -2px;
+    font-size: 13px;
+    color: #9badc4;
+  }
+
+  .filterCard {
+    grid-column: 1 / -1;
+    min-height: 0;
+    padding: 27px 26px 28px;
+    border-radius: 7px;
+    background: rgba(241, 244, 246, 0.98);
+    box-shadow: 0 16px 36px rgba(43, 52, 55, 0.1);
     gap: 24px;
+  }
+
+  .filterTitle {
+    font-size: 18px;
+    line-height: 1.2;
+    letter-spacing: 0.13em;
+    color: #9badc4;
+  }
+
+  .filterList {
+    gap: 10px;
+  }
+
+  .filterButton {
+    min-height: 48px;
+    padding: 0 26px;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #9badc4;
+    box-shadow: 0 6px 16px rgba(146, 164, 183, 0.06);
+  }
+
+  .filterButtonActive {
+    color: #ffffff;
+  }
+}
+
+@media (max-width: 380px) {
+  .container {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .ratingHero h1 {
+    font-size: 34px;
+  }
+
+  .statCard {
+    min-height: 160px;
+  }
+
+  .statLabel {
+    font-size: 15px;
+  }
+
+  .statValue {
+    font-size: 38px;
+  }
+
+  .filterCard {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .filterButton {
+    padding: 0 18px;
+    font-size: 14px;
   }
 }

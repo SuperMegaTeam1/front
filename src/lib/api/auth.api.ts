@@ -1,14 +1,22 @@
 import api from './axios';
-import type { LoginPayload, LoginResponse, ApiResponse } from '@/types/api';
+import type {
+  AuthResponse,
+  AuthUserResponse,
+  BackendLoginRequest,
+  LoginPayload,
+} from './types';
 
-/** Логин пользователя */
-export const login = (payload: LoginPayload) =>
-  api.post<ApiResponse<LoginResponse>>('/auth/login', payload);
+export function login(payload: LoginPayload) {
+  const request: BackendLoginRequest = {
+    email: payload.login,
+    password: payload.password,
+  };
 
-/** Выход */
-export const logout = () =>
-  api.post('/auth/logout');
+  return api.post<AuthResponse>('/login', request);
+}
 
-/** Обновление токена */
-export const refreshToken = (token: string) =>
-  api.post<ApiResponse<LoginResponse>>('/auth/refresh', { refreshToken: token });
+export function getMe(token?: string) {
+  return api.get<AuthUserResponse>('/me', {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
+}

@@ -10,48 +10,15 @@
 .container {
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: 34px $content-padding 88px;
+  padding: 32px $content-padding 64px;
   display: flex;
   flex-direction: column;
-  gap: 72px;
+  gap: 24px;
 
   @include tablet {
-    padding: 24px 24px 64px;
-    gap: 48px;
+    padding: 24px 24px 56px;
+    gap: 20px;
   }
-
-  @include mobile {
-    padding: 20px 20px 56px;
-    gap: 40px;
-  }
-}
-
-.hero {
-  position: relative;
-  min-height: 124px;
-  display: flex;
-  align-items: center;
-  padding: 38px 28px 20px;
-}
-
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 22px 0 0;
-  border-radius: 14px;
-  background: rgba(241, 244, 246, 0.98);
-}
-
-.title {
-  position: relative;
-  z-index: 1;
-  margin: 24px 0 0 20px;
-  font-family: $font-family-heading !important;
-  font-size: clamp(26px, 2.3vw, 40px) !important;
-  font-weight: 800 !important;
-  line-height: 1.1 !important;
-  letter-spacing: -0.03em !important;
-  color: $color-text-primary !important;
 }
 
 .groups {
@@ -82,22 +49,6 @@
 }
 
 @include mobile {
-  .hero {
-    min-height: auto;
-    padding: 0;
-  }
-
-  .hero::after {
-    display: none;
-  }
-
-  .title {
-    margin: 0;
-    font-size: 42px !important;
-    line-height: 1.06 !important;
-    letter-spacing: -0.04em !important;
-  }
-
   .groups {
     gap: 50px;
   }

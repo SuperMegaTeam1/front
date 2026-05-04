@@ -1,226 +1,75 @@
 'use client';
 
-import Link from 'next/link';
-import { Avatar, Typography } from '@mui/material';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
-import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined';
-import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
-import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
-import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
-import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import { useAuthStore } from '@/stores/useAuthStore';
-import type { Teacher } from '@/types/user';
+import ContactPhoneOutlinedIcon from '@mui/icons-material/ContactPhoneOutlined';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { PageHero, InfoCard, FieldItem, LogoutButton } from '@/components/ui';
 import styles from './profile.module.scss';
 
-const FALLBACK_TEACHER: Teacher = {
-  id: 1,
-  login: 'dmitriev.da',
-  firstName: 'Дмитрий',
-  lastName: 'Иванов',
-  patronymic: 'Александрович',
-  phone: '+7 (917) 555-18-27',
-  role: 'teacher',
-  subjectIds: [1, 2, 3, 4],
+const TEACHER_PROFILE = {
+  fullName: 'Закиров Тимур Салаватович',
+  role: 'Преподаватель',
+  degree: 'Кандидат технических наук',
+  position: 'Доцент кафедры программной инженерии',
+  startedAt: '2018 года',
+  education: 'ИВМиИТ КФУ (выпуск 2015)',
+  disciplines: 'Архитектура информационных систем, Разработка мобильных приложений, Объектно-ориентированное программирование',
+  email: 't.zakirov@kpfu.ru',
+  office: 'ул. Кремлевская, 35, ауд. 1008',
+  phone: '+7 (843) 233-71-09',
 };
 
-const SUBJECTS = [
-  { name: 'Базы данных', details: 'Лекции и практики для 09-351, 09-352' },
-  { name: 'Дискретная математика', details: 'Практические занятия для 09-234, 09-251' },
-  { name: 'Программная инженерия', details: 'Лабораторные для 08-222, 09-351' },
-];
-
-const WEEK_SCHEDULE = [
-  { label: 'Сегодня', value: '3 пары' },
-  { label: 'На этой неделе', value: '12 занятий' },
-  { label: 'Приём студентов', value: 'Чт 15:00-17:00' },
-];
-
 export default function TeacherProfilePage() {
-  const { user } = useAuthStore();
-  const teacher = user?.role === 'teacher' ? (user as Teacher) : FALLBACK_TEACHER;
-  const subjectIds = Array.isArray(teacher.subjectIds) ? teacher.subjectIds : FALLBACK_TEACHER.subjectIds;
-
-  const fullName = [teacher.lastName, teacher.firstName, teacher.patronymic]
-    .filter(Boolean)
-    .join(' ');
-  const shortName = [teacher.firstName, teacher.patronymic].filter(Boolean).join(' ');
-  const initials = `${teacher.firstName[0] ?? ''}${teacher.lastName[0] ?? ''}`.trim() || 'МИ';
-  const email = teacher.login ? `${teacher.login}@kpfu.ru` : 'ivmiit@kpfu.ru';
-  const subjectsCount = subjectIds.length || SUBJECTS.length;
+  const { logout } = useAuth();
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <section className={styles.hero}>
-          <div className={styles.heroBody}>
-            <span className={styles.eyebrow}>ПРОФИЛЬ ПРЕПОДАВАТЕЛЯ</span>
-            <Typography className={styles.title}>{fullName}</Typography>
-            <Typography className={styles.subtitle}>
-              Личный кабинет преподавателя ИВМиИТ с актуальной учебной нагрузкой,
-              контактами и быстрым доступом к основным рабочим разделам.
-            </Typography>
+        <PageHero title="Профиль" subtitle="Личные и профессиональные данные" />
 
-            <div className={styles.heroMeta}>
-              <span>ИВМиИТ КФУ</span>
-              <span className={styles.metaDot}>·</span>
-              <span>{subjectsCount} дисциплины</span>
-              <span className={styles.metaDot}>·</span>
-              <span>Очный формат</span>
-            </div>
-
-            <Link href="/teacher/schedule" className={styles.primaryLink}>
-              Перейти в расписание <ArrowForwardIcon sx={{ fontSize: 24 }} />
-            </Link>
-          </div>
-
+        <div className={styles.content}>
           <aside className={styles.profileCard}>
-            <div className={styles.profileHead}>
-              <Avatar
-                variant="rounded"
-                className={styles.avatar}
-                sx={{
-                  bgcolor: '#2a657e',
-                  width: 88,
-                  height: 88,
-                  borderRadius: '24px',
-                  fontSize: '30px',
-                  fontWeight: 800,
-                }}
-              >
-                {initials}
-              </Avatar>
-
-              <div className={styles.profileHeadText}>
-                <p className={styles.profileName}>{shortName}</p>
-                <p className={styles.profileRole}>Преподаватель</p>
-              </div>
+            <div className={styles.avatarBox}>
+              <AccountCircleOutlinedIcon sx={{ fontSize: 48 }} />
             </div>
+            <h2 className={styles.profileName}>{TEACHER_PROFILE.fullName}</h2>
+            <span className={styles.roleBadge}>{TEACHER_PROFILE.role}</span>
 
-            <div className={styles.contactList}>
-              <div className={styles.contactItem}>
-                <BadgeOutlinedIcon sx={{ fontSize: 24 }} />
-                <span>{teacher.login}</span>
-              </div>
-              <div className={styles.contactItem}>
-                <MailOutlineRoundedIcon sx={{ fontSize: 24 }} />
-                <span>{email}</span>
-              </div>
-              <div className={styles.contactItem}>
-                <LocalPhoneOutlinedIcon sx={{ fontSize: 24 }} />
-                <span>{teacher.phone || '+7 (843) 233-71-09'}</span>
-              </div>
+            <div className={styles.cardDivider} />
+
+            <div className={styles.profileFacts}>
+              <FieldItem label="Ученая степень" value={TEACHER_PROFILE.degree} />
+              <FieldItem label="Должность" value={TEACHER_PROFILE.position} />
             </div>
           </aside>
-        </section>
 
-        <section className={styles.statsGrid}>
-          <article className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <MenuBookOutlinedIcon sx={{ fontSize: 32 }} />
-            </div>
-            <div>
-              <p className={styles.statValue}>{subjectsCount}</p>
-              <p className={styles.statLabel}>Активные дисциплины</p>
-            </div>
-          </article>
-
-          <article className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <Groups2OutlinedIcon sx={{ fontSize: 32 }} />
-            </div>
-            <div>
-              <p className={styles.statValue}>6</p>
-              <p className={styles.statLabel}>Учебные группы</p>
-            </div>
-          </article>
-
-          <article className={styles.statCard}>
-            <div className={styles.statIcon}>
-              <CalendarMonthOutlinedIcon sx={{ fontSize: 32 }} />
-            </div>
-            <div>
-              <p className={styles.statValue}>12</p>
-              <p className={styles.statLabel}>Занятий на неделе</p>
-            </div>
-          </article>
-        </section>
-
-        <section className={styles.contentGrid}>
-          <article className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <Typography className={styles.panelTitle}>Основная информация</Typography>
-              <span className={styles.panelPill}>Профиль</span>
-            </div>
-
-            <div className={styles.infoRows}>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>ФИО</span>
-                <span className={styles.infoValue}>{fullName}</span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Роль</span>
-                <span className={styles.infoValue}>Преподаватель</span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Подразделение</span>
-                <span className={styles.infoValue}>Институт вычислительной математики и информационных технологий</span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Логин</span>
-                <span className={styles.infoValue}>{teacher.login}</span>
-              </div>
-              <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Телефон</span>
-                <span className={styles.infoValue}>{teacher.phone || '+7 (843) 233-71-09'}</span>
-              </div>
-            </div>
-          </article>
-
-          <article className={styles.panel}>
-            <div className={styles.panelHeader}>
-              <Typography className={styles.panelTitle}>Учебная нагрузка</Typography>
-              <span className={styles.panelPill}>Текущий семестр</span>
-            </div>
-
-            <div className={styles.subjectList}>
-              {SUBJECTS.map((subject) => (
-                <div key={subject.name} className={styles.subjectItem}>
-                  <div className={styles.subjectIcon}>
-                    <SchoolOutlinedIcon sx={{ fontSize: 24 }} />
-                  </div>
-                  <div className={styles.subjectBody}>
-                    <p className={styles.subjectName}>{subject.name}</p>
-                    <p className={styles.subjectDetails}>{subject.details}</p>
-                  </div>
+          <div className={styles.detailsColumn}>
+            <InfoCard title="Информация о преподавателе" icon={<SchoolOutlinedIcon sx={{ fontSize: 22 }} />}>
+              <div className={styles.infoGrid}>
+                <FieldItem label="В университете с" value={TEACHER_PROFILE.startedAt} />
+                <FieldItem label="Образование" value={TEACHER_PROFILE.education} />
+                <div className={styles.wide}>
+                  <FieldItem label="Преподаваемые дисциплины" value={TEACHER_PROFILE.disciplines} />
                 </div>
-              ))}
-            </div>
-          </article>
-        </section>
+              </div>
+            </InfoCard>
 
-        <section className={styles.panel}>
-          <div className={styles.panelHeader}>
-            <Typography className={styles.panelTitle}>Рабочий ритм</Typography>
-            <span className={styles.panelPill}>Неделя 10</span>
+            <InfoCard title="Контактные данные" icon={<ContactPhoneOutlinedIcon sx={{ fontSize: 22 }} />} variant="white">
+              <div className={styles.contactGrid}>
+                <FieldItem label="Рабочая почта" value={TEACHER_PROFILE.email} />
+                <FieldItem label="Кабинет" value={TEACHER_PROFILE.office} />
+                <div className={styles.wide}>
+                  <FieldItem label="Телефон (раб.)" value={TEACHER_PROFILE.phone} />
+                </div>
+              </div>
+            </InfoCard>
           </div>
+        </div>
 
-          <div className={styles.scheduleGrid}>
-            {WEEK_SCHEDULE.map((item) => (
-              <div key={item.label} className={styles.scheduleCard}>
-                <div className={styles.scheduleIcon}>
-                  <AccessTimeOutlinedIcon sx={{ fontSize: 26 }} />
-                </div>
-                <div>
-                  <p className={styles.scheduleLabel}>{item.label}</p>
-                  <p className={styles.scheduleValue}>{item.value}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <div className={styles.actions}>
+          <LogoutButton onClick={() => logout()} />
+        </div>
       </div>
     </div>
   );

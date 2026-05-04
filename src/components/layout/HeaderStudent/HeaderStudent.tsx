@@ -10,6 +10,7 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import { useUnreadCount } from '@/lib/hooks/useNotifications';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { HeaderStudentMobile } from './HeaderStudentMobile';
 import styles from './HeaderStudent.module.scss';
 
 const HOME_PATH = '/student/home';
@@ -33,86 +34,90 @@ export function HeaderStudent() {
   const isProfilePage = pathname === PROFILE_PATH;
 
   return (
-    <header className={styles.root}>
-      <div className={styles.inner}>
-        <Link href={HOME_PATH} className={styles.logo}>
-          Мой ИВМиИТ
-        </Link>
-
-        <nav className={styles.nav} aria-label="Основная навигация студента">
-          <Link
-            href={HOME_PATH}
-            className={`${styles.navIconLink} ${isHomePage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
-            aria-label="Главная"
-            aria-current={isHomePage ? 'page' : undefined}
-          >
-            <HomeRoundedIcon sx={{ fontSize: 28 }} />
-            {isHomePage && <span className={styles.navText}>Главная</span>}
+    <>
+      <header className={styles.root}>
+        <div className={styles.inner}>
+          <Link href={HOME_PATH} className={styles.logo}>
+            Мой ИВМиИТ
           </Link>
 
-          <Link
-            href={SCHEDULE_PATH}
-            className={`${styles.navIconLink} ${isSchedulePage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
-            aria-label="Расписание"
-            aria-current={isSchedulePage ? 'page' : undefined}
-          >
-            <CalendarMonthOutlinedIcon sx={{ fontSize: 28 }} />
-            {isSchedulePage && <span className={styles.navText}>Расписание</span>}
-          </Link>
-
-          <Link
-            href={RATING_PATH}
-            className={`${styles.navIconLink} ${isRatingPage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
-            aria-label="Рейтинг"
-            aria-current={isRatingPage ? 'page' : undefined}
-          >
-            <BarChartRoundedIcon sx={{ fontSize: 28 }} />
-            {isRatingPage && <span className={styles.navText}>Рейтинг</span>}
-          </Link>
-        </nav>
-
-        <div className={styles.actions}>
-          <button type="button" className={styles.actionButton} aria-label="Сменить тему">
-            <DarkModeOutlinedIcon sx={{ fontSize: 28 }} />
-          </button>
-
-          <Link
-            href={NOTIFICATIONS_PATH}
-            className={`${styles.actionButton} ${isNotificationsPage ? `${styles.actionButtonActive} ${styles.actionButtonExpanded}` : ''}`}
-            aria-label="Уведомления"
-            aria-current={isNotificationsPage ? 'page' : undefined}
-          >
-            <Badge
-              badgeContent={unreadCount || null}
-              color="error"
-              sx={{ '& .MuiBadge-badge': { fontSize: '10px', minWidth: '16px', height: '16px' } }}
+          <nav className={styles.nav} aria-label="Основная навигация студента">
+            <Link
+              href={HOME_PATH}
+              className={`${styles.navIconLink} ${isHomePage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
+              aria-label="Главная"
+              aria-current={isHomePage ? 'page' : undefined}
             >
-              <NotificationsNoneOutlinedIcon sx={{ fontSize: 28 }} />
-            </Badge>
-            {isNotificationsPage && <span className={styles.actionText}>Уведомления</span>}
-          </Link>
+              <HomeRoundedIcon sx={{ fontSize: 28 }} />
+              {isHomePage && <span className={styles.navText}>Главная</span>}
+            </Link>
 
-          <Avatar
-            component={Link}
-            href={PROFILE_PATH}
-            variant="rounded"
-            className={`${styles.profileAvatar} ${isProfilePage ? styles.profileAvatarActive : ''}`}
-            sx={{
-              bgcolor: '#201b2d',
-              width: 62,
-              height: 62,
-              fontSize: '20px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              textDecoration: 'none',
-              borderRadius: '14px',
-            }}
-            aria-current={isProfilePage ? 'page' : undefined}
-          >
-            {avatarLabel}
-          </Avatar>
+            <Link
+              href={SCHEDULE_PATH}
+              className={`${styles.navIconLink} ${isSchedulePage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
+              aria-label="Расписание"
+              aria-current={isSchedulePage ? 'page' : undefined}
+            >
+              <CalendarMonthOutlinedIcon sx={{ fontSize: 28 }} />
+              {isSchedulePage && <span className={styles.navText}>Расписание</span>}
+            </Link>
+
+            <Link
+              href={RATING_PATH}
+              className={`${styles.navIconLink} ${isRatingPage ? `${styles.navIconLinkActive} ${styles.navIconLinkExpanded}` : ''}`}
+              aria-label="Рейтинг"
+              aria-current={isRatingPage ? 'page' : undefined}
+            >
+              <BarChartRoundedIcon sx={{ fontSize: 28 }} />
+              {isRatingPage && <span className={styles.navText}>Рейтинг</span>}
+            </Link>
+          </nav>
+
+          <div className={styles.actions}>
+            <button type="button" className={styles.actionButton} aria-label="Сменить тему">
+              <DarkModeOutlinedIcon sx={{ fontSize: 28 }} />
+            </button>
+
+            <Link
+              href={NOTIFICATIONS_PATH}
+              className={`${styles.actionButton} ${isNotificationsPage ? `${styles.actionButtonActive} ${styles.actionButtonExpanded}` : ''}`}
+              aria-label="Уведомления"
+              aria-current={isNotificationsPage ? 'page' : undefined}
+            >
+              <Badge
+                badgeContent={unreadCount || null}
+                color="error"
+                sx={{ '& .MuiBadge-badge': { fontSize: '10px', minWidth: '16px', height: '16px' } }}
+              >
+                <NotificationsNoneOutlinedIcon sx={{ fontSize: 28 }} />
+              </Badge>
+              {isNotificationsPage && <span className={styles.actionText}>Уведомления</span>}
+            </Link>
+
+            <Avatar
+              component={Link}
+              href={PROFILE_PATH}
+              variant="rounded"
+              className={`${styles.profileAvatar} ${isProfilePage ? styles.profileAvatarActive : ''}`}
+              sx={{
+                bgcolor: '#201b2d',
+                width: 62,
+                height: 62,
+                fontSize: '20px',
+                fontWeight: 700,
+                cursor: 'pointer',
+                textDecoration: 'none',
+                borderRadius: '14px',
+              }}
+              aria-current={isProfilePage ? 'page' : undefined}
+            >
+              {avatarLabel}
+            </Avatar>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      <HeaderStudentMobile />
+    </>
   );
 }

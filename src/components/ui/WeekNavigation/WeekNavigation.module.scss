@@ -1,0 +1,75 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.root {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
+  align-items: center;
+  width: 100%;
+  min-width: 280px;
+  min-height: 48px;
+  overflow: hidden;
+  border: 1px solid rgba(227, 233, 236, 0.92);
+  border-radius: 16px;
+  background: rgba(248, 249, 250, 0.98);
+  box-shadow: 0 8px 20px rgba(146, 164, 183, 0.08);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 18px;
+  border: 0;
+  background: transparent;
+  color: $color-brand;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  transition: background $transition-fast, color $transition-fast;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(191, 232, 255, 0.28);
+  }
+
+  &:disabled {
+    color: #b5c2d1;
+    cursor: not-allowed;
+  }
+
+  &:disabled:hover {
+    background: transparent;
+  }
+}
+
+.divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(151, 169, 189, 0.35);
+}
+
+@include mobile {
+  .root {
+    min-width: 0;
+    min-height: 52px;
+    border-radius: 14px;
+  }
+
+  .button {
+    min-height: 52px;
+    padding: 0 10px;
+    gap: 3px;
+    font-size: 12px;
+    letter-spacing: 0.07em;
+  }
+
+  .divider {
+    height: 30px;
+  }
+}
