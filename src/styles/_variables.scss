@@ -1,87 +1,60 @@
-// ==========================================
-// Цветовая палитра — из Figma (Мой ИВМиИТ)
-// ==========================================
+$color-brand: var(--color-brand);
+$color-brand-dark: var(--color-brand-dark);
+$color-brand-light: var(--color-brand-light);
 
-// Бренд (тёмно-бирюзовый — основной цвет проекта)
-$color-brand: #2a657e;
-$color-brand-dark: #004b63;  // градиент кнопки: верх
-$color-brand-light: #bfe8ff; // акценты, hover, активные пункты меню
+$color-primary: var(--color-primary);
+$color-primary-light: var(--color-primary-light);
+$color-primary-dark: var(--color-primary-dark);
 
-// Совместимые алиасы (чтобы не ломать существующие импорты)
-$color-primary: $color-brand;
-$color-primary-light: $color-brand-light;
-$color-primary-dark: $color-brand-dark;
+$gradient-login: var(--gradient-login);
 
-// Градиент кнопки входа
-$gradient-login: linear-gradient(135deg, #004b63 0%, #006686 100%);
+$color-secondary: var(--color-secondary);
 
-// Вспомогательный secondary (пока не используется в Figma, оставлен из дефолта)
-$color-secondary: #7c4dff;
+$color-success: var(--color-success);
+$color-warning: var(--color-warning);
+$color-error: var(--color-error);
+$color-info: var(--color-info);
 
-// Статусы
-$color-success: #2e7d32;
-$color-warning: #f57f17;
-$color-error: #d32f2f;
-$color-info: #0288d1;
+$color-bg: var(--color-bg);
+$color-surface: var(--color-surface);
+$color-surface-alt: var(--color-surface-alt);
+$color-text-primary: var(--color-text-primary);
+$color-text-secondary: var(--color-text-secondary);
+$color-text-label: var(--color-text-label);
+$color-border: var(--color-border);
+$color-border-soft: var(--color-border-soft);
+$color-divider: var(--color-divider);
+$color-input-bg: var(--color-input-bg);
 
-// Нейтральные — фон/поверхности/текст из Figma
-$color-bg: #f8f9fa;             // фон страницы
-$color-surface: #ffffff;        // карточки
-$color-surface-alt: #f1f4f6;    // greeting-блок, спокойные фоны
-$color-text-primary: #2b3437;   // основной текст
-$color-text-secondary: #94a3b8; // meta, подписи
-$color-text-label: #586064;     // label над инпутом
-$color-border: #e3e9ec;
-$color-divider: #e3e9ec;
-$color-input-bg: #dbe4e7;       // фон инпута (login screen)
+$spacing-xs: var(--spacing-xs);
+$spacing-sm: var(--spacing-sm);
+$spacing-md: var(--spacing-md);
+$spacing-lg: var(--spacing-lg);
+$spacing-xl: var(--spacing-xl);
+$spacing-2xl: var(--spacing-2xl);
 
-// ==========================================
-// Отступы (4px-база)
-// ==========================================
-$spacing-xs: 4px;
-$spacing-sm: 8px;
-$spacing-md: 16px;
-$spacing-lg: 24px;
-$spacing-xl: 32px;
-$spacing-2xl: 48px;
+$radius-sm: var(--radius-sm);
+$radius-md: var(--radius-md);
+$radius-lg: var(--radius-lg);
+$radius-xl: var(--radius-xl);
+$radius-full: var(--radius-full);
 
-// ==========================================
-// Скругления — из Figma
-// ==========================================
-$radius-sm: 4px;
-$radius-md: 8px;
-$radius-lg: 12px;
-$radius-xl: 16px;
-$radius-full: 9999px;
+$shadow-sm: var(--shadow-sm);
+$shadow-md: var(--shadow-md);
+$shadow-lg: var(--shadow-lg);
+$shadow-btn: var(--shadow-btn);
 
-// ==========================================
-// Тени — из Figma
-// ==========================================
-$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-$shadow-md: 0 4px 24px rgba(43, 52, 55, 0.08);
-$shadow-lg: 0 20px 40px rgba(25, 28, 30, 0.06);
-$shadow-btn: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+$transition-fast: var(--transition-fast);
+$transition-normal: var(--transition-normal);
+$transition-slow: var(--transition-slow);
 
-// ==========================================
-// Переходы
-// ==========================================
-$transition-fast: 150ms ease;
-$transition-normal: 250ms ease;
-$transition-slow: 400ms ease;
+$bp-mobile: var(--bp-mobile);
+$bp-tablet: var(--bp-tablet);
+$bp-desktop: var(--bp-desktop);
+$bp-wide: var(--bp-wide);
 
-// ==========================================
-// Breakpoints
-// ==========================================
-$bp-mobile: 480px;
-$bp-tablet: 768px;
-$bp-desktop: 1024px;
-$bp-wide: 1280px;
-
-// ==========================================
-// Layout
-// ==========================================
-$header-height: 73px;
-$sidebar-width: 260px;
-$sidebar-collapsed-width: 72px;
-$content-max-width: 1760px;
-$content-padding: 64px;
+$header-height: var(--header-height);
+$sidebar-width: var(--sidebar-width);
+$sidebar-collapsed-width: var(--sidebar-collapsed-width);
+$content-max-width: var(--content-max-width);
+$content-padding: var(--content-padding);

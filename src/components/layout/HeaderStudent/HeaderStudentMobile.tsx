@@ -8,8 +8,8 @@ import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import { useUnreadCount } from '@/lib/hooks/useNotifications';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { useNotificationStore } from '@/stores/useNotificationStore';
 import styles from './HeaderStudentMobile.module.scss';
 
 const HOME_PATH = '/student/home';
@@ -20,7 +20,7 @@ const PROFILE_PATH = '/student/profile';
 
 export function HeaderStudentMobile() {
   const { user } = useAuthStore();
-  const { unreadCount } = useNotificationStore();
+  const { data: unreadCount = 0 } = useUnreadCount();
   const pathname = usePathname();
 
   const avatarLabel = user

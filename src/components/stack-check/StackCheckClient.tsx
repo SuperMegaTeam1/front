@@ -2,14 +2,14 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { Button, Card, CardContent, Chip, Divider, Stack, Typography } from '@mui/material';
-import { useNotificationStore } from '@/stores/useNotificationStore';
+import { useUiStore } from '@/stores/useUiStore';
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export function StackCheckClient() {
-  const unreadCount = useNotificationStore((state) => state.unreadCount);
-  const setUnreadCount = useNotificationStore((state) => state.setUnreadCount);
-  const decrementUnread = useNotificationStore((state) => state.decrementUnread);
+  const isSidebarOpen = useUiStore((state) => state.isSidebarOpen);
+  const toggleSidebar = useUiStore((state) => state.toggleSidebar);
+  const setSidebarOpen = useUiStore((state) => state.setSidebarOpen);
 
   const demoQuery = useQuery({
     queryKey: ['stack-check'],
@@ -53,14 +53,14 @@ export function StackCheckClient() {
           <Stack spacing={1}>
             <Typography variant="subtitle1">Zustand</Typography>
             <Typography color="text.secondary">
-              Непрочитанных уведомлений в сторе: {unreadCount}
+              Sidebar в сторе: {isSidebarOpen ? 'open' : 'closed'}
             </Typography>
             <Stack direction="row" spacing={1}>
-              <Button variant="contained" onClick={() => setUnreadCount(3)}>
-                set 3
+              <Button variant="contained" onClick={toggleSidebar}>
+                toggle
               </Button>
-              <Button variant="outlined" onClick={decrementUnread}>
-                minus 1
+              <Button variant="outlined" onClick={() => setSidebarOpen(true)}>
+                open
               </Button>
             </Stack>
           </Stack>
