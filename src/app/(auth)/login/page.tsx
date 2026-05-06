@@ -3,10 +3,11 @@
 import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { TextField, Button, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
 import { useAuth } from '@/lib/hooks/useAuth';
 import type { LoginPayload } from '@/types/api';
+import { AuthTextField } from './AuthTextField';
 import styles from './login.module.scss';
 
 export default function LoginPage() {
@@ -106,14 +107,13 @@ export default function LoginPage() {
                     validate: (value) => value.trim().length > 0 || 'Введите данные для входа',
                   }}
                   render={({ field, fieldState }) => (
-                    <TextField
+                    <AuthTextField
                       {...field}
                       fullWidth
                       size="small"
                       placeholder="ivanov.i"
                       autoComplete="username"
                       error={!!fieldState.error}
-                      sx={fieldSx}
                     />
                   )}
                 />
@@ -128,7 +128,7 @@ export default function LoginPage() {
                     validate: (value) => value.trim().length > 0 || 'Введите данные для входа',
                   }}
                   render={({ field, fieldState }) => (
-                    <TextField
+                    <AuthTextField
                       {...field}
                       type="password"
                       fullWidth
@@ -136,7 +136,6 @@ export default function LoginPage() {
                       placeholder="••••••••"
                       autoComplete="current-password"
                       error={!!fieldState.error}
-                      sx={fieldSx}
                     />
                   )}
                 />

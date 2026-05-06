@@ -13,6 +13,7 @@ playwright-report/
 # production
 dist/
 build/
+*.tsbuildinfo
 
 # environment
 .env
@@ -27,3 +28,7 @@ pnpm-debug.log*
 # system
 .DS_Store
 Thumbs.db
+
+# IDE
+.idea/
+.vscode/

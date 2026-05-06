@@ -3,6 +3,7 @@ import { Manrope, IBM_Plex_Sans } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
 import './globals.scss';
 import { Providers } from '@/providers/Providers';
+import { rootCssVariables } from '@/theme/tokens';
 
 // Шрифты из Figma подключены через next/font:
 // — Next скачает их на этапе сборки, захостит локально (self-hosted),
@@ -33,6 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" className={`${manrope.variable} ${ibmPlexSans.variable}`}>
+      <head>
+        <style>{rootCssVariables}</style>
+      </head>
       <body>
         <AppRouterCacheProvider>
           <Providers>{children}</Providers>

@@ -7,8 +7,9 @@ import {
   markAsRead,
   sendNotification,
 } from '@/lib/api/notifications.api';
-import { useNotificationStore } from '@/stores/useNotificationStore';
 import type { SendNotificationPayload } from '@/types/notification';
+
+export const unreadCountQueryKey = ['notifications', 'unread-count'] as const;
 
 /** Хук: список уведомлений с пагинацией */
 export function useNotifications(page = 1) {
@@ -20,13 +21,10 @@ export function useNotifications(page = 1) {
 
 /** Хук: счётчик непрочитанных (обновляется каждые 30 сек) */
 export function useUnreadCount() {
-  const { setUnreadCount } = useNotificationStore();
-
   return useQuery({
-    queryKey: ['notifications', 'unread-count'],
+    queryKey: unreadCountQueryKey,
     queryFn: async () => {
       const res = await getUnreadCount();
-      setUnreadCount(res.data.data);
       return res.data.data;
     },
     refetchInterval: 30_000, // каждые 30 секунд
