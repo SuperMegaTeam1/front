@@ -2,8 +2,8 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { getMe, login as loginApi } from '@/lib/api/auth.api';
-import { mapAuthUserToUser } from '@/lib/api/types';
+import { getRoleFromToken, getStudentMe, getTeacherMe, login as loginApi } from '@/lib/api/auth.api';
+import { mapStudentMeToUser, mapTeacherMeToUser } from '@/lib/api/types';
 import { useAuthStore } from '@/stores/useAuthStore';
 import type { LoginPayload } from '@/types/api';
 
@@ -15,11 +15,19 @@ export function useAuth() {
     mutationFn: async (payload: LoginPayload) => {
       const loginResponse = await loginApi(payload);
       const accessToken = loginResponse.data.token;
-      const meResponse = await getMe(accessToken);
+      const role = getRoleFromToken(accessToken);
+      if (!role) {
+        throw new Error('Unable to determine role from access token');
+      }
+
+      const user =
+        role === 'student'
+          ? mapStudentMeToUser((await getStudentMe(accessToken)).data)
+          : mapTeacherMeToUser((await getTeacherMe(accessToken)).data);
 
       return {
         accessToken,
-        user: mapAuthUserToUser(meResponse.data),
+        user,
       };
     },
     onSuccess: ({ user, accessToken }) => {

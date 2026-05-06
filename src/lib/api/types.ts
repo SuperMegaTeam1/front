@@ -20,7 +20,7 @@ export interface AuthResponse {
   token: string;
 }
 
-export interface AuthUserResponse {
+export interface AuthStudentMeResponse {
   id: string;
   roleName: BackendRoleName;
   firstName: string;
@@ -31,6 +31,15 @@ export interface AuthUserResponse {
   teacherId: string | null;
   groupId: string | null;
   groupName: string | null;
+}
+
+export interface AuthTeacherMeResponse {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fatherName: string | null;
+  email: string;
+  teacherId: string | null;
 }
 
 export interface ScheduleLessonResult {
@@ -92,7 +101,7 @@ export function normalizeRole(roleName: BackendRoleName): User['role'] {
   return roleName.toLowerCase() === 'teacher' ? 'teacher' : 'student';
 }
 
-export function mapAuthUserToUser(authUser: AuthUserResponse): User {
+export function mapStudentMeToUser(authUser: AuthStudentMeResponse): User {
   return {
     id: authUser.id,
     login: authUser.email,
@@ -106,5 +115,22 @@ export function mapAuthUserToUser(authUser: AuthUserResponse): User {
     teacherId: authUser.teacherId,
     groupId: authUser.groupId,
     groupName: authUser.groupName,
+  };
+}
+
+export function mapTeacherMeToUser(authUser: AuthTeacherMeResponse): User {
+  return {
+    id: authUser.id,
+    login: authUser.email,
+    firstName: authUser.firstName,
+    lastName: authUser.lastName,
+    patronymic: authUser.fatherName ?? '',
+    phone: '',
+    role: 'teacher',
+    email: authUser.email,
+    teacherId: authUser.teacherId,
+    studentId: null,
+    groupId: null,
+    groupName: null,
   };
 }
