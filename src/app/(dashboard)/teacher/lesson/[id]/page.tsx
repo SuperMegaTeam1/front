@@ -59,7 +59,7 @@ function formatShortFullName(fullName: string) {
     return fullName;
   }
 
-  return `${lastName[0]}. ${firstName[0]}. ${fatherName}`;
+  return `${lastName} ${firstName[0]}. ${fatherName[0]}.`;
 }
 
 function GroupGradebook({

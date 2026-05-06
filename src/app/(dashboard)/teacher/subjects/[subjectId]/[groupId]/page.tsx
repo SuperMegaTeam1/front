@@ -32,40 +32,50 @@ const LESSON_DATES = ['03.04', '10.04', '13.04', '20.04', '27.04', '04.05', '11.
 const STUDENTS: StudentGradeRow[] = [
   {
     initials: 'АА',
-    name: 'Александров Артем',
+    name: 'Александров Артем Игоревич',
     avatarTone: 'violet',
     grades: ['5', '4', 'У', '5', '', '5', '—', '—', '—'],
     total: 18,
   },
   {
     initials: 'БЕ',
-    name: 'Белова Елена',
+    name: 'Белова Елена Дмитриевна',
     avatarTone: 'blue',
     grades: ['4', '5', '5', '5', '', '5', '—', '—', '—'],
     total: 24,
   },
   {
     initials: 'ГД',
-    name: 'Григорьев Дмитрий',
+    name: 'Григорьев Дмитрий Сергеевич',
     avatarTone: 'sky',
     grades: ['3', '', '', 'У', '', '3', '—', '—', '—'],
     total: 13,
   },
   {
     initials: 'ИС',
-    name: 'Иванова Софья',
+    name: 'Иванова Софья Павловна',
     avatarTone: 'lilac',
     grades: ['5', '5', '5', '5', '', '5', '—', '—', '—'],
     total: 24,
   },
   {
     initials: 'КМ',
-    name: 'Кузнецов Максим',
+    name: 'Кузнецов Максим Андреевич',
     avatarTone: 'gray',
     grades: ['У', 'У', '2', '3', '', '2', '—', '—', '—'],
     total: 8,
   },
 ];
+
+function formatShortFullName(fullName: string) {
+  const [lastName, firstName, fatherName] = fullName.trim().split(/\s+/);
+
+  if (!lastName || !firstName || !fatherName) {
+    return fullName;
+  }
+
+  return `${lastName} ${firstName[0]}. ${fatherName[0]}.`;
+}
 
 const getGradeClassName = (grade: GradeValue) => {
   if (grade === 'Н' || grade === 'У') {
@@ -119,7 +129,7 @@ export default function TeacherGroupGradebookPage() {
               <div key={student.name} className={styles.tableRow}>
                 <div className={styles.studentCell}>
                   <span className={`${styles.avatar} ${styles[student.avatarTone]}`}>{student.initials}</span>
-                  <span className={styles.studentName}>{student.name}</span>
+                  <span className={styles.studentName}>{formatShortFullName(student.name)}</span>
                 </div>
 
                 {student.grades.map((grade, index) => (
@@ -150,7 +160,7 @@ export default function TeacherGroupGradebookPage() {
               <div key={student.name} className={styles.mobileTableRow}>
                 <div className={styles.mobileStudentCell}>
                   <span className={`${styles.avatar} ${styles[student.avatarTone]}`}>{student.initials}</span>
-                  <span className={styles.mobileStudentName}>{student.name}</span>
+                  <span className={styles.mobileStudentName}>{formatShortFullName(student.name)}</span>
                 </div>
 
                 {visibleDates.map((date, index) => {
