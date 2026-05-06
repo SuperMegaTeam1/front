@@ -131,12 +131,13 @@ export default function StudentSchedulePage() {
       <span>{formatHeadlineDate(headlineDate)}</span>
     </>
   ) : (
-    <>
-      <strong style={{ color: '#2a657e' }}>{isEvenWeek ? 'ЧЕТНАЯ НЕДЕЛЯ' : 'НЕЧЕТНАЯ НЕДЕЛЯ'}</strong>
-      <span>·</span>
-      <CalendarTodayOutlinedIcon sx={{ fontSize: 14 }} />
-      <span>{formatWeekRange(displayWeekDays).toUpperCase()}</span>
-    </>
+    <span className={styles.weekMeta}>
+      <strong className={styles.weekMetaLabel}>{isEvenWeek ? 'ЧЕТНАЯ НЕДЕЛЯ' : 'НЕЧЕТНАЯ НЕДЕЛЯ'}</strong>
+      <span className={styles.weekMetaPeriod}>
+        <CalendarTodayOutlinedIcon sx={{ fontSize: 14 }} />
+        <span>{formatWeekRange(displayWeekDays).toUpperCase()}</span>
+      </span>
+    </span>
   );
 
   const heroCenter = view === 'week' ? (
