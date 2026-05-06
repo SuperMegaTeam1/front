@@ -104,12 +104,13 @@ export default function TeacherSchedulePage() {
       <span>СРЕДА, 9 АПРЕЛЯ</span>
     </>
   ) : (
-    <>
-      <strong style={{ color: '#2a657e' }}>{selectedWeek.parity.toUpperCase()}</strong>
-      <span>·</span>
-      <CalendarTodayOutlinedIcon sx={{ fontSize: 14 }} />
-      <span>{selectedWeek.period.toUpperCase()}</span>
-    </>
+    <span className={styles.weekMeta}>
+      <strong className={styles.weekMetaLabel}>{selectedWeek.parity.toUpperCase()}</strong>
+      <span className={styles.weekMetaPeriod}>
+        <CalendarTodayOutlinedIcon sx={{ fontSize: 14 }} />
+        <span>{selectedWeek.period.toUpperCase()}</span>
+      </span>
+    </span>
   );
 
   const heroCenter = !isToday ? (
