@@ -3,7 +3,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getNotifications,
-  getUnreadCount,
   markAsRead,
   sendNotification,
 } from '@/lib/api/notifications.api';
@@ -23,11 +22,8 @@ export function useNotifications(page = 1) {
 export function useUnreadCount() {
   return useQuery({
     queryKey: unreadCountQueryKey,
-    queryFn: async () => {
-      const res = await getUnreadCount();
-      return res.data.data;
-    },
-    refetchInterval: 30_000, // каждые 30 секунд
+    // Временная заглушка, пока /notifications/unread-count не реализован на бэке.
+    queryFn: async () => 0,
   });
 }
 

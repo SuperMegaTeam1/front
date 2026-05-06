@@ -1,6 +1,7 @@
 export type {
   AuthResponse,
-  AuthUserResponse,
+  AuthStudentMeResponse,
+  AuthTeacherMeResponse,
   BackendLoginRequest,
   BackendRoleName,
   BackendStatusResponse,

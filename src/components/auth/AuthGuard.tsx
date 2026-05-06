@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { getMe } from '@/lib/api/auth.api';
-import { mapAuthUserToUser } from '@/lib/api/types';
+import { getRoleFromToken, getStudentMe, getTeacherMe } from '@/lib/api/auth.api';
+import { mapStudentMeToUser, mapTeacherMeToUser } from '@/lib/api/types';
 import { useAuthStore } from '@/stores/useAuthStore';
 import type { Role } from '@/types/user';
 
@@ -57,8 +57,16 @@ export function AuthGuard({ allowedRole, children }: AuthGuardProps) {
       }
 
       try {
-        const currentUser =
-          user ?? mapAuthUserToUser((await getMe(accessToken)).data);
+        const currentUser = user ?? (await (async () => {
+          const role = getRoleFromToken(accessToken);
+          if (!role) {
+            throw new Error('Unable to determine role from access token');
+          }
+
+          return role === 'student'
+            ? mapStudentMeToUser((await getStudentMe(accessToken)).data)
+            : mapTeacherMeToUser((await getTeacherMe(accessToken)).data);
+        })());
 
         if (!user) {
           setAuth(currentUser, accessToken, refreshToken ?? '');
