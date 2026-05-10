@@ -1,9 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { PageHero } from '@/components/ui';
+import { useSubjectRating } from '@/lib/hooks/useRating';
+import { useSubjectDetail } from '@/lib/hooks/useSubjects';
 import styles from './subject-detail.module.scss';
 
 type GradeEntry = {
@@ -15,153 +17,73 @@ type GradeEntry = {
 };
 
 type SubjectPageData = {
-  id: number;
   name: string;
   teacher: string;
-  department: string;
-  semester: string;
-  currentScore: number;
-  maxScore: number;
-  groupName: string;
-  ratingPlace: number;
-  totalStudents: number;
   journal: GradeEntry[];
 };
 
 const INITIAL_VISIBLE_ROWS = 5;
 
-const SUBJECTS: Record<number, SubjectPageData> = {
-  1: {
-    id: 1,
-    name: 'Математический анализ',
-    teacher: 'проф. Иванов И.И.',
-    department: 'Кафедра высшей математики',
-    semester: 'Семестр 3',
-    currentScore: 92,
-    maxScore: 100,
-    groupName: 'Группа БФ-22-01',
-    ratingPlace: 3,
-    totalStudents: 28,
-    journal: [
-      { id: 1, date: '12.10.2023', time: '10:45', room: '402', points: null },
-      { id: 2, date: '10.10.2023', time: '09:00', room: '315', points: 5 },
-      { id: 3, date: '05.10.2023', time: '14:20', room: '101', points: 18 },
-      { id: 4, date: '03.10.2023', time: '12:30', room: '208', points: null },
-      { id: 5, date: '28.09.2023', time: '09:00', room: '315', points: 4 },
-      { id: 6, date: '26.09.2023', time: '10:45', room: '402', points: 7 },
-      { id: 7, date: '21.09.2023', time: '09:00', room: '315', points: 6 },
-      { id: 8, date: '19.09.2023', time: '14:20', room: '101', points: 13 },
-      { id: 9, date: '14.09.2023', time: '12:30', room: '208', points: 10 },
-      { id: 10, date: '12.09.2023', time: '09:00', room: '315', points: null },
-    ],
-  },
-  2: {
-    id: 2,
-    name: 'Базы данных',
-    teacher: 'доц. Сафиуллин Р.Н.',
-    department: 'Кафедра информационных систем',
-    semester: 'Семестр 3',
-    currentScore: 84,
-    maxScore: 100,
-    groupName: 'Группа БФ-22-01',
-    ratingPlace: 7,
-    totalStudents: 28,
-    journal: [
-      { id: 1, date: '15.10.2023', time: '10:20', room: '315', points: 12 },
-      { id: 2, date: '08.10.2023', time: '10:20', room: '315', points: 10 },
-      { id: 3, date: '01.10.2023', time: '10:20', room: '315', points: 8 },
-      { id: 4, date: '24.09.2023', time: '10:20', room: '315', points: null },
-      { id: 5, date: '17.09.2023', time: '10:20', room: '315', points: 6 },
-      { id: 6, date: '10.09.2023', time: '10:20', room: '315', points: 9 },
-      { id: 7, date: '03.09.2023', time: '10:20', room: '315', points: 11 },
-    ],
-  },
-  3: {
-    id: 3,
-    name: 'Дискретная математика',
-    teacher: 'доц. Новиков А.В.',
-    department: 'Кафедра прикладной математики',
-    semester: 'Семестр 3',
-    currentScore: 76,
-    maxScore: 100,
-    groupName: 'Группа БФ-22-01',
-    ratingPlace: 11,
-    totalStudents: 28,
-    journal: [
-      { id: 1, date: '13.10.2023', time: '12:10', room: '208', points: 10 },
-      { id: 2, date: '06.10.2023', time: '12:10', room: '208', points: 9 },
-      { id: 3, date: '29.09.2023', time: '12:10', room: '208', points: null },
-      { id: 4, date: '22.09.2023', time: '12:10', room: '208', points: 8 },
-      { id: 5, date: '15.09.2023', time: '12:10', room: '208', points: 7 },
-      { id: 6, date: '08.09.2023', time: '12:10', room: '208', points: 6 },
-      { id: 7, date: '01.09.2023', time: '12:10', room: '208', points: 12 },
-    ],
-  },
-  4: {
-    id: 4,
-    name: 'Программная инженерия',
-    teacher: 'ст. преп. Батрушина Г.С.',
-    department: 'Кафедра программной инженерии',
-    semester: 'Семестр 3',
-    currentScore: 88,
-    maxScore: 100,
-    groupName: 'Группа БФ-22-01',
-    ratingPlace: 5,
-    totalStudents: 28,
-    journal: [
-      { id: 1, date: '16.10.2023', time: '14:00', room: '310', points: 14 },
-      { id: 2, date: '09.10.2023', time: '14:00', room: '310', points: 12 },
-      { id: 3, date: '02.10.2023', time: '14:00', room: '310', points: 11 },
-      { id: 4, date: '25.09.2023', time: '14:00', room: '310', points: 9 },
-      { id: 5, date: '18.09.2023', time: '14:00', room: '310', points: null },
-      { id: 6, date: '11.09.2023', time: '14:00', room: '310', points: 8 },
-      { id: 7, date: '04.09.2023', time: '14:00', room: '310', points: 15 },
-    ],
-  },
-};
-
 const FALLBACK_SUBJECT: SubjectPageData = {
-  id: 0,
   name: 'Предмет',
-  teacher: 'преп. Не указан',
-  department: 'Кафедра не указана',
-  semester: 'Семестр 3',
-  currentScore: 0,
-  maxScore: 100,
-  groupName: 'Группа БФ-22-01',
-  ratingPlace: 0,
-  totalStudents: 0,
+  teacher: 'преподаватель не указан',
   journal: [],
 };
 
+function getTeacherName(
+  firstName?: string | null,
+  lastName?: string | null,
+  fatherName?: string | null
+) {
+  return [lastName, firstName, fatherName].filter(Boolean).join(' ');
+}
+
 export default function StudentSubjectDetailPage() {
   const params = useParams<{ id: string }>();
-  const subjectId = Number(params?.id ?? 0);
-  const subject = useMemo(() => SUBJECTS[subjectId] ?? FALLBACK_SUBJECT, [subjectId]);
+  const subjectId = params?.id ?? '';
+  const { data: subjectDetail } = useSubjectDetail(subjectId);
+  const { data: subjectRating } = useSubjectRating(subjectId);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const progressWidth = `${Math.min(100, Math.max(0, (subject.currentScore / subject.maxScore) * 100))}%`;
+  const subject: SubjectPageData = {
+    name: subjectDetail?.name ?? subjectRating?.subjectName ?? FALLBACK_SUBJECT.name,
+    teacher:
+      getTeacherName(
+        subjectDetail?.teacherFirstName,
+        subjectDetail?.teacherLastName,
+        subjectDetail?.teacherFatherName
+      ) || FALLBACK_SUBJECT.teacher,
+    journal: FALLBACK_SUBJECT.journal,
+  };
+
+  const currentScore = subjectRating?.totalGrade ?? 0;
+  const maxScore = 100;
+  const groupName = subjectDetail?.groupName ?? subjectRating?.groupName ?? '';
+  const ratingPlace = subjectRating?.ratingPosition;
+  const totalStudents = subjectRating?.topStudents.length ?? 0;
+  const progressWidth = `${Math.min(100, Math.max(0, (currentScore / maxScore) * 100))}%`;
   const hasExtraRows = subject.journal.length > INITIAL_VISIBLE_ROWS;
   const visibleEntries = isExpanded ? subject.journal : subject.journal.slice(0, INITIAL_VISIBLE_ROWS);
+  const ratingCaption =
+    totalStudents > 0 ? `место среди ${totalStudents} студентов` : 'место в группе пока недоступно';
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
         <PageHero
           title={subject.name}
-          subtitle={`${subject.teacher} · ${subject.department}`}
+          subtitle={subject.teacher || undefined}
         />
 
         <section className={styles.summaryGrid}>
           <article className={styles.progressCard}>
             <div className={styles.cardHead}>
               <h2 className={styles.cardTitle}>Текущая успеваемость</h2>
-              <span className={styles.semesterBadge}>{subject.semester}</span>
             </div>
 
             <div className={styles.scoreRow}>
-              <span className={styles.scoreValue}>{subject.currentScore}</span>
-              <span className={styles.scoreMax}>/ {subject.maxScore} баллов</span>
+              <span className={styles.scoreValue}>{subjectRating ? currentScore : '—'}</span>
+              <span className={styles.scoreMax}>/ {maxScore} баллов</span>
             </div>
 
             <div className={styles.progressTrack} aria-hidden="true">
@@ -170,15 +92,15 @@ export default function StudentSubjectDetailPage() {
           </article>
 
           <article className={styles.ratingCard}>
-            <h2 className={styles.ratingTitle}>Рейтинг группы</h2>
-            <p className={styles.ratingSubtitle}>{subject.groupName}</p>
+            <h2 className={styles.ratingTitle}>Рейтинг в группе</h2>
+            <p className={styles.ratingSubtitle}>{groupName || 'Группа пока не указана'}</p>
 
             <div className={styles.ratingValueRow}>
-              <span className={styles.ratingValue}>{subject.ratingPlace}</span>
-              <span className={styles.ratingSuffix}>-е</span>
+              <span className={styles.ratingValue}>{ratingPlace ?? '—'}</span>
+              {ratingPlace ? <span className={styles.ratingSuffix}>-е</span> : null}
             </div>
 
-            <p className={styles.ratingCaption}>место среди {subject.totalStudents} студентов</p>
+            <p className={styles.ratingCaption}>{ratingCaption}</p>
           </article>
         </section>
 

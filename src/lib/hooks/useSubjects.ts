@@ -12,10 +12,10 @@ export function useSubjects() {
 }
 
 /** Хук: детали одного предмета */
-export function useSubjectDetail(id: number) {
+export function useSubjectDetail(id: string) {
   return useQuery({
     queryKey: ['subjects', id],
-    queryFn: () => getSubjectById(id).then((res) => res.data.data),
+    queryFn: () => getSubjectById(id).then((res) => res.data),
     enabled: !!id,
   });
 }

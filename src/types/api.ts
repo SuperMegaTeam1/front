@@ -7,6 +7,7 @@ export type {
   BackendStatusResponse,
   LoginPayload,
   ScheduleLessonResult,
+  SubjectDetailsResponse,
   StudentRatingResponse,
   TodayScheduleResult,
   TopStudentDto,
