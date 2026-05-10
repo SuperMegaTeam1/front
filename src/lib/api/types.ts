@@ -72,6 +72,17 @@ export interface WeekScheduleResult {
   items: TodayScheduleResult[];
 }
 
+export interface SubjectDetailsResponse {
+  id: string;
+  name: string;
+  groupId: string;
+  groupName: string;
+  teacherId: string;
+  teacherFirstName: string;
+  teacherLastName: string;
+  teacherFatherName: string | null;
+}
+
 export interface TopStudentDto {
   studentId: string;
   firstName: string;

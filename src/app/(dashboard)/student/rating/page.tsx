@@ -40,8 +40,15 @@ export default function StudentRatingPage() {
   }, [rating?.topStudents]);
 
   const groupName = rating?.groupName ?? '...';
-  const currentStudentScore = rating?.totalGrade ?? 0;
   const activeStudentsCount = rows.length;
+  const averageGroupScore = useMemo(() => {
+    if (!rating?.topStudents?.length) {
+      return 0;
+    }
+
+    const totalScore = rating.topStudents.reduce((sum, student) => sum + student.totalGrade, 0);
+    return totalScore / rating.topStudents.length;
+  }, [rating?.topStudents]);
 
   return (
     <div className={styles.page}>
@@ -56,14 +63,13 @@ export default function StudentRatingPage() {
           <article className={styles.statCard}>
             <span className={styles.statLabel}>Средний балл</span>
             <span className={styles.statValue}>
-              {isLoading ? '...' : currentStudentScore.toFixed(1)}
+              {isLoading ? '...' : averageGroupScore.toFixed(1)}
             </span>
           </article>
 
           <article className={styles.statCard}>
             <span className={styles.statLabel}>Студентов</span>
             <span className={styles.statValue}>{isLoading ? '...' : activeStudentsCount}</span>
-            <span className={styles.statHint}>Активный поток</span>
           </article>
 
           <article className={styles.filterCard}>
