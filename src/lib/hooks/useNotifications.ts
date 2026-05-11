@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getNotifications,
+  getStudentNotifications,
   markAsRead,
   sendNotification,
   sendTeacherMessage,
@@ -17,6 +18,14 @@ export function useNotifications(page = 1) {
   return useQuery({
     queryKey: ['notifications', page],
     queryFn: () => getNotifications(page).then((res) => res.data),
+  });
+}
+
+/** Хук: список уведомлений текущего студента */
+export function useStudentNotifications() {
+  return useQuery({
+    queryKey: ['notifications', 'student', 'me'],
+    queryFn: () => getStudentNotifications().then((res) => res.data),
   });
 }
 

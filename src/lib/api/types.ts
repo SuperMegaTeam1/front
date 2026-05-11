@@ -83,6 +83,17 @@ export interface TeacherMessageRequest {
   body: string;
 }
 
+export interface StudentNotificationResponse {
+  id: string;
+  senderName: string;
+  senderLastName: string;
+  senderFatherName: string | null;
+  title: string;
+  messageBody: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
 export interface StudentMeSubjectItem {
   subjectId: string;
   subjectName: string;
