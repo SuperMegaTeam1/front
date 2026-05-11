@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -12,7 +12,7 @@ import { useAuthStore } from '@/stores/useAuthStore';
 import { useWeekSchedule } from '@/lib/hooks/useSchedule';
 import type { ScheduleLessonResult, WeekScheduleResult } from '@/lib/api/types';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
-import { getIsoWeekNumber, getLocalIsoDate, shiftIsoDate } from '@/lib/utils/isoDate';
+import { getIsoWeekNumber, getLocalIsoDate, getWeekStart, shiftIsoDate } from '@/lib/utils/isoDate';
 import styles from './home.module.scss';
 import { TeacherHomeScheduleSection } from './components/TeacherHomeScheduleSection';
 import { TeacherHomeSubjectsSection } from './components/TeacherHomeSubjectsSection';
@@ -62,51 +62,74 @@ function mapLessonToHomeLesson(lesson: ScheduleLessonResult): TeacherHomeLesson 
   };
 }
 
-function buildDay(label: string, date: string, lessons: ScheduleLessonResult[]): TeacherHomeDay {
-  return {
-    label,
-    date,
-    lessons: sortLessons(lessons).map(mapLessonToHomeLesson),
-  };
+function buildEmptyWeek(anchorDate: string): TeacherHomeDay[] {
+  const monday = getWeekStart(anchorDate);
+
+  return Array.from({ length: 6 }, (_, index) => {
+    const date = shiftIsoDate(monday, index);
+    return { label: getWeekDay(date), date, lessons: [] };
+  });
 }
 
-function findDayInWeek(schedule: WeekScheduleResult | undefined, isoDate: string) {
-  return schedule?.items?.find((day) => day.date === isoDate);
+function mapWeekSchedule(schedule?: WeekScheduleResult): TeacherHomeDay[] {
+  return (schedule?.items ?? []).map((day) => ({
+    label: getWeekDay(day.date),
+    date: day.date,
+    lessons: sortLessons(day.items).map(mapLessonToHomeLesson),
+  }));
 }
 
 export default function TeacherHomePage() {
   const router = useRouter();
   const { user } = useAuthStore();
-
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
   const todayDate = getLocalIsoDate();
-  const yesterdayDate = shiftIsoDate(todayDate, -1);
-  const tomorrowDate = shiftIsoDate(todayDate, 1);
 
-  const { data: weekSchedule } = useWeekSchedule(todayDate);
-  const { data: nextWeekSchedule } = useWeekSchedule(tomorrowDate, true);
+  const {
+    data: weekSchedule,
+    isLoading: isWeekScheduleLoading,
+    error: weekScheduleError,
+  } = useWeekSchedule(todayDate);
 
-  const previousDay = useMemo<TeacherHomeDay>(() => {
-    const day = findDayInWeek(weekSchedule, yesterdayDate);
-    return buildDay('Вчера', yesterdayDate, day?.items ?? []);
-  }, [weekSchedule, yesterdayDate]);
+  const weekDays = useMemo(() => {
+    const backendDays = mapWeekSchedule(weekSchedule);
+    return backendDays.length > 0 ? backendDays : buildEmptyWeek(todayDate);
+  }, [todayDate, weekSchedule]);
 
-  const today = useMemo<TeacherHomeDay>(() => {
-    const day = findDayInWeek(weekSchedule, todayDate);
-    return buildDay('Сегодня', todayDate, day?.items ?? []);
-  }, [weekSchedule, todayDate]);
+  const todayIndex = Math.max(0, weekDays.findIndex((day) => day.date === todayDate));
+  const currentDayIndex = Math.min(
+    selectedDayIndex ?? todayIndex,
+    Math.max(weekDays.length - 1, 0)
+  );
+  const currentDay = weekDays[currentDayIndex];
+  const previousDay = weekDays[currentDayIndex - 1];
+  const nextDay = weekDays[currentDayIndex + 1];
 
-  const nextDay = useMemo<TeacherHomeDay>(() => {
-    const day = findDayInWeek(weekSchedule, tomorrowDate) ?? findDayInWeek(nextWeekSchedule, tomorrowDate);
-    return buildDay('Завтра', tomorrowDate, day?.items ?? []);
-  }, [weekSchedule, nextWeekSchedule, tomorrowDate]);
+  const currentDateStr = formatDateFull(currentDay.date);
+  const currentWeekDay = getWeekDay(currentDay.date);
+  const currentDayLabel =
+    currentDayIndex === todayIndex
+      ? 'Сегодня'
+      : currentDayIndex === todayIndex - 1
+        ? 'Вчера'
+        : currentDayIndex === todayIndex + 1
+          ? 'Завтра'
+          : getWeekDay(currentDay.date);
 
-  const todayLessonsCount = today.lessons.length;
-  const todayDateStr = formatDateFull(today.date);
-  const todayWeekDay = getWeekDay(today.date);
-  const weekNumber = getIsoWeekNumber(todayDate);
+  const weekNumber = getIsoWeekNumber(currentDay.date);
   const firstName = user?.firstName ?? '';
   const patronymic = user?.patronymic ?? '';
   const fullGreeting = `${firstName} ${patronymic}`.trim() || 'Преподаватель';
+
+  const lessonsCountLabel = useMemo(() => {
+    if (isWeekScheduleLoading) return 'загружаем расписание';
+    if (weekScheduleError) return 'расписание недоступно';
+
+    const count = currentDay.lessons.length;
+    if (count === 1) return '1 занятие';
+    if (count >= 2 && count <= 4) return `${count} занятия`;
+    return `${count} занятий`;
+  }, [currentDay.lessons.length, isWeekScheduleLoading, weekScheduleError]);
 
   return (
     <div className={styles.page}>
@@ -116,11 +139,13 @@ export default function TeacherHomePage() {
           title={`Добрый день, ${fullGreeting}`}
           meta={
             <>
-              <span className={styles.heroMetaItem}>{todayWeekDay}, {todayDateStr}</span>
+              <span className={styles.heroMetaItem}>{currentWeekDay}, {currentDateStr}</span>
               <span className={styles.heroMetaDot}>·</span>
               <span className={styles.heroMetaItem}>Неделя {weekNumber}</span>
               <span className={styles.heroMetaDot}>·</span>
-              <strong className={styles.heroMetaStrong}>{todayLessonsCount} занятий сегодня</strong>
+              <strong className={styles.heroMetaStrong}>
+                {lessonsCountLabel} {currentDayLabel.toLowerCase()}
+              </strong>
             </>
           }
           action={
@@ -132,8 +157,19 @@ export default function TeacherHomePage() {
 
         <TeacherHomeScheduleSection
           previousDay={previousDay}
-          currentDay={today}
+          currentDay={currentDay}
           nextDay={nextDay}
+          currentDayIndex={currentDayIndex}
+          todayIndex={todayIndex}
+          totalDays={weekDays.length}
+          isLoading={isWeekScheduleLoading}
+          hasError={Boolean(weekScheduleError)}
+          onPrevious={() => {
+            setSelectedDayIndex((index) => Math.max(0, (index ?? currentDayIndex) - 1));
+          }}
+          onNext={() => {
+            setSelectedDayIndex((index) => Math.min(weekDays.length - 1, (index ?? currentDayIndex) + 1));
+          }}
           onLessonOpen={(lessonId) => router.push(`/teacher/lesson/${lessonId}`)}
         />
 
