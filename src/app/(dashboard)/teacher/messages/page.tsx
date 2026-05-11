@@ -6,12 +6,17 @@ import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { PageHero } from '@/components/ui';
 import { useTeacherGroups } from '@/lib/hooks/useGroups';
+import { useSendTeacherMessage } from '@/lib/hooks/useNotifications';
 import styles from './messages.module.scss';
+
+const MESSAGE_TITLE = 'Сообщение от преподавателя';
 
 export default function TeacherMessagesPage() {
   const { data: groups = [], isLoading, error } = useTeacherGroups();
   const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
   const [message, setMessage] = useState('');
+
+  const sendMutation = useSendTeacherMessage();
 
   const toggleGroup = (groupId: string) => {
     setSelectedGroupIds((current) =>
@@ -22,7 +27,19 @@ export default function TeacherMessagesPage() {
   };
 
   const handleSubmit = () => {
-    setMessage('');
+    sendMutation.mutate(
+      {
+        groupIds: selectedGroupIds,
+        title: MESSAGE_TITLE,
+        body: message.trim(),
+      },
+      {
+        onSuccess: () => {
+          setMessage('');
+          setSelectedGroupIds([]);
+        },
+      },
+    );
   };
 
   return (
@@ -78,11 +95,21 @@ export default function TeacherMessagesPage() {
               type="button"
               className={styles.sendButton}
               onClick={handleSubmit}
-              disabled={selectedGroupIds.length === 0 || message.trim().length === 0}
+              disabled={
+                selectedGroupIds.length === 0 ||
+                message.trim().length === 0 ||
+                sendMutation.isPending
+              }
             >
-              Отправить
+              {sendMutation.isPending ? 'Отправка...' : 'Отправить'}
               <SendRoundedIcon sx={{ fontSize: 34 }} />
             </button>
+            {sendMutation.isError && (
+              <span className={styles.errorMessage}>Не удалось отправить сообщение</span>
+            )}
+            {sendMutation.isSuccess && (
+              <span className={styles.successMessage}>Сообщение отправлено</span>
+            )}
           </div>
         </section>
       </div>

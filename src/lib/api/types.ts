@@ -77,6 +77,12 @@ export interface TeacherGroupResponse {
   name: string;
 }
 
+export interface TeacherMessageRequest {
+  groupId: string;
+  title: string;
+  body: string;
+}
+
 export interface StudentMeSubjectItem {
   subjectId: string;
   subjectName: string;

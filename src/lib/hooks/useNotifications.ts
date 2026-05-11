@@ -5,8 +5,10 @@ import {
   getNotifications,
   markAsRead,
   sendNotification,
+  sendTeacherMessage,
 } from '@/lib/api/notifications.api';
 import type { SendNotificationPayload } from '@/types/notification';
+import type { TeacherMessageRequest } from '@/lib/api/types';
 
 export const unreadCountQueryKey = ['notifications', 'unread-count'] as const;
 
@@ -43,5 +45,20 @@ export function useMarkAsRead() {
 export function useSendNotification() {
   return useMutation({
     mutationFn: (payload: SendNotificationPayload) => sendNotification(payload),
+  });
+}
+
+/** Хук: отправка сообщения преподавателя группе(ам) — по одному запросу на группу */
+export function useSendTeacherMessage() {
+  return useMutation({
+    mutationFn: async (input: { groupIds: string[]; title: string; body: string }) => {
+      const requests: TeacherMessageRequest[] = input.groupIds.map((groupId) => ({
+        groupId,
+        title: input.title,
+        body: input.body,
+      }));
+
+      return Promise.all(requests.map((req) => sendTeacherMessage(req)));
+    },
   });
 }
