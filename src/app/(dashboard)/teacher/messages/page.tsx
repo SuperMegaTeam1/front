@@ -5,23 +5,12 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { PageHero } from '@/components/ui';
+import { useTeacherGroups } from '@/lib/hooks/useGroups';
 import styles from './messages.module.scss';
 
-interface TeacherGroup {
-  id: string;
-  name: string;
-}
-
-const MOCK_GROUPS: TeacherGroup[] = [
-  { id: '09-352', name: '09-352' },
-  { id: '09-351', name: '09-351' },
-  { id: '09-353', name: '09-353' },
-];
-
-const DEFAULT_SELECTED_GROUPS = ['09-352'];
-
 export default function TeacherMessagesPage() {
-  const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>(DEFAULT_SELECTED_GROUPS);
+  const { data: groups = [], isLoading, error } = useTeacherGroups();
+  const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
   const [message, setMessage] = useState('');
 
   const toggleGroup = (groupId: string) => {
@@ -49,22 +38,30 @@ export default function TeacherMessagesPage() {
             </div>
 
             <div className={styles.groupList}>
-              {MOCK_GROUPS.map((group) => {
-                const isSelected = selectedGroupIds.includes(group.id);
+              {isLoading ? (
+                <span>Загружаем группы...</span>
+              ) : error ? (
+                <span>Не удалось загрузить группы</span>
+              ) : groups.length === 0 ? (
+                <span>Нет групп</span>
+              ) : (
+                groups.map((group) => {
+                  const isSelected = selectedGroupIds.includes(group.groupId);
 
-                return (
-                  <button
-                    key={group.id}
-                    type="button"
-                    className={`${styles.groupButton} ${isSelected ? styles.groupButtonActive : ''}`}
-                    onClick={() => toggleGroup(group.id)}
-                    aria-pressed={isSelected}
-                  >
-                    {isSelected && <CheckCircleRoundedIcon sx={{ fontSize: 22 }} />}
-                    <span>{group.name}</span>
-                  </button>
-                );
-              })}
+                  return (
+                    <button
+                      key={group.groupId}
+                      type="button"
+                      className={`${styles.groupButton} ${isSelected ? styles.groupButtonActive : ''}`}
+                      onClick={() => toggleGroup(group.groupId)}
+                      aria-pressed={isSelected}
+                    >
+                      {isSelected && <CheckCircleRoundedIcon sx={{ fontSize: 22 }} />}
+                      <span>{group.name}</span>
+                    </button>
+                  );
+                })
+              )}
             </div>
           </div>
 

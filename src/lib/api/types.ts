@@ -72,6 +72,11 @@ export interface WeekScheduleResult {
   items: TodayScheduleResult[];
 }
 
+export interface TeacherGroupResponse {
+  groupId: string;
+  name: string;
+}
+
 export interface StudentMeSubjectItem {
   subjectId: string;
   subjectName: string;
