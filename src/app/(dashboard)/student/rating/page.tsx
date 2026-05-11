@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { RatingTable, type RatingTableRow } from '@/components/shared/RatingTable/RatingTable';
-import { useOverallRating } from '@/lib/hooks/useRating';
+import { useOverallRating, useSubjectRating } from '@/lib/hooks/useRating';
+import { useStudentMeSubjects } from '@/lib/hooks/useSubjects';
 import { PageHero } from '@/components/ui';
 import styles from './rating.module.scss';
 
@@ -24,7 +25,14 @@ function getStudentName(firstName: string, lastName: string, fatherName?: string
 }
 
 export default function StudentRatingPage() {
-  const { data: rating, isLoading, error } = useOverallRating();
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
+
+  const { data: subjects } = useStudentMeSubjects();
+
+  const overall = useOverallRating();
+  const bySubject = useSubjectRating(selectedSubjectId ?? '');
+
+  const { data: rating, isLoading, error } = selectedSubjectId ? bySubject : overall;
 
   const rows = useMemo<RatingTableRow[]>(() => {
     return (rating?.topStudents ?? [])
@@ -78,10 +86,21 @@ export default function StudentRatingPage() {
             <div className={styles.filterList}>
               <button
                 type="button"
-                className={`${styles.filterButton} ${styles.filterButtonActive}`}
+                className={`${styles.filterButton} ${selectedSubjectId === null ? styles.filterButtonActive : ''}`}
+                onClick={() => setSelectedSubjectId(null)}
               >
                 {DEFAULT_FILTER_LABEL}
               </button>
+              {subjects?.map((subject) => (
+                <button
+                  key={subject.subjectId}
+                  type="button"
+                  className={`${styles.filterButton} ${selectedSubjectId === subject.subjectId ? styles.filterButtonActive : ''}`}
+                  onClick={() => setSelectedSubjectId(subject.subjectId)}
+                >
+                  {subject.subjectName}
+                </button>
+              ))}
             </div>
           </article>
         </section>

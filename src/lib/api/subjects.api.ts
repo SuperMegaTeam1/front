@@ -1,7 +1,11 @@
 import api from './axios';
-import type { SubjectDetailsResponse } from './types';
+import type { StudentMeSubjectsResponse, SubjectDetailsResponse } from './types';
 import type { ApiResponse } from '@/types/api';
 import type { Subject } from '@/types/subject';
+
+/** Список предметов текущего студента */
+export const getStudentMeSubjects = () =>
+  api.get<StudentMeSubjectsResponse>('/students/me/subjects');
 
 /** Список предметов текущего пользователя */
 export const getSubjects = () =>

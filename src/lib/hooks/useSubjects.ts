@@ -1,7 +1,15 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getSubjects, getSubjectById } from '@/lib/api/subjects.api';
+import { getStudentMeSubjects, getSubjects, getSubjectById } from '@/lib/api/subjects.api';
+
+/** Хук: список предметов текущего студента */
+export function useStudentMeSubjects() {
+  return useQuery({
+    queryKey: ['subjects', 'student', 'me'],
+    queryFn: () => getStudentMeSubjects().then((res) => res.data.items),
+  });
+}
 
 /** Хук: список предметов */
 export function useSubjects() {
