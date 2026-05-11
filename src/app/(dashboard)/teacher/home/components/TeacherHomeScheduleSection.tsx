@@ -11,7 +11,7 @@ interface TeacherHomeScheduleSectionProps {
   previousDay: TeacherHomeDay;
   currentDay: TeacherHomeDay;
   nextDay: TeacherHomeDay;
-  onLessonOpen: (lessonId: number) => void;
+  onLessonOpen: (lessonId: string) => void;
 }
 
 function parseLessonMeta(meta?: string) {
