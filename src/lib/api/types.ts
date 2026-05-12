@@ -72,15 +72,6 @@ export interface WeekScheduleResult {
   items: TodayScheduleResult[];
 }
 
-export interface StudentMeSubjectItem {
-  subjectId: string;
-  subjectName: string;
-}
-
-export interface StudentMeSubjectsResponse {
-  items: StudentMeSubjectItem[];
-}
-
 export interface SubjectDetailsResponse {
   id: string;
   name: string;

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { SubjectCardProps } from '@/components/shared/SubjectCard/SubjectCard';
 
 export interface TeacherHomeLesson {
-  id: string;
+  id: number;
   startTime: string;
   endTime: string;
   subjectName: string;
