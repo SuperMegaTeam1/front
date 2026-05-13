@@ -3,9 +3,8 @@ import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import styles from './SubjectCard.module.scss';
 
 export interface SubjectCardProps {
-  id: number;
+  id: number | string;
   name: string;
-  examType: 'ЭКЗАМЕН' | 'ЗАЧЕТ' | 'ЗАЧЁТ';
   groups?: string[];
   href?: string;
   icon?: React.ReactNode;
@@ -20,31 +19,31 @@ const ICON_VARIANT_CLASS = {
 
 export function SubjectCard({
   name,
-  examType,
   groups = [],
   href,
   icon,
   iconVariant = 'brand',
 }: SubjectCardProps) {
   const linkHref = href ?? '/teacher/subjects';
-  const groupsLabel = groups.length > 1 ? 'Группы' : 'Группа';
+  const groupsLabel = groups.length === 1 ? 'Группа' : 'Группы';
+  const groupsText = groups.length > 0 ? groups.join(', ') : 'пока не назначены';
 
   return (
-    <Link href={linkHref} className={styles.root}>
+    <Link
+      href={linkHref}
+      className={`${styles.root} ${styles.rootCompact}`}
+    >
       <div className={styles.topRow}>
         <div className={`${styles.iconWrap} ${ICON_VARIANT_CLASS[iconVariant]}`}>
           {icon ?? <MenuBookOutlinedIcon sx={{ fontSize: 30, color: '#2a657e' }} />}
         </div>
-        <span className={styles.examPill}>{examType}</span>
       </div>
 
-      <div className={styles.body}>
+      <div className={`${styles.body} ${styles.bodyCompact}`}>
         <p className={styles.name}>{name}</p>
-        {groups.length > 0 && (
-          <p className={styles.groups}>
-            {groupsLabel}: {groups.join(', ')}
-          </p>
-        )}
+        <p className={styles.groups}>
+          {groupsLabel}: {groupsText}
+        </p>
       </div>
     </Link>
   );

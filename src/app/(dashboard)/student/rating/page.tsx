@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { RatingTable, type RatingTableRow } from '@/components/shared/RatingTable/RatingTable';
-import { useOverallRating } from '@/lib/hooks/useRating';
 import { PageHero } from '@/components/ui';
+import { useOverallRating, useSubjectRating } from '@/lib/hooks/useRating';
+import { useMyStudentSubjects } from '@/lib/hooks/useSubjects';
 import styles from './rating.module.scss';
 
 const AVATAR_COLORS = [
@@ -14,6 +15,7 @@ const AVATAR_COLORS = [
 ];
 
 const DEFAULT_FILTER_LABEL = 'Все предметы';
+const DEFAULT_SUBTITLE = 'Академическая успеваемость за текущий семестр';
 
 function getAvatarLabel(firstName: string, lastName: string) {
   return `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase();
@@ -24,10 +26,54 @@ function getStudentName(firstName: string, lastName: string, fatherName?: string
 }
 
 export default function StudentRatingPage() {
-  const { data: rating, isLoading, error } = useOverallRating();
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
+
+  const {
+    data: subjects = [],
+    isLoading: isSubjectsLoading,
+  } = useMyStudentSubjects();
+  const {
+    data: overallRating,
+    isLoading: isOverallLoading,
+    error: overallError,
+  } = useOverallRating();
+
+  const activeSubjectId = useMemo(() => {
+    if (!selectedSubjectId) {
+      return null;
+    }
+
+    const isSelectedSubjectAvailable = subjects.some(
+      (subject) => subject.subjectId === selectedSubjectId,
+    );
+
+    return isSelectedSubjectAvailable ? selectedSubjectId : null;
+  }, [selectedSubjectId, subjects]);
+
+  const {
+    data: subjectRating,
+    isLoading: isSubjectLoading,
+    error: subjectError,
+  } = useSubjectRating(activeSubjectId ?? '');
+
+  const activeRating = activeSubjectId ? subjectRating : overallRating;
+  const isLoading = activeSubjectId ? isSubjectLoading : isOverallLoading;
+  const error = activeSubjectId ? subjectError : overallError;
+
+  const selectedSubjectName = useMemo(() => {
+    if (!activeSubjectId) {
+      return null;
+    }
+
+    return (
+      subjects.find((subject) => subject.subjectId === activeSubjectId)?.subjectName
+      ?? subjectRating?.subjectName
+      ?? null
+    );
+  }, [activeSubjectId, subjectRating?.subjectName, subjects]);
 
   const rows = useMemo<RatingTableRow[]>(() => {
-    return (rating?.topStudents ?? [])
+    return (activeRating?.topStudents ?? [])
       .slice()
       .sort((left, right) => left.ratingPosition - right.ratingPosition)
       .map((student, index) => ({
@@ -37,11 +83,23 @@ export default function StudentRatingPage() {
         avatarLabel: getAvatarLabel(student.firstName, student.lastName),
         avatarColor: AVATAR_COLORS[index % AVATAR_COLORS.length],
       }));
-  }, [rating?.topStudents]);
+  }, [activeRating?.topStudents]);
 
-  const groupName = rating?.groupName ?? '...';
-  const currentStudentScore = rating?.totalGrade ?? 0;
+  const groupName = activeRating?.groupName ?? overallRating?.groupName ?? '...';
   const activeStudentsCount = rows.length;
+
+  const averageGroupScore = useMemo(() => {
+    if (!activeRating?.topStudents?.length) {
+      return 0;
+    }
+
+    const totalScore = activeRating.topStudents.reduce((sum, student) => sum + student.totalGrade, 0);
+    return totalScore / activeRating.topStudents.length;
+  }, [activeRating?.topStudents]);
+
+  const heroSubtitle = selectedSubjectName
+    ? `Рейтинг по предмету «${selectedSubjectName}»`
+    : DEFAULT_SUBTITLE;
 
   return (
     <div className={styles.page}>
@@ -49,21 +107,20 @@ export default function StudentRatingPage() {
         <PageHero
           className={styles.ratingHero}
           title={`Рейтинг группы ${groupName}`}
-          subtitle="Академическая успеваемость за текущий семестр"
+          subtitle={heroSubtitle}
         />
 
         <section className={styles.overview}>
           <article className={styles.statCard}>
             <span className={styles.statLabel}>Средний балл</span>
             <span className={styles.statValue}>
-              {isLoading ? '...' : currentStudentScore.toFixed(1)}
+              {isLoading ? '...' : averageGroupScore.toFixed(1)}
             </span>
           </article>
 
           <article className={styles.statCard}>
             <span className={styles.statLabel}>Студентов</span>
             <span className={styles.statValue}>{isLoading ? '...' : activeStudentsCount}</span>
-            <span className={styles.statHint}>Активный поток</span>
           </article>
 
           <article className={styles.filterCard}>
@@ -72,10 +129,24 @@ export default function StudentRatingPage() {
             <div className={styles.filterList}>
               <button
                 type="button"
-                className={`${styles.filterButton} ${styles.filterButtonActive}`}
+                className={`${styles.filterButton} ${activeSubjectId === null ? styles.filterButtonActive : ''}`}
+                onClick={() => setSelectedSubjectId(null)}
               >
                 {DEFAULT_FILTER_LABEL}
               </button>
+
+              {isSubjectsLoading ? null : (
+                subjects.map((subject) => (
+                  <button
+                    key={subject.subjectId}
+                    type="button"
+                    className={`${styles.filterButton} ${activeSubjectId === subject.subjectId ? styles.filterButtonActive : ''}`}
+                    onClick={() => setSelectedSubjectId(subject.subjectId)}
+                  >
+                    {subject.subjectName}
+                  </button>
+                ))
+              )}
             </div>
           </article>
         </section>
@@ -85,7 +156,14 @@ export default function StudentRatingPage() {
         ) : error ? (
           <section className={styles.statCard}>
             <span className={styles.statLabel}>Ошибка</span>
-            <span className={styles.statValue}>Не удалось загрузить рейтинг</span>
+            <span className={styles.statValue}>—</span>
+            <span className={styles.statHint}>Не удалось загрузить рейтинг</span>
+          </section>
+        ) : rows.length === 0 ? (
+          <section className={styles.statCard}>
+            <span className={styles.statLabel}>Нет данных</span>
+            <span className={styles.statValue}>—</span>
+            <span className={styles.statHint}>Рейтинг по выбранному предмету пока пуст</span>
           </section>
         ) : (
           <RatingTable

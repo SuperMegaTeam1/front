@@ -56,6 +56,17 @@
   gap: 38px;
 }
 
+.stateCard {
+  padding: 32px 36px;
+  border: 1px solid rgba(155, 173, 196, 0.32);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.98);
+  color: #5c6b74;
+  font-size: clamp(18px, 1.1vw, 22px);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
 .subjectCard {
   min-height: 640px;
   padding: 40px 38px 42px;
@@ -172,6 +183,17 @@
   gap: 14px;
 }
 
+.emptyGroups {
+  min-height: 74px;
+  padding: 20px;
+  border: 2px dashed rgba(155, 173, 196, 0.7);
+  border-radius: 10px;
+  color: #6b7982;
+  font-size: clamp(18px, 1.1vw, 24px);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .groupLink {
   min-height: 74px;
   padding: 0 18px 0 20px;
@@ -206,6 +228,10 @@
 
   .subjectCard {
     min-height: auto;
+  }
+
+  .stateCard {
+    padding: 24px 28px;
   }
 }
 
@@ -321,6 +347,14 @@
     gap: 10px;
   }
 
+  .emptyGroups {
+    min-height: 60px;
+    padding: 14px 15px;
+    border-width: 1px;
+    border-radius: 9px;
+    font-size: 14px;
+  }
+
   .groupLink {
     min-height: 60px;
     padding: 0 13px 0 15px;
@@ -333,5 +367,11 @@
     svg {
       font-size: 30px !important;
     }
+  }
+
+  .stateCard {
+    padding: 20px;
+    border-radius: 14px;
+    font-size: 15px;
   }
 }

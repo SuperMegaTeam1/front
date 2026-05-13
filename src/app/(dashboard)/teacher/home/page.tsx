@@ -5,12 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CalculateOutlinedIcon from '@mui/icons-material/CalculateOutlined';
-import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
-import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
-
 import { PageHero } from '@/components/ui';
-
+import { useMyTeacherSubjects } from '@/lib/hooks/useSubjects';
 import { useAuthStore } from '@/stores/useAuthStore';
 
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
@@ -30,32 +26,7 @@ import { TeacherHomeSubjectsSection } from './components/TeacherHomeSubjectsSect
 
 import type { TeacherHomeDay, TeacherHomeLesson, TeacherHomeSubject } from './components/TeacherHome.types';
 
-const MOCK_SUBJECTS: TeacherHomeSubject[] = [
-  {
-    id: 1,
-    name: 'Математический анализ',
-    examType: 'ЭКЗАМЕН',
-    groups: ['09-351', '09-352'],
-    icon: <CalculateOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'brand',
-  },
-  {
-    id: 2,
-    name: 'Дискретная математика',
-    examType: 'ЗАЧЕТ',
-    groups: ['09-251', '09-252'],
-    icon: <HubOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'violet',
-  },
-  {
-    id: 3,
-    name: 'Программная инженерия',
-    examType: 'ЭКЗАМЕН',
-    groups: ['09-351'],
-    icon: <CodeOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'mint',
-  },
-];
+const SUBJECT_CARD_VARIANTS: TeacherHomeSubject['iconVariant'][] = ['brand', 'violet', 'mint'];
 
 function mapLessonToHomeLesson(lesson: ScheduleLessonResult): TeacherHomeLesson {
   return {
@@ -93,6 +64,11 @@ export default function TeacherHomePage() {
   const currentDay = weekDays[currentDayIndex];
   const previousDay = weekDays[currentDayIndex - 1];
   const nextDay = weekDays[currentDayIndex + 1];
+  const {
+    data: teacherSubjects = [],
+    isLoading: isTeacherSubjectsLoading,
+    error: teacherSubjectsError,
+  } = useMyTeacherSubjects();
 
   const currentDateStr = formatDateFull(currentDay.date);
   const currentWeekDay = getWeekDay(currentDay.date);
@@ -130,6 +106,16 @@ export default function TeacherHomePage() {
 
     return `${count} занятий`;
   }, [currentDay.lessons.length, isWeekScheduleLoading, weekScheduleError]);
+  const homeSubjects: TeacherHomeSubject[] = teacherSubjects.map((subject, index) => {
+    const groups = Array.isArray(subject.groups) ? subject.groups : [];
+
+    return {
+      id: subject.subjectId,
+      name: subject.subjectName,
+      groups: groups.map((group) => group.groupName),
+      iconVariant: SUBJECT_CARD_VARIANTS[index % SUBJECT_CARD_VARIANTS.length],
+    };
+  });
 
   return (
     <div className={styles.page}>
@@ -176,7 +162,11 @@ export default function TeacherHomePage() {
           }}
         />
 
-        <TeacherHomeSubjectsSection subjects={MOCK_SUBJECTS} />
+        <TeacherHomeSubjectsSection
+          subjects={homeSubjects}
+          isLoading={isTeacherSubjectsLoading}
+          hasError={!!teacherSubjectsError}
+        />
       </div>
     </div>
   );

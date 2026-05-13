@@ -17,9 +17,8 @@ export interface TeacherHomeDay {
 }
 
 export interface TeacherHomeSubject {
-  id: number;
+  id: number | string;
   name: string;
-  examType: SubjectCardProps['examType'];
   groups: string[];
   icon?: ReactNode;
   iconVariant?: SubjectCardProps['iconVariant'];

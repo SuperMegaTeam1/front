@@ -72,6 +72,17 @@ export interface WeekScheduleResult {
   items: TodayScheduleResult[];
 }
 
+export interface SubjectDetailsResponse {
+  id: string;
+  name: string;
+  groupId: string;
+  groupName: string;
+  teacherId: string;
+  teacherFirstName: string;
+  teacherLastName: string;
+  teacherFatherName: string | null;
+}
+
 export interface TopStudentDto {
   studentId: string;
   firstName: string;
@@ -90,6 +101,33 @@ export interface StudentRatingResponse {
   totalGrade: number;
   updatedAt: string;
   topStudents: TopStudentDto[];
+}
+
+export interface StudentSubjectListItem {
+  subjectId: string;
+  subjectName: string;
+}
+
+export interface StudentSubjectsResponse {
+  items: StudentSubjectListItem[];
+}
+
+export interface TeacherSubjectGroupListItem {
+  groupId?: string;
+  groupName?: string;
+  id?: string;
+  name?: string;
+}
+
+export interface TeacherSubjectListItem {
+  subjectId: string;
+  subjectName: string;
+  groups?: TeacherSubjectGroupListItem[];
+  studyGroups?: TeacherSubjectGroupListItem[];
+}
+
+export interface TeacherSubjectsResponse {
+  items: TeacherSubjectListItem[];
 }
 
 export interface BackendStatusResponse {

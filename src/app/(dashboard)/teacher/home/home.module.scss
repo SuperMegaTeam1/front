@@ -208,6 +208,17 @@
   gap: 28px;
 }
 
+.sectionState {
+  padding: 28px 32px;
+  border: 1px solid rgba(227, 233, 236, 0.9);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.98);
+  color: #6d7d87;
+  font-size: clamp(16px, 1.1vw, 20px);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
 @include tablet {
   .container {
     padding: 30px 24px 52px;
@@ -354,5 +365,11 @@
 
   .subjectsGrid {
     gap: 14px;
+  }
+
+  .sectionState {
+    padding: 18px;
+    border-radius: 10px;
+    font-size: 14px;
   }
 }
