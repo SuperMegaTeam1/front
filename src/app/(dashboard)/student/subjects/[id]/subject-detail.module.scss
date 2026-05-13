@@ -211,7 +211,7 @@
 .tableHeader,
 .row {
   display: grid;
-  grid-template-columns: minmax(120px, 1fr) minmax(96px, 0.8fr) minmax(88px, 0.7fr);
+  grid-template-columns: minmax(120px, 1fr) minmax(88px, 0.7fr);
   gap: 12px;
   align-items: center;
 }
@@ -223,6 +223,11 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #acb9c5;
+}
+
+.pointsHeader {
+  justify-self: end;
+  text-align: right;
 }
 
 .rows {
@@ -245,7 +250,7 @@
 }
 
 .dateCell,
-.timeCell {
+.points {
   min-width: 0;
 }
 
@@ -253,6 +258,16 @@
   justify-self: end;
   font-weight: 700;
   color: $color-brand;
+}
+
+.emptyJournal {
+  margin: 0;
+  padding: 18px 16px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(227, 233, 236, 0.95);
+  color: #7b8d9b;
+  font-size: 15px;
 }
 
 .emptyScore {
@@ -296,7 +311,7 @@
   }
 
   .row {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px;
   }
 
