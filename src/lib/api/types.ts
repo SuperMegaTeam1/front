@@ -51,6 +51,7 @@ export interface ScheduleLessonResult {
   teacherFirstName?: string;
   teacherLastName?: string;
   teacherFatherName?: string;
+  studyGroups?: TeacherSubjectGroupListItem[];
 
   cabinet: string | null;
   type: string | null;

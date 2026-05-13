@@ -9,6 +9,7 @@ import type { ScheduleLessonResult } from '@/lib/api/types';
 import { getIsoWeekNumber, getLocalIsoDate, shiftIsoDate } from '@/lib/utils/isoDate';
 import {
   buildEmptyScheduleWeek,
+  formatScheduleLessonGroups,
   formatScheduleDayTitle,
   formatScheduleHeadlineDate,
   formatScheduleWeekRange,
@@ -113,6 +114,7 @@ export default function TeacherSchedulePage() {
                   subjectName={lesson.subjectName}
                   lessonType={lesson.type ?? undefined}
                   room={lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined}
+                  groups={formatScheduleLessonGroups(lesson)}
                   onMore={() => router.push(`/teacher/lesson/${lesson.lessonsId}`)}
                   moreLabel={`Открыть занятие: ${lesson.subjectName}`}
                 />
@@ -141,6 +143,7 @@ export default function TeacherSchedulePage() {
                           subjectName={lesson.subjectName}
                           lessonType={lesson.type ?? undefined}
                           room={lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined}
+                          groups={formatScheduleLessonGroups(lesson)}
                           onMore={() => router.push(`/teacher/lesson/${lesson.lessonsId}`)}
                           moreLabel={`Открыть занятие: ${lesson.subjectName}`}
                         />

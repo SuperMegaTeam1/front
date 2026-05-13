@@ -7,6 +7,7 @@ export interface TeacherHomeLesson {
   endTime: string;
   subjectName: string;
   meta?: string;
+  groups?: string[];
   room?: string;
   isActive?: boolean;
 }

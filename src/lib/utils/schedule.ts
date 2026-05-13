@@ -1,4 +1,4 @@
-import type { ScheduleLessonResult, WeekScheduleResult } from '@/lib/api/types';
+import type { ScheduleLessonResult, TeacherSubjectGroupListItem, WeekScheduleResult } from '@/lib/api/types';
 import { getWeekDay } from './formatDate';
 import { getWeekStart, parseIsoDate, shiftIsoDate } from './isoDate';
 
@@ -27,6 +27,30 @@ export function sortScheduleLessons<T extends { startsAt: string }>(
   lessons: T[] | null | undefined
 ) {
   return (lessons ?? []).slice().sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+}
+
+export function getScheduleLessonGroupNames(lesson: {
+  studyGroups?: TeacherSubjectGroupListItem[];
+}) {
+  const uniqueNames = new Set<string>();
+
+  for (const group of lesson.studyGroups ?? []) {
+    const groupName = group.groupName ?? group.name;
+
+    if (groupName) {
+      uniqueNames.add(groupName);
+    }
+  }
+
+  return Array.from(uniqueNames);
+}
+
+export function formatScheduleLessonGroups(lesson: {
+  studyGroups?: TeacherSubjectGroupListItem[];
+}) {
+  const groups = getScheduleLessonGroupNames(lesson);
+
+  return groups.length > 0 ? groups.join(', ') : undefined;
 }
 
 export function mapBackendWeekToScheduleDays<TLesson>(
