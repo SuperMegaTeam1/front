@@ -5,15 +5,31 @@ import styles from '../home.module.scss';
 
 interface StudentHomeInsightsGrade {
   subject: string;
-  score: number;
+  score: number | null;
 }
 
 interface StudentHomeInsightsSectionProps {
-  avgScore: number;
-  ratingPos: number;
-  totalStudents: number;
+  avgScore: number | null;
+  ratingPos: number | null;
+  totalStudents: number | null;
   groupName: string;
   grades: StudentHomeInsightsGrade[];
+}
+
+function formatScore(score: number | null) {
+  if (score === null) {
+    return '—';
+  }
+
+  return Number.isInteger(score) ? String(score) : score.toFixed(1);
+}
+
+function formatAverageScore(score: number | null) {
+  if (score === null) {
+    return '—';
+  }
+
+  return score.toFixed(1);
 }
 
 export function StudentHomeInsightsSection({
@@ -29,7 +45,7 @@ export function StudentHomeInsightsSection({
 
       <div className={styles.insightsCard}>
         <div className={styles.primaryStat}>
-          <div className={styles.primaryScore}>{avgScore}</div>
+          <div className={styles.primaryScore}>{formatAverageScore(avgScore)}</div>
           <div className={styles.primaryLabel}>СРЕДНИЙ БАЛЛ</div>
           <Link href="/student/rating" className={styles.primaryLink}>
             Смотреть подробный рейтинг <ArrowForwardIcon sx={{ fontSize: 22 }} />
@@ -37,7 +53,7 @@ export function StudentHomeInsightsSection({
         </div>
 
         <div className={styles.secondaryStat}>
-          <div className={styles.secondaryValue}>{ratingPos} из {totalStudents}</div>
+          <div className={styles.secondaryValue}>{ratingPos ?? '—'} из {totalStudents ?? '—'}</div>
           <div className={styles.secondaryLabel}>Группа {groupName}</div>
         </div>
 
@@ -45,10 +61,10 @@ export function StudentHomeInsightsSection({
           {grades.map((grade) => (
             <div
               key={grade.subject}
-              className={`${styles.subjectScoreRow} ${grade.score < 70 ? styles.subjectScoreRowDim : ''}`}
+              className={`${styles.subjectScoreRow} ${grade.score !== null && grade.score < 70 ? styles.subjectScoreRowDim : ''}`}
             >
               <span>{grade.subject}</span>
-              <strong>{grade.score}</strong>
+              <strong>{formatScore(grade.score)}</strong>
             </div>
           ))}
         </div>

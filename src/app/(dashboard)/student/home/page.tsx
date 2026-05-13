@@ -9,7 +9,9 @@ import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { PageHero } from '@/components/ui';
 import type { ScheduleLessonResult } from '@/lib/api/types';
+import { useOverallRating, useSubjectRatings } from '@/lib/hooks/useRating';
 import { useWeekSchedule } from '@/lib/hooks/useSchedule';
+import { useMyStudentSubjects } from '@/lib/hooks/useSubjects';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
 import { getIsoWeekNumber, getLocalIsoDate } from '@/lib/utils/isoDate';
 import {
@@ -27,12 +29,6 @@ import {
 
 type HomeLesson = StudentHomeScheduleDay['lessons'][number];
 type HomeScheduleDay = StudentHomeScheduleDay;
-
-const MOCK_GRADES = [
-  { subject: 'Базы данных', score: 82 },
-  { subject: 'Дискретная математика', score: 71 },
-  { subject: 'Программная инженерия', score: 63 },
-];
 
 const MOCK_NOTIFICATIONS = [
   {
@@ -95,6 +91,15 @@ export default function StudentHomePage() {
     isLoading: isWeekScheduleLoading,
     error: weekScheduleError,
   } = useWeekSchedule(todayDate);
+  const {
+    data: overallRating,
+  } = useOverallRating();
+  const {
+    data: subjects = [],
+  } = useMyStudentSubjects();
+
+  const topSubjects = useMemo(() => subjects.slice(0, 3), [subjects]);
+  const subjectRatingQueries = useSubjectRatings(topSubjects.map((subject) => subject.subjectId));
 
   const weekDays = useMemo<HomeScheduleDay[]>(() => {
     const backendDays = mapBackendWeekToScheduleDays(weekSchedule, mapLessonToHomeLesson);
@@ -104,7 +109,7 @@ export default function StudentHomePage() {
   const todayIndex = Math.max(0, weekDays.findIndex((day) => day.date === todayDate));
   const currentDayIndex = Math.min(
     selectedDayIndex ?? todayIndex,
-    Math.max(weekDays.length - 1, 0)
+    Math.max(weekDays.length - 1, 0),
   );
   const currentDay = weekDays[currentDayIndex];
   const previousDay = weekDays[currentDayIndex - 1];
@@ -121,10 +126,20 @@ export default function StudentHomePage() {
           ? 'Завтра'
           : getWeekDay(currentDay.date);
 
-  const avgScore = 74.2;
-  const ratingPos = 12;
-  const totalStudents = 87;
-  const groupName = (user as { groupName?: string })?.groupName ?? '09-411';
+  const ratingGrades = useMemo(() => {
+    return topSubjects.map((subject, index) => {
+      const rating = subjectRatingQueries[index]?.data;
+
+      return {
+        subject: rating?.subjectName ?? subject.subjectName,
+        score: rating?.totalGrade ?? null,
+      };
+    });
+  }, [subjectRatingQueries, topSubjects]);
+
+  const groupName = overallRating?.groupName
+    ?? (user as { groupName?: string })?.groupName
+    ?? '—';
   const firstName = user?.firstName ?? 'Тимур';
   const weekNumber = getIsoWeekNumber(currentDay.date);
 
@@ -192,11 +207,11 @@ export default function StudentHomePage() {
         />
 
         <StudentHomeInsightsSection
-          avgScore={avgScore}
-          ratingPos={ratingPos}
-          totalStudents={totalStudents}
+          avgScore={overallRating?.totalGrade ?? null}
+          ratingPos={overallRating?.ratingPosition ?? null}
+          totalStudents={overallRating?.topStudents.length ?? null}
           groupName={groupName}
-          grades={MOCK_GRADES}
+          grades={ratingGrades}
         />
 
         <StudentHomeRecentChangesSection notifications={MOCK_NOTIFICATIONS} />

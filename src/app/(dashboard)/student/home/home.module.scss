@@ -438,11 +438,11 @@
       letter-spacing: -0.055em;
     }
 
-    > div:first-child {
+    >div:first-child {
       gap: 8px;
     }
 
-    > div:first-child > div {
+    >div:first-child>div {
       flex-direction: column;
       align-items: flex-start;
       gap: 5px;
@@ -452,7 +452,7 @@
       text-transform: none;
     }
 
-    > div:last-child {
+    >div:last-child {
       justify-self: start;
     }
   }

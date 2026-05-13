@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { getMyStudentRating } from '@/lib/api/rating.api';
 
 export function useOverallRating() {
@@ -15,5 +15,16 @@ export function useSubjectRating(subjectId: string) {
     queryKey: ['students', 'me', 'rating', subjectId],
     queryFn: () => getMyStudentRating(subjectId).then((res) => res.data),
     enabled: !!subjectId,
+  });
+}
+
+export function useSubjectRatings(subjectIds: string[]) {
+  return useQueries({
+    queries: subjectIds.map((subjectId) => ({
+      queryKey: ['students', 'me', 'rating', subjectId],
+      queryFn: () => getMyStudentRating(subjectId).then((res) => res.data),
+      enabled: !!subjectId,
+      staleTime: 10 * 60 * 1000,
+    })),
   });
 }
