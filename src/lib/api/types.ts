@@ -103,6 +103,33 @@ export interface StudentRatingResponse {
   topStudents: TopStudentDto[];
 }
 
+export interface StudentSubjectListItem {
+  subjectId: string;
+  subjectName: string;
+}
+
+export interface StudentSubjectsResponse {
+  items: StudentSubjectListItem[];
+}
+
+export interface TeacherSubjectGroupListItem {
+  groupId?: string;
+  groupName?: string;
+  id?: string;
+  name?: string;
+}
+
+export interface TeacherSubjectListItem {
+  subjectId: string;
+  subjectName: string;
+  groups?: TeacherSubjectGroupListItem[];
+  studyGroups?: TeacherSubjectGroupListItem[];
+}
+
+export interface TeacherSubjectsResponse {
+  items: TeacherSubjectListItem[];
+}
+
 export interface BackendStatusResponse {
   service: string;
   status: string;

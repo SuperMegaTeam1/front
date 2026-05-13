@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
@@ -87,9 +87,11 @@ const getGradeClassName = (grade: GradeValue) => {
 
 export default function TeacherGroupGradebookPage() {
   const params = useParams<{ subjectId: string; groupId: string }>();
+  const searchParams = useSearchParams();
   const subjectId = params.subjectId ?? 'mathematical-analysis';
   const groupId = params.groupId ?? '09-352';
-  const subjectTitle = SUBJECT_TITLES[subjectId] ?? 'Математический анализ';
+  const groupName = searchParams.get('groupName') ?? groupId;
+  const subjectTitle = searchParams.get('subjectName') ?? SUBJECT_TITLES[subjectId] ?? 'Предмет';
   const mobilePageCount = Math.ceil(LESSON_DATES.length / DATES_PER_MOBILE_PAGE);
   const [mobilePageIndex, setMobilePageIndex] = useState(0);
   const visibleDateStart = mobilePageIndex * DATES_PER_MOBILE_PAGE;
@@ -108,8 +110,8 @@ export default function TeacherGroupGradebookPage() {
       <div className={styles.container}>
         <PageHero
           className={styles.gradebookHero}
-          title={`Журнал группы ${groupId}`}
-          subtitle={`${subjectTitle} — 3 семестр`}
+          title={`Журнал группы ${groupName}`}
+          subtitle={subjectTitle}
         />
 
         <section
