@@ -3,10 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import CalculateOutlinedIcon from '@mui/icons-material/CalculateOutlined';
-import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
-import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 import { PageHero } from '@/components/ui';
+import { useMyTeacherSubjects } from '@/lib/hooks/useSubjects';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
 import styles from './home.module.scss';
@@ -92,36 +90,16 @@ const MOCK_DAYS: TeacherHomeDay[] = [
   },
 ];
 
-const MOCK_SUBJECTS: TeacherHomeSubject[] = [
-  {
-    id: 1,
-    name: 'Математический анализ',
-    examType: 'ЭКЗАМЕН',
-    groups: ['09-351', '09-352'],
-    icon: <CalculateOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'brand',
-  },
-  {
-    id: 2,
-    name: 'Дискретная математика',
-    examType: 'ЗАЧЕТ',
-    groups: ['09-251', '09-252'],
-    icon: <HubOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'violet',
-  },
-  {
-    id: 3,
-    name: 'Программная инженерия',
-    examType: 'ЭКЗАМЕН',
-    groups: ['09-351'],
-    icon: <CodeOutlinedIcon sx={{ fontSize: 34, color: '#2a657e' }} />,
-    iconVariant: 'mint',
-  },
-];
+const SUBJECT_CARD_VARIANTS: TeacherHomeSubject['iconVariant'][] = ['brand', 'violet', 'mint'];
 
 export default function TeacherSchedulePage() {
   const router = useRouter();
   const { user } = useAuthStore();
+  const {
+    data: teacherSubjects = [],
+    isLoading: isTeacherSubjectsLoading,
+    error: teacherSubjectsError,
+  } = useMyTeacherSubjects();
 
   const previousDay = MOCK_DAYS[0];
   const today = MOCK_DAYS[1];
@@ -132,6 +110,16 @@ export default function TeacherSchedulePage() {
   const firstName = user?.firstName ?? 'Дмитрий';
   const patronymic = user?.patronymic ?? 'Александрович';
   const fullGreeting = `${firstName} ${patronymic}`.trim();
+  const homeSubjects: TeacherHomeSubject[] = teacherSubjects.map((subject, index) => {
+    const groups = Array.isArray(subject.groups) ? subject.groups : [];
+
+    return {
+      id: subject.subjectId,
+      name: subject.subjectName,
+      groups: groups.map((group) => group.groupName),
+      iconVariant: SUBJECT_CARD_VARIANTS[index % SUBJECT_CARD_VARIANTS.length],
+    };
+  });
 
   return (
     <div className={styles.page}>
@@ -139,7 +127,7 @@ export default function TeacherSchedulePage() {
         <PageHero
           className={styles.homeHero}
           title={`Добрый день, ${fullGreeting}`}
-          meta={
+          meta={(
             <>
               <span className={styles.heroMetaItem}>{todayWeekDay}, {todayDateStr}</span>
               <span className={styles.heroMetaDot}>·</span>
@@ -147,12 +135,12 @@ export default function TeacherSchedulePage() {
               <span className={styles.heroMetaDot}>·</span>
               <strong className={styles.heroMetaStrong}>{todayLessonsCount} занятия сегодня</strong>
             </>
-          }
-          action={
+          )}
+          action={(
             <Link href="#schedule" className={styles.greetingLink}>
               Перейти в расписание <ArrowForwardIcon sx={{ fontSize: 22 }} />
             </Link>
-          }
+          )}
         />
 
         <TeacherHomeScheduleSection
@@ -162,7 +150,11 @@ export default function TeacherSchedulePage() {
           onLessonOpen={(lessonId) => router.push(`/teacher/lesson/${lessonId}`)}
         />
 
-        <TeacherHomeSubjectsSection subjects={MOCK_SUBJECTS} />
+        <TeacherHomeSubjectsSection
+          subjects={homeSubjects}
+          isLoading={isTeacherSubjectsLoading}
+          hasError={!!teacherSubjectsError}
+        />
       </div>
     </div>
   );
