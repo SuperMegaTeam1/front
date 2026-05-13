@@ -93,6 +93,7 @@ export function TeacherHomeScheduleSection({
                   endTime={lesson.endTime}
                   subjectName={lesson.subjectName}
                   lessonType={lessonType}
+                  groups={lesson.groups?.join(', ') || undefined}
                   room={lesson.room}
                   onMore={() => onLessonOpen(lesson.id)}
                   moreLabel={`Открыть занятие: ${lesson.subjectName}`}

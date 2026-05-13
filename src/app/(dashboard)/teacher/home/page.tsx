@@ -16,6 +16,7 @@ import type { ScheduleLessonResult } from '@/lib/api/types';
 import { getIsoWeekNumber, getLocalIsoDate } from '@/lib/utils/isoDate';
 import {
   buildEmptyScheduleWeek,
+  getScheduleLessonGroupNames,
   mapBackendWeekToScheduleDays,
 } from '@/lib/utils/schedule';
 
@@ -35,6 +36,7 @@ function mapLessonToHomeLesson(lesson: ScheduleLessonResult): TeacherHomeLesson 
     endTime: lesson.endsAt,
     subjectName: lesson.subjectName,
     meta: lesson.type ?? undefined,
+    groups: getScheduleLessonGroupNames(lesson),
     room: lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined,
   };
 }
