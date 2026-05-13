@@ -75,12 +75,18 @@ export interface WeekScheduleResult {
 export interface SubjectDetailsResponse {
   id: string;
   name: string;
-  groupId: string;
-  groupName: string;
+  groupId?: string;
+  groupName?: string;
   teacherId: string;
-  teacherFirstName: string;
+  teacherName: string;
   teacherLastName: string;
   teacherFatherName: string | null;
+  journalInfos: SubjectJournalInfo[];
+}
+
+export interface SubjectJournalInfo {
+  lessonsStartDate: string;
+  studentGrade: number | null;
 }
 
 export interface TopStudentDto {

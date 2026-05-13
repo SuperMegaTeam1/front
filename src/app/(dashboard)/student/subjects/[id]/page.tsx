@@ -9,10 +9,8 @@ import { useSubjectDetail } from '@/lib/hooks/useSubjects';
 import styles from './subject-detail.module.scss';
 
 type GradeEntry = {
-  id: number;
+  id: string;
   date: string;
-  time: string;
-  room: string;
   points: number | null;
 };
 
@@ -26,7 +24,7 @@ const INITIAL_VISIBLE_ROWS = 5;
 
 const FALLBACK_SUBJECT: SubjectPageData = {
   name: 'Предмет',
-  teacher: 'преподаватель не указан',
+  teacher: 'Преподаватель не указан',
   journal: [],
 };
 
@@ -38,6 +36,14 @@ function getTeacherName(
   return [lastName, firstName, fatherName].filter(Boolean).join(' ');
 }
 
+function mapJournalEntry(lessonsStartDate: string, studentGrade: number | null, index: number): GradeEntry {
+  return {
+    id: `${lessonsStartDate}-${index}`,
+    date: new Date(lessonsStartDate).toLocaleDateString('ru-RU'),
+    points: studentGrade,
+  };
+}
+
 export default function StudentSubjectDetailPage() {
   const params = useParams<{ id: string }>();
   const subjectId = params?.id ?? '';
@@ -47,13 +53,15 @@ export default function StudentSubjectDetailPage() {
 
   const subject: SubjectPageData = {
     name: subjectDetail?.name ?? subjectRating?.subjectName ?? FALLBACK_SUBJECT.name,
-    teacher:
-      getTeacherName(
-        subjectDetail?.teacherFirstName,
-        subjectDetail?.teacherLastName,
-        subjectDetail?.teacherFatherName
-      ) || FALLBACK_SUBJECT.teacher,
-    journal: FALLBACK_SUBJECT.journal,
+    teacher: getTeacherName(
+      subjectDetail?.teacherName,
+      subjectDetail?.teacherLastName,
+      subjectDetail?.teacherFatherName
+    ),
+    journal:
+      subjectDetail?.journalInfos.map((entry, index) =>
+        mapJournalEntry(entry.lessonsStartDate, entry.studentGrade, index)
+      ) ?? FALLBACK_SUBJECT.journal,
   };
 
   const currentScore = subjectRating?.totalGrade ?? 0;
@@ -72,7 +80,7 @@ export default function StudentSubjectDetailPage() {
       <div className={styles.container}>
         <PageHero
           title={subject.name}
-          subtitle={subject.teacher || undefined}
+          subtitle={subject.teacher ? `Преподаватель: ${subject.teacher}` : FALLBACK_SUBJECT.teacher}
         />
 
         <section className={styles.summaryGrid}>
@@ -109,21 +117,23 @@ export default function StudentSubjectDetailPage() {
 
           <div className={styles.tableHeader}>
             <span>Дата</span>
-            <span>Время</span>
-            <span>Баллы</span>
+            <span className={styles.pointsHeader}>Баллы</span>
           </div>
 
-          <div className={styles.rows}>
-            {visibleEntries.map((entry) => (
-              <article key={entry.id} className={styles.row}>
-                <span className={`${styles.rowCell} ${styles.dateCell}`}>{entry.date}</span>
-                <span className={`${styles.rowCell} ${styles.timeCell}`}>{entry.time}</span>
-                <span className={`${styles.rowCell} ${styles.points} ${entry.points === null ? styles.emptyScore : ''}`}>
-                  {entry.points === null ? '—' : entry.points}
-                </span>
-              </article>
-            ))}
-          </div>
+          {visibleEntries.length === 0 ? (
+            <p className={styles.emptyJournal}>Пока нет записей в журнале.</p>
+          ) : (
+            <div className={styles.rows}>
+              {visibleEntries.map((entry) => (
+                <article key={entry.id} className={styles.row}>
+                  <span className={`${styles.rowCell} ${styles.dateCell}`}>{entry.date}</span>
+                  <span className={`${styles.rowCell} ${styles.points} ${entry.points === null ? styles.emptyScore : ''}`}>
+                    {entry.points === null ? '—' : entry.points}
+                  </span>
+                </article>
+              ))}
+            </div>
+          )}
 
           {hasExtraRows && (
             <button
