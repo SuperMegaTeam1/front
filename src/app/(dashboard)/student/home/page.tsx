@@ -8,10 +8,14 @@ import ApartmentRoundedIcon from '@mui/icons-material/ApartmentRounded';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
 import { PageHero } from '@/components/ui';
-import type { ScheduleLessonResult, WeekScheduleResult } from '@/lib/api/types';
+import type { ScheduleLessonResult } from '@/lib/api/types';
 import { useWeekSchedule } from '@/lib/hooks/useSchedule';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
-import { getIsoWeekNumber, getLocalIsoDate, getWeekStart, shiftIsoDate } from '@/lib/utils/isoDate';
+import { getIsoWeekNumber, getLocalIsoDate } from '@/lib/utils/isoDate';
+import {
+  buildEmptyScheduleWeek,
+  mapBackendWeekToScheduleDays,
+} from '@/lib/utils/schedule';
 import { useAuthStore } from '@/stores/useAuthStore';
 import styles from './home.module.scss';
 import { StudentHomeInsightsSection } from './components/StudentHomeInsightsSection';
@@ -61,23 +65,10 @@ const MOCK_NOTIFICATIONS = [
   },
 ];
 
-function buildEmptyWeek(anchorDate: string): HomeScheduleDay[] {
-  const monday = getWeekStart(anchorDate);
-
-  return Array.from({ length: 6 }, (_, index) => ({
-    date: shiftIsoDate(monday, index),
-    lessons: [],
-  }));
-}
-
 function formatTeacherName(lesson: ScheduleLessonResult) {
   return [lesson.teacherLastName, lesson.teacherFirstName, lesson.teacherFatherName]
     .filter(Boolean)
     .join(' ');
-}
-
-function sortLessons(lessons: ScheduleLessonResult[] | null | undefined) {
-  return (lessons ?? []).slice().sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 }
 
 function mapLessonToHomeLesson(lesson: ScheduleLessonResult): HomeLesson {
@@ -94,13 +85,6 @@ function mapLessonToHomeLesson(lesson: ScheduleLessonResult): HomeLesson {
   };
 }
 
-function mapWeekSchedule(schedule?: WeekScheduleResult): HomeScheduleDay[] {
-  return (schedule?.items ?? []).map((day) => ({
-    date: day.date,
-    lessons: sortLessons(day.items).map(mapLessonToHomeLesson),
-  }));
-}
-
 export default function StudentHomePage() {
   const { user } = useAuthStore();
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
@@ -112,9 +96,9 @@ export default function StudentHomePage() {
     error: weekScheduleError,
   } = useWeekSchedule(todayDate);
 
-  const weekDays = useMemo(() => {
-    const backendDays = mapWeekSchedule(weekSchedule);
-    return backendDays.length > 0 ? backendDays : buildEmptyWeek(todayDate);
+  const weekDays = useMemo<HomeScheduleDay[]>(() => {
+    const backendDays = mapBackendWeekToScheduleDays(weekSchedule, mapLessonToHomeLesson);
+    return backendDays.length > 0 ? backendDays : buildEmptyScheduleWeek<HomeLesson>(todayDate);
   }, [todayDate, weekSchedule]);
 
   const todayIndex = Math.max(0, weekDays.findIndex((day) => day.date === todayDate));

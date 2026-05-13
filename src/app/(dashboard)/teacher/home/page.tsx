@@ -1,115 +1,111 @@
 'use client';
 
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { PageHero } from '@/components/ui';
 import { useMyTeacherSubjects } from '@/lib/hooks/useSubjects';
 import { useAuthStore } from '@/stores/useAuthStore';
+
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
+
+import { useWeekSchedule } from '@/lib/hooks/useSchedule';
+import type { ScheduleLessonResult } from '@/lib/api/types';
+import { getIsoWeekNumber, getLocalIsoDate } from '@/lib/utils/isoDate';
+import {
+  buildEmptyScheduleWeek,
+  mapBackendWeekToScheduleDays,
+} from '@/lib/utils/schedule';
+
 import styles from './home.module.scss';
+
 import { TeacherHomeScheduleSection } from './components/TeacherHomeScheduleSection';
 import { TeacherHomeSubjectsSection } from './components/TeacherHomeSubjectsSection';
-import type { TeacherHomeDay, TeacherHomeSubject } from './components/TeacherHome.types';
 
-const MOCK_DAYS: TeacherHomeDay[] = [
-  {
-    label: 'Вчера',
-    date: '2026-04-22',
-    lessons: [
-      {
-        id: 1,
-        startTime: '08:30',
-        endTime: '10:00',
-        subjectName: 'Базы данных',
-        meta: 'Лекция • 09-351, 09-352.',
-        room: 'Ауд. 1005',
-      },
-      {
-        id: 2,
-        startTime: '10:15',
-        endTime: '11:45',
-        subjectName: 'Дискретная математика',
-        meta: 'Практика • 09-234.',
-        room: 'Ауд. 602',
-      },
-    ],
-  },
-  {
-    label: 'Сегодня',
-    date: '2026-04-23',
-    lessons: [
-      {
-        id: 3,
-        startTime: '10:20',
-        endTime: '11:50',
-        subjectName: 'Базы данных',
-        meta: 'Лекция • 09-352, 09-353.',
-        room: 'Ауд. 1101',
-        isActive: true,
-      },
-      {
-        id: 4,
-        startTime: '12:10',
-        endTime: '13:40',
-        subjectName: 'Дискретная математика',
-        meta: 'Практика • 09-234.',
-        room: 'Ауд. 602',
-      },
-      {
-        id: 5,
-        startTime: '14:00',
-        endTime: '15:30',
-        subjectName: 'Программная инженерия',
-        meta: 'Практика • 08-222.',
-        room: 'Ауд. 310',
-      },
-    ],
-  },
-  {
-    label: 'Завтра',
-    date: '2026-04-24',
-    lessons: [
-      {
-        id: 6,
-        startTime: '10:20',
-        endTime: '11:50',
-        subjectName: 'Базы данных',
-        meta: 'Лекция • 09-352, 09-353.',
-        room: 'Ауд. 1101',
-      },
-      {
-        id: 7,
-        startTime: '12:10',
-        endTime: '13:40',
-        subjectName: 'Практикум',
-        meta: 'Группа • 09-251.',
-        room: 'Ауд. 518',
-      },
-    ],
-  },
-];
+import type { TeacherHomeDay, TeacherHomeLesson, TeacherHomeSubject } from './components/TeacherHome.types';
 
 const SUBJECT_CARD_VARIANTS: TeacherHomeSubject['iconVariant'][] = ['brand', 'violet', 'mint'];
 
-export default function TeacherSchedulePage() {
+function mapLessonToHomeLesson(lesson: ScheduleLessonResult): TeacherHomeLesson {
+  return {
+    id: lesson.lessonsId,
+    startTime: lesson.startsAt,
+    endTime: lesson.endsAt,
+    subjectName: lesson.subjectName,
+    meta: lesson.type ?? undefined,
+    room: lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined,
+  };
+}
+
+export default function TeacherHomePage() {
   const router = useRouter();
   const { user } = useAuthStore();
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
+  const todayDate = getLocalIsoDate();
+
+  const {
+    data: weekSchedule,
+    isLoading: isWeekScheduleLoading,
+    error: weekScheduleError,
+  } = useWeekSchedule(todayDate);
+
+  const weekDays = useMemo<TeacherHomeDay[]>(() => {
+    const backendDays = mapBackendWeekToScheduleDays(weekSchedule, mapLessonToHomeLesson);
+    return backendDays.length > 0 ? backendDays : buildEmptyScheduleWeek<TeacherHomeLesson>(todayDate);
+  }, [todayDate, weekSchedule]);
+
+  const todayIndex = Math.max(0, weekDays.findIndex((day) => day.date === todayDate));
+  const currentDayIndex = Math.min(
+    selectedDayIndex ?? todayIndex,
+    Math.max(weekDays.length - 1, 0)
+  );
+  const currentDay = weekDays[currentDayIndex];
+  const previousDay = weekDays[currentDayIndex - 1];
+  const nextDay = weekDays[currentDayIndex + 1];
   const {
     data: teacherSubjects = [],
     isLoading: isTeacherSubjectsLoading,
     error: teacherSubjectsError,
   } = useMyTeacherSubjects();
 
-  const previousDay = MOCK_DAYS[0];
-  const today = MOCK_DAYS[1];
-  const nextDay = MOCK_DAYS[2];
-  const todayLessonsCount = today.lessons.length;
-  const todayDateStr = formatDateFull(today.date);
-  const todayWeekDay = getWeekDay(today.date);
+  const currentDateStr = formatDateFull(currentDay.date);
+  const currentWeekDay = getWeekDay(currentDay.date);
+  const currentDayLabel =
+    currentDayIndex === todayIndex
+      ? 'Сегодня'
+      : currentDayIndex === todayIndex - 1
+        ? 'Вчера'
+        : currentDayIndex === todayIndex + 1
+          ? 'Завтра'
+          : getWeekDay(currentDay.date);
   const firstName = user?.firstName ?? 'Дмитрий';
   const patronymic = user?.patronymic ?? 'Александрович';
   const fullGreeting = `${firstName} ${patronymic}`.trim();
+  const weekNumber = getIsoWeekNumber(currentDay.date);
+
+  const lessonsCountLabel = useMemo(() => {
+    if (isWeekScheduleLoading) {
+      return 'загружаем расписание';
+    }
+
+    if (weekScheduleError) {
+      return 'расписание недоступно';
+    }
+
+    const count = currentDay.lessons.length;
+
+    if (count === 1) {
+      return '1 занятие';
+    }
+
+    if (count >= 2 && count <= 4) {
+      return `${count} занятия`;
+    }
+
+    return `${count} занятий`;
+  }, [currentDay.lessons.length, isWeekScheduleLoading, weekScheduleError]);
   const homeSubjects: TeacherHomeSubject[] = teacherSubjects.map((subject, index) => {
     const groups = Array.isArray(subject.groups) ? subject.groups : [];
 
@@ -129,25 +125,41 @@ export default function TeacherSchedulePage() {
           title={`Добрый день, ${fullGreeting}`}
           meta={(
             <>
-              <span className={styles.heroMetaItem}>{todayWeekDay}, {todayDateStr}</span>
+              <span className={styles.heroMetaItem}>{currentWeekDay}, {currentDateStr}</span>
               <span className={styles.heroMetaDot}>·</span>
-              <span className={styles.heroMetaItem}>Неделя 10</span>
+              <span className={styles.heroMetaItem}>Неделя {weekNumber}</span>
               <span className={styles.heroMetaDot}>·</span>
-              <strong className={styles.heroMetaStrong}>{todayLessonsCount} занятия сегодня</strong>
+              <strong className={styles.heroMetaStrong}>
+                {lessonsCountLabel} {currentDayLabel.toLowerCase()}
+              </strong>
             </>
           )}
           action={(
             <Link href="#schedule" className={styles.greetingLink}>
-              Перейти в расписание <ArrowForwardIcon sx={{ fontSize: 22 }} />
+              Перейти в расписание
+              <ArrowForwardIcon sx={{ fontSize: 22 }} />
             </Link>
           )}
         />
 
         <TeacherHomeScheduleSection
           previousDay={previousDay}
-          currentDay={today}
+          currentDay={currentDay}
           nextDay={nextDay}
-          onLessonOpen={(lessonId) => router.push(`/teacher/lesson/${lessonId}`)}
+          currentDayIndex={currentDayIndex}
+          todayIndex={todayIndex}
+          totalDays={weekDays.length}
+          isLoading={isWeekScheduleLoading}
+          hasError={Boolean(weekScheduleError)}
+          onPrevious={() => {
+            setSelectedDayIndex((index) => Math.max(0, (index ?? currentDayIndex) - 1));
+          }}
+          onNext={() => {
+            setSelectedDayIndex((index) => Math.min(weekDays.length - 1, (index ?? currentDayIndex) + 1));
+          }}
+          onLessonOpen={(lessonId) => {
+            router.push(`/teacher/lesson/${lessonId}`);
+          }}
         />
 
         <TeacherHomeSubjectsSection

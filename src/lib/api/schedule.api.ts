@@ -1,16 +1,25 @@
 import api from './axios';
 import type { TodayScheduleResult, WeekScheduleResult } from './types';
+import type { Role } from '@/types/user';
 
-export function getTodaySchedule(date?: string) {
-  return api.get<TodayScheduleResult>('/schedule/today', {
-    params: date ? { date } : undefined,
+export function getTodaySchedule(date: string, role: Role) {
+  const url =
+    role === 'student'
+      ? '/schedule/student/today'
+      : '/schedule/teacher/today';
+
+  return api.get<TodayScheduleResult>(url, {
+    params: { date },
   });
 }
 
-export const getScheduleByDate = getTodaySchedule;
+export function getWeekSchedule(date: string, role: Role) {
+  const url =
+    role === 'student'
+      ? '/schedule/student/week'
+      : '/schedule/teacher/week';
 
-export function getWeekSchedule(date?: string) {
-  return api.get<WeekScheduleResult>('/schedule/week', {
-    params: date ? { date } : undefined,
+  return api.get<WeekScheduleResult>(url, {
+    params: { date },
   });
 }

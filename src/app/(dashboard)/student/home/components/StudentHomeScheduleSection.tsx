@@ -2,7 +2,7 @@ import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import { LessonCard, type LessonCardProps } from '@/components/shared/LessonCard/LessonCard';
 import { EmptyDayState, ScheduleCard } from '@/components/ui';
-import { getWeekDay } from '@/lib/utils/formatDate';
+import { getRelativeScheduleDayLabel, getScheduleStageTag } from '@/lib/utils/schedule';
 import styles from '../home.module.scss';
 
 export type StudentHomeScheduleDay = {
@@ -21,40 +21,6 @@ interface StudentHomeScheduleSectionProps {
   hasError: boolean;
   onPrevious: () => void;
   onNext: () => void;
-}
-
-function getRelativeDayLabel(offset: number, fallbackDate: string) {
-  if (offset === 0) {
-    return 'Сегодня';
-  }
-
-  if (offset === -1) {
-    return 'Вчера';
-  }
-
-  if (offset === 1) {
-    return 'Завтра';
-  }
-
-  return getWeekDay(fallbackDate);
-}
-
-function getStageTag(index: number, todayIndex: number, date: string) {
-  const offset = index - todayIndex;
-
-  if (offset === 0) {
-    return 'ПАРЫ СЕГОДНЯ';
-  }
-
-  if (offset === -1) {
-    return 'ПАРЫ ВЧЕРА';
-  }
-
-  if (offset === 1) {
-    return 'ПАРЫ ЗАВТРА';
-  }
-
-  return `РАСПИСАНИЕ НА ${getWeekDay(date).toUpperCase()}`;
 }
 
 function parseLessonMeta(meta?: string) {
@@ -84,14 +50,14 @@ export function StudentHomeScheduleSection({
 }: StudentHomeScheduleSectionProps) {
   return (
     <section id="schedule" className={styles.scheduleStage}>
-      <div className={styles.stageTag}>{getStageTag(currentDayIndex, todayIndex, currentDay.date)}</div>
+      <div className={styles.stageTag}>{getScheduleStageTag(currentDayIndex, todayIndex, currentDay.date)}</div>
 
       <div className={styles.stageLayout}>
         <div className={`${styles.sideColumn} ${styles.sideColumnLeft}`}>
           {previousDay ? (
             <>
               <div className={styles.sideLabel}>
-                {getRelativeDayLabel(currentDayIndex - todayIndex - 1, previousDay.date).toUpperCase()}
+                {getRelativeScheduleDayLabel(currentDayIndex - todayIndex - 1, previousDay.date).toUpperCase()}
               </div>
               {previousDay.lessons.length > 0 ? (
                 previousDay.lessons.map((lesson) => (
@@ -154,7 +120,7 @@ export function StudentHomeScheduleSection({
           {nextDay ? (
             <>
               <div className={styles.sideLabel}>
-                {getRelativeDayLabel(currentDayIndex - todayIndex + 1, nextDay.date).toUpperCase()}
+                {getRelativeScheduleDayLabel(currentDayIndex - todayIndex + 1, nextDay.date).toUpperCase()}
               </div>
               {nextDay.lessons.length > 0 ? (
                 nextDay.lessons.map((lesson) => (

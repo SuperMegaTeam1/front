@@ -46,12 +46,12 @@ export interface ScheduleLessonResult {
   lessonsId: string;
   subjectId: string;
   subjectName: string;
-  teacherId: string | null;
-  teacherFirstName: string | null;
-  teacherLastName: string | null;
-  teacherFatherName: string | null;
-  groupId: string | null;
-  groupName: string | null;
+
+  teacherId?: string;
+  teacherFirstName?: string;
+  teacherLastName?: string;
+  teacherFatherName?: string;
+
   cabinet: string | null;
   type: string | null;
   startsAt: string;
@@ -62,8 +62,8 @@ export interface TodayScheduleResult {
   date: string;
   dayName: string;
   weekNumber: number | null;
-  lessonsWeek: number | null;
-  items: ScheduleLessonResult[] | null;
+  lessonsCount: number;
+  items: ScheduleLessonResult[];
 }
 
 export interface WeekScheduleResult {

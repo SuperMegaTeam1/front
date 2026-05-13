@@ -5,92 +5,31 @@ import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined
 import { useRouter } from 'next/navigation';
 import { PageHero, ViewSwitch, WeekNavigation, ScheduleCard, DayDivider, EmptyDayState } from '@/components/ui';
 import { useDaySchedule, useWeekSchedule } from '@/lib/hooks/useSchedule';
-import type { ScheduleLessonResult, WeekScheduleResult } from '@/lib/api/types';
-import { getIsoWeekNumber, getLocalIsoDate, getWeekStart, parseIsoDate, shiftIsoDate } from '@/lib/utils/isoDate';
+import type { ScheduleLessonResult } from '@/lib/api/types';
+import { getIsoWeekNumber, getLocalIsoDate, shiftIsoDate } from '@/lib/utils/isoDate';
+import {
+  buildEmptyScheduleWeek,
+  formatScheduleDayTitle,
+  formatScheduleHeadlineDate,
+  formatScheduleWeekRange,
+  mapBackendWeekToScheduleDays,
+  type ScheduleDay,
+  sortScheduleLessons,
+} from '@/lib/utils/schedule';
 import styles from './schedule.module.scss';
 
 type ScheduleView = 'today' | 'week';
-
-type WeekDaySchedule = {
-  date: string;
-  lessons: ScheduleLessonResult[];
-};
+type WeekDaySchedule = ScheduleDay<ScheduleLessonResult>;
 
 const VIEW_OPTIONS: Array<{ value: ScheduleView; label: string }> = [
   { value: 'today', label: 'Сегодня' },
   { value: 'week', label: 'Неделя' },
 ];
 
-const weekdayFormatter = new Intl.DateTimeFormat('ru-RU', { weekday: 'long' });
-const dayMonthFormatter = new Intl.DateTimeFormat('ru-RU', {
-  day: 'numeric',
-  month: 'long',
-});
-const monthFormatter = new Intl.DateTimeFormat('ru-RU', { month: 'long' });
-
-function buildEmptyWeek(anchorDate: string): WeekDaySchedule[] {
-  const monday = getWeekStart(anchorDate);
-
-  return Array.from({ length: 6 }, (_, index) => ({
-    date: shiftIsoDate(monday, index),
-    lessons: [],
-  }));
-}
-
-function formatDayMonth(date: Date) {
-  return dayMonthFormatter.format(date);
-}
-
-function getMonthForDateContext(date: Date) {
-  return dayMonthFormatter.formatToParts(date)
-    .find((part) => part.type === 'month')?.value ?? monthFormatter.format(date);
-}
-
-function formatHeadlineDate(dateStr: string) {
-  const date = parseIsoDate(dateStr);
-  const weekday = weekdayFormatter.format(date).toUpperCase();
-  const dayAndMonth = formatDayMonth(date).toUpperCase();
-  return `${weekday}, ${dayAndMonth}`;
-}
-
-function formatDayTitle(dateStr: string) {
-  const date = parseIsoDate(dateStr);
-  const weekday = weekdayFormatter.format(date);
-  const dayAndMonth = formatDayMonth(date);
-  return `${weekday}, ${dayAndMonth}`.toUpperCase();
-}
-
-function formatWeekRange(days: WeekDaySchedule[]) {
-  const start = parseIsoDate(days[0].date);
-  const end = parseIsoDate(days[days.length - 1].date);
-  const startDay = start.getDate();
-  const endDay = end.getDate();
-  const isSameMonth =
-    start.getFullYear() === end.getFullYear() &&
-    start.getMonth() === end.getMonth();
-
-  if (isSameMonth) {
-    return `${startDay}-${endDay} ${getMonthForDateContext(end)}`;
-  }
-
-  return `${formatDayMonth(start)} - ${formatDayMonth(end)}`;
-}
-
 function formatTeacherName(lesson: ScheduleLessonResult) {
   return [lesson.teacherLastName, lesson.teacherFirstName, lesson.teacherFatherName]
     .filter(Boolean)
     .join(' ');
-}
-
-function sortLessons(lessons: ScheduleLessonResult[] | null | undefined) {
-  return (lessons ?? []).slice().sort((a, b) => a.startsAt.localeCompare(b.startsAt));
-}
-
-function mapWeekSchedule(schedule?: WeekScheduleResult): WeekDaySchedule[] {
-  return (schedule?.items ?? []).map((day) => ({
-    date: day.date,
-    lessons: sortLessons(day.items),
-  }));
 }
 
 export default function StudentSchedulePage() {
@@ -113,12 +52,17 @@ export default function StudentSchedulePage() {
   } = useWeekSchedule(weekAnchorDate, view === 'week');
 
   const todayLessons = useMemo(
-    () => sortLessons(todaySchedule?.items),
+    () => sortScheduleLessons(todaySchedule?.items),
     [todaySchedule?.items]
   );
 
-  const weekDays = useMemo(() => mapWeekSchedule(weekSchedule), [weekSchedule]);
-  const displayWeekDays = weekDays.length > 0 ? weekDays : buildEmptyWeek(weekAnchorDate);
+  const weekDays = useMemo<WeekDaySchedule[]>(
+    () => mapBackendWeekToScheduleDays(weekSchedule, (lesson) => lesson),
+    [weekSchedule]
+  );
+  const displayWeekDays = weekDays.length > 0
+    ? weekDays
+    : buildEmptyScheduleWeek<ScheduleLessonResult>(weekAnchorDate);
   const weekNumber = weekOffset === 0 && todaySchedule?.weekNumber
     ? todaySchedule.weekNumber
     : getIsoWeekNumber(weekAnchorDate);
@@ -128,22 +72,22 @@ export default function StudentSchedulePage() {
   const heroMeta = view === 'today' ? (
     <>
       <CalendarTodayOutlinedIcon sx={{ fontSize: 14 }} />
-      <span>{formatHeadlineDate(headlineDate)}</span>
+      <span>{formatScheduleHeadlineDate(headlineDate)}</span>
     </>
   ) : (
     <span className={styles.weekMeta}>
       <strong className={styles.weekMetaLabel}>{isEvenWeek ? 'ЧЕТНАЯ НЕДЕЛЯ' : 'НЕЧЕТНАЯ НЕДЕЛЯ'}</strong>
       <span className={styles.weekMetaPeriod}>
         <CalendarTodayOutlinedIcon sx={{ fontSize: 14 }} />
-        <span>{formatWeekRange(displayWeekDays).toUpperCase()}</span>
+        <span>{formatScheduleWeekRange(displayWeekDays).toUpperCase()}</span>
       </span>
     </span>
   );
 
   const heroCenter = view === 'week' ? (
     <WeekNavigation
-      onPrevious={() => setWeekOffset((o) => o - 1)}
-      onNext={() => setWeekOffset((o) => o + 1)}
+      onPrevious={() => setWeekOffset((offset) => offset - 1)}
+      onNext={() => setWeekOffset((offset) => offset + 1)}
     />
   ) : undefined;
 
@@ -193,7 +137,7 @@ export default function StudentSchedulePage() {
             ) : (
               displayWeekDays.map((day) => (
                 <div key={day.date} className={styles.weekDay}>
-                  <DayDivider label={formatDayTitle(day.date)} />
+                  <DayDivider label={formatScheduleDayTitle(day.date)} />
                   {day.lessons.length > 0 ? (
                     <div className={styles.dayLessons}>
                       {day.lessons.map((lesson) => (
