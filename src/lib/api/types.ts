@@ -145,6 +145,18 @@ export interface TeacherGroupListItem {
 
 export type TeacherGroupsResponse = TeacherGroupListItem[];
 
+export interface TeacherMessageRequest {
+  groupId: string;
+  title: string;
+  body: string;
+}
+
+export interface TeacherMessageResponse {
+  groupName: string;
+  title: string;
+  body: string;
+}
+
 export interface BackendStatusResponse {
   service: string;
   status: string;

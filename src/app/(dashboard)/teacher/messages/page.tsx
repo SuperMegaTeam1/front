@@ -6,9 +6,21 @@ import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { PageHero } from '@/components/ui';
 import { useTeacherGroups } from '@/lib/hooks/useGroups';
+import { useSendTeacherMessage } from '@/lib/hooks/useNotifications';
+import { useAuthStore } from '@/stores/useAuthStore';
 import styles from './messages.module.scss';
 
+function buildTeacherTitle(user: ReturnType<typeof useAuthStore.getState>['user']) {
+  const title = [user?.lastName, user?.firstName, user?.patronymic]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+
+  return title || 'Преподаватель';
+}
+
 export default function TeacherMessagesPage() {
+  const { user } = useAuthStore();
   const {
     data: groups = [],
     isLoading: isGroupsLoading,
@@ -16,6 +28,7 @@ export default function TeacherMessagesPage() {
   } = useTeacherGroups();
   const [message, setMessage] = useState('');
   const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
+  const sendTeacherMessageMutation = useSendTeacherMessage();
 
   const toggleGroup = (groupId: string) => {
     setSelectedGroupIds((current) =>
@@ -26,7 +39,25 @@ export default function TeacherMessagesPage() {
   };
 
   const handleSubmit = () => {
-    setMessage('');
+    const body = message.trim();
+
+    if (selectedGroupIds.length === 0 || body.length === 0 || sendTeacherMessageMutation.isPending) {
+      return;
+    }
+
+    sendTeacherMessageMutation.mutate(
+      {
+        groupIds: selectedGroupIds,
+        title: buildTeacherTitle(user),
+        body,
+      },
+      {
+        onSuccess: () => {
+          setMessage('');
+          setSelectedGroupIds([]);
+        },
+      },
+    );
   };
 
   return (
@@ -82,11 +113,23 @@ export default function TeacherMessagesPage() {
               type="button"
               className={styles.sendButton}
               onClick={handleSubmit}
-              disabled={selectedGroupIds.length === 0 || message.trim().length === 0}
+              disabled={
+                selectedGroupIds.length === 0 ||
+                message.trim().length === 0 ||
+                sendTeacherMessageMutation.isPending
+              }
             >
-              Отправить
+              {sendTeacherMessageMutation.isPending ? 'Отправка...' : 'Отправить'}
               <SendRoundedIcon sx={{ fontSize: 34 }} />
             </button>
+
+            {sendTeacherMessageMutation.isError && (
+              <span className={styles.errorMessage}>Не удалось отправить сообщение</span>
+            )}
+
+            {sendTeacherMessageMutation.isSuccess && (
+              <span className={styles.successMessage}>Сообщение отправлено</span>
+            )}
           </div>
         </section>
       </div>

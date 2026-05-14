@@ -152,8 +152,29 @@
 
 .actions {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 18px;
   margin-top: 76px;
+}
+
+.errorMessage,
+.successMessage {
+  width: 100%;
+  text-align: right;
+  font-family: $font-family-heading;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.errorMessage {
+  color: #b34a45;
+}
+
+.successMessage {
+  color: $color-brand;
 }
 
 .sendButton {
@@ -204,6 +225,11 @@
 
   .actions {
     margin-top: 40px;
+  }
+
+  .errorMessage,
+  .successMessage {
+    text-align: left;
   }
 }
 
