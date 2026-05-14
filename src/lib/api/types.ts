@@ -157,6 +157,17 @@ export interface TeacherMessageResponse {
   body: string;
 }
 
+export interface StudentNotificationResponse {
+  id: string;
+  senderName: string;
+  senderLastName: string;
+  senderFatherName: string | null;
+  title: string;
+  messageBody: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
 export interface BackendStatusResponse {
   service: string;
   status: string;

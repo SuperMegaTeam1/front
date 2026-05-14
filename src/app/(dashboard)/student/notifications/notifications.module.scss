@@ -48,6 +48,23 @@
   gap: 20px;
 }
 
+.stateCard {
+  min-height: 160px;
+  padding: 42px;
+  border-radius: 18px;
+  background: rgba(241, 244, 246, 0.88);
+  border: 1px solid rgba(227, 233, 236, 0.82);
+  color: #9badc4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-family-heading;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
 @include mobile {
   .groups {
     gap: 50px;
@@ -66,5 +83,12 @@
 
   .groupItems {
     gap: 28px;
+  }
+
+  .stateCard {
+    min-height: 132px;
+    padding: 28px;
+    border-radius: 22px;
+    font-size: 17px;
   }
 }
