@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import { NotificationItem } from '@/components/shared/NotificationItem/NotificationItem';
 import { PageHero } from '@/components/ui';
@@ -72,34 +72,19 @@ export default function StudentNotificationsPage() {
     isLoading,
     error,
   } = useStudentNotifications();
-  const {
-    mutate: markAllAsRead,
-    isPending: isMarkingAllAsRead,
-    isSuccess: hasMarkedAllAsRead,
-  } = useMarkAllStudentNotificationsAsRead();
+  const { mutate: markAllAsRead } = useMarkAllStudentNotificationsAsRead();
   const groups = groupNotifications(notifications);
   const hasUnreadNotifications = notifications.some((notification) => !notification.isRead);
+  const hasTriggeredMarkAllRef = useRef(false);
 
   useEffect(() => {
-    if (
-      isLoading
-      || error
-      || !hasUnreadNotifications
-      || isMarkingAllAsRead
-      || hasMarkedAllAsRead
-    ) {
+    if (isLoading || error || !hasUnreadNotifications || hasTriggeredMarkAllRef.current) {
       return;
     }
 
+    hasTriggeredMarkAllRef.current = true;
     markAllAsRead();
-  }, [
-    error,
-    hasMarkedAllAsRead,
-    hasUnreadNotifications,
-    isLoading,
-    isMarkingAllAsRead,
-    markAllAsRead,
-  ]);
+  }, [error, hasUnreadNotifications, isLoading, markAllAsRead]);
 
   return (
     <div className={styles.page}>
