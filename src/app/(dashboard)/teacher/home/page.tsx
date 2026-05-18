@@ -19,6 +19,7 @@ import {
   getScheduleLessonGroupNames,
   mapBackendWeekToScheduleDays,
 } from '@/lib/utils/schedule';
+import { buildTeacherLessonHref, normalizeTeacherLessonGroups } from '@/lib/utils/teacherLesson';
 
 import styles from './home.module.scss';
 
@@ -30,13 +31,17 @@ import type { TeacherHomeDay, TeacherHomeLesson, TeacherHomeSubject } from './co
 const SUBJECT_CARD_VARIANTS: TeacherHomeSubject['iconVariant'][] = ['brand', 'violet', 'mint'];
 
 function mapLessonToHomeLesson(lesson: ScheduleLessonResult): TeacherHomeLesson {
+  const groupInfos = normalizeTeacherLessonGroups(lesson);
+
   return {
     id: lesson.lessonsId,
+    subjectId: lesson.subjectId,
     startTime: lesson.startsAt,
     endTime: lesson.endsAt,
     subjectName: lesson.subjectName,
     meta: lesson.type ?? undefined,
     groups: getScheduleLessonGroupNames(lesson),
+    groupInfos,
     room: lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined,
   };
 }
@@ -108,6 +113,7 @@ export default function TeacherHomePage() {
 
     return `${count} занятий`;
   }, [currentDay.lessons.length, isWeekScheduleLoading, weekScheduleError]);
+
   const homeSubjects: TeacherHomeSubject[] = teacherSubjects.map((subject, index) => {
     const groups = Array.isArray(subject.groups) ? subject.groups : [];
 
@@ -159,8 +165,18 @@ export default function TeacherHomePage() {
           onNext={() => {
             setSelectedDayIndex((index) => Math.min(weekDays.length - 1, (index ?? currentDayIndex) + 1));
           }}
-          onLessonOpen={(lessonId) => {
-            router.push(`/teacher/lesson/${lessonId}`);
+          onLessonOpen={(lesson, date) => {
+            router.push(buildTeacherLessonHref({
+              lessonId: lesson.id,
+              subjectId: lesson.subjectId,
+              subjectName: lesson.subjectName,
+              lessonType: lesson.meta,
+              date,
+              startsAt: lesson.startTime,
+              endsAt: lesson.endTime,
+              cabinet: lesson.room?.replace(/^Ауд\.\s*/, '') ?? null,
+              groups: lesson.groupInfos,
+            }));
           }}
         />
 

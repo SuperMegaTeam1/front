@@ -42,6 +42,13 @@ export interface AuthTeacherMeResponse {
   teacherId: string | null;
 }
 
+export interface ScheduleLessonGroupResult {
+  groupId?: string;
+  groupName?: string;
+  id?: string;
+  name?: string;
+}
+
 export interface ScheduleLessonResult {
   lessonsId: string;
   subjectId: string;
@@ -52,6 +59,9 @@ export interface ScheduleLessonResult {
   teacherLastName?: string;
   teacherFatherName?: string;
   studyGroups?: TeacherSubjectGroupListItem[];
+  groups?: Array<ScheduleLessonGroupResult | string>;
+  groupNames?: string[];
+  groupName?: string | null;
 
   cabinet: string | null;
   type: string | null;
@@ -137,6 +147,60 @@ export interface TeacherSubjectsResponse {
   items: TeacherSubjectListItem[];
 }
 
+export interface GroupJournalItemResponse {
+  lessonId: string;
+  date: string;
+  studentId: string;
+  attended: boolean | null;
+  grade: number | null;
+}
+
+export interface GroupJournalResponse {
+  subjectId: string;
+  groupId: string;
+  items: GroupJournalItemResponse[];
+}
+
+export interface LessonJournalUpdateItem {
+  studentId: string;
+  attended?: boolean | null;
+  grade?: number | null;
+}
+
+export interface SaveLessonJournalPayload {
+  items: LessonJournalUpdateItem[];
+}
+
+export interface SaveLessonJournalResponse {
+  lessonId: string;
+  items: Array<{
+    studentId: string;
+    attended: boolean | null;
+    grade: number | null;
+  }>;
+}
+
+export interface GroupStudentListItem {
+  studentId: string;
+  firstName: string;
+  lastName: string;
+  fatherName: string | null;
+}
+
+export interface RawGroupStudentListItem {
+  id: string;
+  firstName: string;
+  lastName: string;
+  fatherName: string | null;
+  email?: string | null;
+}
+
+export interface GroupStudentsResponse {
+  items: GroupStudentListItem[];
+}
+
+export type GroupStudentsApiResponse = GroupStudentsResponse | RawGroupStudentListItem[];
+
 export interface BackendStatusResponse {
   service: string;
   status: string;
@@ -177,5 +241,27 @@ export function mapTeacherMeToUser(authUser: AuthTeacherMeResponse): User {
     studentId: null,
     groupId: null,
     groupName: null,
+  };
+}
+
+export function normalizeGroupStudentsResponse(payload: GroupStudentsApiResponse): GroupStudentsResponse {
+  if (Array.isArray(payload)) {
+    return {
+      items: payload.map((student) => ({
+        studentId: student.id,
+        firstName: student.firstName,
+        lastName: student.lastName,
+        fatherName: student.fatherName || null,
+      })),
+    };
+  }
+
+  return {
+    items: (payload.items ?? []).map((student) => ({
+      studentId: student.studentId,
+      firstName: student.firstName,
+      lastName: student.lastName,
+      fatherName: student.fatherName || null,
+    })),
   };
 }

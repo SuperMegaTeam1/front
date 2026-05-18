@@ -1,6 +1,7 @@
 import type { ScheduleLessonResult, TeacherSubjectGroupListItem, WeekScheduleResult } from '@/lib/api/types';
 import { getWeekDay } from './formatDate';
 import { getWeekStart, parseIsoDate, shiftIsoDate } from './isoDate';
+import { normalizeTeacherLessonGroups } from './teacherLesson';
 
 export type ScheduleDay<TLesson> = {
   date: string;
@@ -30,23 +31,20 @@ export function sortScheduleLessons<T extends { startsAt: string }>(
 }
 
 export function getScheduleLessonGroupNames(lesson: {
+  groups?: ScheduleLessonResult['groups'];
   studyGroups?: TeacherSubjectGroupListItem[];
+  groupNames?: string[];
+  groupName?: string | null;
 }) {
-  const uniqueNames = new Set<string>();
-
-  for (const group of lesson.studyGroups ?? []) {
-    const groupName = group.groupName ?? group.name;
-
-    if (groupName) {
-      uniqueNames.add(groupName);
-    }
-  }
-
+  const uniqueNames = new Set(normalizeTeacherLessonGroups(lesson).map((group) => group.groupName));
   return Array.from(uniqueNames);
 }
 
 export function formatScheduleLessonGroups(lesson: {
+  groups?: ScheduleLessonResult['groups'];
   studyGroups?: TeacherSubjectGroupListItem[];
+  groupNames?: string[];
+  groupName?: string | null;
 }) {
   const groups = getScheduleLessonGroupNames(lesson);
 
