@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Typography } from '@mui/material';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import type { Lesson } from '@/types/schedule';
 import styles from './schedule.module.scss';
@@ -56,7 +56,7 @@ export function ScheduleLessonCard({ lesson }: ScheduleLessonCardProps) {
         aria-label={`Перейти на страницу предмета ${lesson.subjectName}`}
         onClick={() => router.push(`/student/subjects/${lesson.subjectId}`)}
       >
-        <MoreHorizRoundedIcon sx={{ fontSize: 22 }} />
+        <ChevronRightRoundedIcon sx={{ fontSize: 24 }} />
       </button>
     </article>
   );

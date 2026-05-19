@@ -61,7 +61,7 @@ export function RatingTable({
   showAllLabel,
 }: RatingTableProps) {
   const hiddenCount = Math.max(totalCount - visibleCount, 0);
-  const shouldShowButton = !!showAllLabel || (hiddenCount > 0 && !!onShowMore);
+  const shouldShowButton = hiddenCount > 0 && !!onShowMore;
 
   return (
     <section className={styles.card}>

@@ -44,6 +44,10 @@ function mapJournalEntry(lessonsStartDate: string, studentGrade: number | null, 
   };
 }
 
+function formatScore(score: number) {
+  return Number.isInteger(score) ? String(score) : score.toFixed(1);
+}
+
 export default function StudentSubjectDetailPage() {
   const params = useParams<{ id: string }>();
   const subjectId = params?.id ?? '';
@@ -64,12 +68,13 @@ export default function StudentSubjectDetailPage() {
       ) ?? FALLBACK_SUBJECT.journal,
   };
 
-  const currentScore = subjectRating?.totalGrade ?? 0;
+  const currentScore =
+    subjectDetail?.journalInfos.reduce((sum, entry) => sum + (entry.studentGrade ?? 0), 0) ?? null;
   const maxScore = 100;
   const groupName = subjectDetail?.groupName ?? subjectRating?.groupName ?? '';
   const ratingPlace = subjectRating?.ratingPosition;
   const totalStudents = subjectRating?.topStudents.length ?? 0;
-  const progressWidth = `${Math.min(100, Math.max(0, (currentScore / maxScore) * 100))}%`;
+  const progressWidth = `${Math.min(100, Math.max(0, ((currentScore ?? 0) / maxScore) * 100))}%`;
   const hasExtraRows = subject.journal.length > INITIAL_VISIBLE_ROWS;
   const visibleEntries = isExpanded ? subject.journal : subject.journal.slice(0, INITIAL_VISIBLE_ROWS);
   const ratingCaption =
@@ -90,7 +95,7 @@ export default function StudentSubjectDetailPage() {
             </div>
 
             <div className={styles.scoreRow}>
-              <span className={styles.scoreValue}>{subjectRating ? currentScore : '—'}</span>
+              <span className={styles.scoreValue}>{currentScore === null ? '—' : formatScore(currentScore)}</span>
               <span className={styles.scoreMax}>/ {maxScore} баллов</span>
             </div>
 
