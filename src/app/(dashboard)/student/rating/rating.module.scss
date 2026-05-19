@@ -114,7 +114,7 @@
   cursor: pointer;
   transition: background $transition-fast, color $transition-fast, border-color $transition-fast;
 
-  &:hover {
+  &:hover:not(.filterButtonActive) {
     border-color: rgba(42, 101, 126, 0.24);
     color: $color-brand;
   }
