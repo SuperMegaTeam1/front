@@ -5,24 +5,30 @@ import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { PageHero } from '@/components/ui';
+import { useTeacherGroups } from '@/lib/hooks/useGroups';
+import { useSendTeacherMessage } from '@/lib/hooks/useNotifications';
+import { useAuthStore } from '@/stores/useAuthStore';
 import styles from './messages.module.scss';
 
-interface TeacherGroup {
-  id: string;
-  name: string;
+function buildTeacherTitle(user: ReturnType<typeof useAuthStore.getState>['user']) {
+  const title = [user?.lastName, user?.firstName, user?.patronymic]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+
+  return title || 'Преподаватель';
 }
 
-const MOCK_GROUPS: TeacherGroup[] = [
-  { id: '09-352', name: '09-352' },
-  { id: '09-351', name: '09-351' },
-  { id: '09-353', name: '09-353' },
-];
-
-const DEFAULT_SELECTED_GROUPS = ['09-352'];
-
 export default function TeacherMessagesPage() {
-  const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>(DEFAULT_SELECTED_GROUPS);
+  const { user } = useAuthStore();
+  const {
+    data: groups = [],
+    isLoading: isGroupsLoading,
+    error: groupsError,
+  } = useTeacherGroups();
   const [message, setMessage] = useState('');
+  const [selectedGroupIds, setSelectedGroupIds] = useState<string[]>([]);
+  const sendTeacherMessageMutation = useSendTeacherMessage();
 
   const toggleGroup = (groupId: string) => {
     setSelectedGroupIds((current) =>
@@ -33,7 +39,25 @@ export default function TeacherMessagesPage() {
   };
 
   const handleSubmit = () => {
-    setMessage('');
+    const body = message.trim();
+
+    if (selectedGroupIds.length === 0 || body.length === 0 || sendTeacherMessageMutation.isPending) {
+      return;
+    }
+
+    sendTeacherMessageMutation.mutate(
+      {
+        groupIds: selectedGroupIds,
+        title: buildTeacherTitle(user),
+        body,
+      },
+      {
+        onSuccess: () => {
+          setMessage('');
+          setSelectedGroupIds([]);
+        },
+      },
+    );
   };
 
   return (
@@ -49,22 +73,30 @@ export default function TeacherMessagesPage() {
             </div>
 
             <div className={styles.groupList}>
-              {MOCK_GROUPS.map((group) => {
-                const isSelected = selectedGroupIds.includes(group.id);
+              {isGroupsLoading ? (
+                <span className={styles.groupState}>Загружаем группы...</span>
+              ) : groupsError ? (
+                <span className={styles.groupState}>Не удалось загрузить группы</span>
+              ) : groups.length === 0 ? (
+                <span className={styles.groupState}>Нет доступных групп</span>
+              ) : (
+                groups.map((group) => {
+                  const isSelected = selectedGroupIds.includes(group.groupId);
 
-                return (
-                  <button
-                    key={group.id}
-                    type="button"
-                    className={`${styles.groupButton} ${isSelected ? styles.groupButtonActive : ''}`}
-                    onClick={() => toggleGroup(group.id)}
-                    aria-pressed={isSelected}
-                  >
-                    {isSelected && <CheckCircleRoundedIcon sx={{ fontSize: 22 }} />}
-                    <span>{group.name}</span>
-                  </button>
-                );
-              })}
+                  return (
+                    <button
+                      key={group.groupId}
+                      type="button"
+                      className={`${styles.groupButton} ${isSelected ? styles.groupButtonActive : ''}`}
+                      onClick={() => toggleGroup(group.groupId)}
+                      aria-pressed={isSelected}
+                    >
+                      {isSelected && <CheckCircleRoundedIcon sx={{ fontSize: 22 }} />}
+                      <span>{group.groupName}</span>
+                    </button>
+                  );
+                })
+              )}
             </div>
           </div>
 
@@ -81,11 +113,23 @@ export default function TeacherMessagesPage() {
               type="button"
               className={styles.sendButton}
               onClick={handleSubmit}
-              disabled={selectedGroupIds.length === 0 || message.trim().length === 0}
+              disabled={
+                selectedGroupIds.length === 0 ||
+                message.trim().length === 0 ||
+                sendTeacherMessageMutation.isPending
+              }
             >
-              Отправить
+              {sendTeacherMessageMutation.isPending ? 'Отправка...' : 'Отправить'}
               <SendRoundedIcon sx={{ fontSize: 34 }} />
             </button>
+
+            {sendTeacherMessageMutation.isError && (
+              <span className={styles.errorMessage}>Не удалось отправить сообщение</span>
+            )}
+
+            {sendTeacherMessageMutation.isSuccess && (
+              <span className={styles.successMessage}>Сообщение отправлено</span>
+            )}
           </div>
         </section>
       </div>

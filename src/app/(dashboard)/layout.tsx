@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useNotificationsHub } from '@/lib/hooks/useNotificationsHub';
 import styles from './dashboard.module.scss';
 
 export default function DashboardLayout({
@@ -9,6 +10,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const { hasHydrated } = useAuthStore();
+
+  useNotificationsHub();
 
   if (!hasHydrated) {
     return null;

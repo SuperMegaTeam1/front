@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 import styles from '../home.module.scss';
 
 interface StudentHomeNotification {
-  id: number;
+  id: string;
   icon: ReactNode;
   title: string;
   subtitle: string;
