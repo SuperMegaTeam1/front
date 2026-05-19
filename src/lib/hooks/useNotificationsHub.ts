@@ -34,19 +34,19 @@ export function useNotificationsHub() {
     // и cleanup может вызвать stop() до завершения negotiate.
     // Чтобы не словить "The connection was stopped during negotiation",
     // стопаем коннект уже после успешного start().
-    let cancelled = false;
+    let isCancelled = false;
 
     connection
       .start()
       .then(() => {
-        if (cancelled) {
+        if (isCancelled) {
           void connection.stop().catch(() => undefined);
         }
       })
       .catch(() => undefined);
 
     return () => {
-      cancelled = true;
+      isCancelled = true;
       if (connection.state === 'Connected') {
         void connection.stop().catch(() => undefined);
       }
