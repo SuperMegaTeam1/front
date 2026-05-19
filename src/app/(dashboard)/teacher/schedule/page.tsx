@@ -9,7 +9,6 @@ import type { ScheduleLessonResult } from '@/lib/api/types';
 import { getIsoWeekNumber, getLocalIsoDate, shiftIsoDate } from '@/lib/utils/isoDate';
 import {
   buildEmptyScheduleWeek,
-  formatScheduleLessonGroups,
   formatScheduleDayTitle,
   formatScheduleHeadlineDate,
   formatScheduleWeekRange,
@@ -17,6 +16,11 @@ import {
   type ScheduleDay,
   sortScheduleLessons,
 } from '@/lib/utils/schedule';
+import {
+  buildTeacherLessonHref,
+  formatTeacherLessonGroupNames,
+  normalizeTeacherLessonGroups,
+} from '@/lib/utils/teacherLesson';
 import styles from './schedule.module.scss';
 
 type ViewMode = 'today' | 'week';
@@ -55,6 +59,7 @@ export default function TeacherSchedulePage() {
     () => mapBackendWeekToScheduleDays(weekSchedule, (lesson) => lesson),
     [weekSchedule]
   );
+
   const displayWeekDays = weekDays.length > 0
     ? weekDays
     : buildEmptyScheduleWeek<ScheduleLessonResult>(weekAnchorDate);
@@ -63,6 +68,20 @@ export default function TeacherSchedulePage() {
     : getIsoWeekNumber(weekAnchorDate);
   const isEvenWeek = weekNumber % 2 === 0;
   const headlineDate = todaySchedule?.date ?? todayDate;
+
+  const openLessonPage = (lesson: ScheduleLessonResult, date: string) => {
+    router.push(buildTeacherLessonHref({
+      lessonId: lesson.lessonsId,
+      subjectId: lesson.subjectId,
+      subjectName: lesson.subjectName,
+      lessonType: lesson.type,
+      date,
+      startsAt: lesson.startsAt,
+      endsAt: lesson.endsAt,
+      cabinet: lesson.cabinet,
+      groups: normalizeTeacherLessonGroups(lesson),
+    }));
+  };
 
   const heroMeta = view === 'today' ? (
     <>
@@ -114,8 +133,8 @@ export default function TeacherSchedulePage() {
                   subjectName={lesson.subjectName}
                   lessonType={lesson.type ?? undefined}
                   room={lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined}
-                  groups={formatScheduleLessonGroups(lesson)}
-                  onMore={() => router.push(`/teacher/lesson/${lesson.lessonsId}`)}
+                  groups={formatTeacherLessonGroupNames(normalizeTeacherLessonGroups(lesson)) || undefined}
+                  onMore={() => openLessonPage(lesson, todayDate)}
                   moreLabel={`Открыть занятие: ${lesson.subjectName}`}
                 />
               ))
@@ -143,8 +162,8 @@ export default function TeacherSchedulePage() {
                           subjectName={lesson.subjectName}
                           lessonType={lesson.type ?? undefined}
                           room={lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined}
-                          groups={formatScheduleLessonGroups(lesson)}
-                          onMore={() => router.push(`/teacher/lesson/${lesson.lessonsId}`)}
+                          groups={formatTeacherLessonGroupNames(normalizeTeacherLessonGroups(lesson)) || undefined}
+                          onMore={() => openLessonPage(lesson, day.date)}
                           moreLabel={`Открыть занятие: ${lesson.subjectName}`}
                         />
                       ))}

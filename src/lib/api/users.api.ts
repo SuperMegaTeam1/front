@@ -1,11 +1,10 @@
 import api from './axios';
-import type { ApiResponse } from '@/types/api';
-import type { User, Student } from '@/types/user';
+import { normalizeGroupStudentsResponse } from './types';
+import type { GroupStudentsApiResponse } from './types';
 
-/** Профиль текущего пользователя */
-export const getProfile = () =>
-  api.get<ApiResponse<User>>('/users/me');
-
-/** Список студентов группы (для преподавателя) */
-export const getStudentsByGroup = (groupId: number) =>
-  api.get<ApiResponse<Student[]>>(`/users/students/${groupId}`);
+export function getStudentsByGroup(groupId: string) {
+  return api.get<GroupStudentsApiResponse>(`/${groupId}/students`).then((response) => ({
+    ...response,
+    data: normalizeGroupStudentsResponse(response.data),
+  }));
+}

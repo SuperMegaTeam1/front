@@ -71,6 +71,16 @@
   overflow: hidden;
 }
 
+.stateCard {
+  padding: 24px 28px;
+  border: 1px solid rgba(227, 233, 236, 0.94);
+  border-radius: 14px;
+  background: $color-surface;
+  color: #687b92;
+  font-size: 15px;
+  box-shadow: 0 8px 24px rgba(146, 164, 183, 0.08);
+}
+
 .tableHeader,
 .row {
   display: grid;
@@ -180,6 +190,20 @@
       width: 100%;
     }
   }
+}
+
+.statusText {
+  margin: 0;
+  font-size: 14px;
+  color: #687b92;
+}
+
+.statusSuccess {
+  color: #1f7a46;
+}
+
+.statusError {
+  color: #c81e28;
 }
 
 .submitButton {

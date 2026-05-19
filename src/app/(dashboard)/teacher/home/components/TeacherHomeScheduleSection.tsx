@@ -6,7 +6,7 @@ import { LessonCard } from '@/components/shared/LessonCard/LessonCard';
 import { EmptyDayState, ScheduleCard } from '@/components/ui';
 import { getRelativeScheduleDayLabel, getScheduleStageTag } from '@/lib/utils/schedule';
 import styles from '../home.module.scss';
-import type { TeacherHomeDay } from './TeacherHome.types';
+import type { TeacherHomeDay, TeacherHomeLesson } from './TeacherHome.types';
 
 interface TeacherHomeScheduleSectionProps {
   previousDay?: TeacherHomeDay;
@@ -19,7 +19,7 @@ interface TeacherHomeScheduleSectionProps {
   hasError: boolean;
   onPrevious: () => void;
   onNext: () => void;
-  onLessonOpen: (lessonId: string) => void;
+  onLessonOpen: (lesson: TeacherHomeLesson, date: string) => void;
 }
 
 function parseLessonMeta(meta?: string) {
@@ -95,7 +95,7 @@ export function TeacherHomeScheduleSection({
                   lessonType={lessonType}
                   groups={lesson.groups?.join(', ') || undefined}
                   room={lesson.room}
-                  onMore={() => onLessonOpen(lesson.id)}
+                  onMore={() => onLessonOpen(lesson, currentDay.date)}
                   moreLabel={`Открыть занятие: ${lesson.subjectName}`}
                 />
               );
