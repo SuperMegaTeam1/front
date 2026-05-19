@@ -19,6 +19,7 @@ import {
   getScheduleLessonGroupNames,
   mapBackendWeekToScheduleDays,
 } from '@/lib/utils/schedule';
+import { getSubjectIconByName } from '@/lib/utils/subjectIcons';
 
 import styles from './home.module.scss';
 
@@ -110,11 +111,13 @@ export default function TeacherHomePage() {
   }, [currentDay.lessons.length, isWeekScheduleLoading, weekScheduleError]);
   const homeSubjects: TeacherHomeSubject[] = teacherSubjects.map((subject, index) => {
     const groups = Array.isArray(subject.groups) ? subject.groups : [];
+    const SubjectIcon = getSubjectIconByName(subject.subjectName);
 
     return {
       id: subject.subjectId,
       name: subject.subjectName,
       groups: groups.map((group) => group.groupName),
+      icon: <SubjectIcon sx={{ fontSize: 30, color: '#2a657e' }} />,
       iconVariant: SUBJECT_CARD_VARIANTS[index % SUBJECT_CARD_VARIANTS.length],
     };
   });

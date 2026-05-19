@@ -1,5 +1,6 @@
 'use client';
 
+import BedtimeRoundedIcon from '@mui/icons-material/BedtimeRounded';
 import { useMemo, useState } from 'react';
 import { RatingTable, type RatingTableRow } from '@/components/shared/RatingTable/RatingTable';
 import { PageHero } from '@/components/ui';
@@ -16,6 +17,7 @@ const AVATAR_COLORS = [
 
 const DEFAULT_FILTER_LABEL = 'Все предметы';
 const DEFAULT_SUBTITLE = 'Академическая успеваемость за текущий семестр';
+const INITIAL_VISIBLE_ROWS = 5;
 
 function getAvatarLabel(firstName: string, lastName: string) {
   return `${firstName[0] ?? ''}${lastName[0] ?? ''}`.toUpperCase();
@@ -27,6 +29,7 @@ function getStudentName(firstName: string, lastName: string, fatherName?: string
 
 export default function StudentRatingPage() {
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const {
     data: subjects = [],
@@ -87,6 +90,8 @@ export default function StudentRatingPage() {
 
   const groupName = activeRating?.groupName ?? overallRating?.groupName ?? '...';
   const activeStudentsCount = rows.length;
+  const hasHiddenRows = rows.length > INITIAL_VISIBLE_ROWS;
+  const visibleRows = isExpanded ? rows : rows.slice(0, INITIAL_VISIBLE_ROWS);
 
   const averageGroupScore = useMemo(() => {
     if (!activeRating?.topStudents?.length) {
@@ -100,6 +105,10 @@ export default function StudentRatingPage() {
   const heroSubtitle = selectedSubjectName
     ? `Рейтинг по предмету «${selectedSubjectName}»`
     : DEFAULT_SUBTITLE;
+  const loaderTitle = activeSubjectId ? 'Загружаем рейтинг по предмету' : 'Загружаем рейтинг группы';
+  const loaderHint = selectedSubjectName
+    ? `Обновляем список лидеров по предмету «${selectedSubjectName}».`
+    : 'Собираем актуальные позиции и средний балл группы.';
 
   return (
     <div className={styles.page}>
@@ -109,6 +118,16 @@ export default function StudentRatingPage() {
           title={`Рейтинг группы ${groupName}`}
           subtitle={heroSubtitle}
         />
+
+        <section className={styles.updateNotice} aria-label="Информация об обновлении рейтинга">
+          <div className={styles.updateNoticeIcon} aria-hidden="true">
+            <BedtimeRoundedIcon sx={{ fontSize: 20 }} />
+          </div>
+
+          <div className={styles.updateNoticeCopy}>
+            <span className={styles.updateNoticeTitle}>Рейтинг обновляется автоматически каждую ночь в 02:00</span>
+          </div>
+        </section>
 
         <section className={styles.overview}>
           <article className={styles.statCard}>
@@ -130,9 +149,13 @@ export default function StudentRatingPage() {
               <button
                 type="button"
                 className={`${styles.filterButton} ${activeSubjectId === null ? styles.filterButtonActive : ''}`}
-                onClick={() => setSelectedSubjectId(null)}
+                onClick={() => {
+                  setIsExpanded(false);
+                  setSelectedSubjectId(null);
+                }}
+                aria-pressed={activeSubjectId === null}
               >
-                {DEFAULT_FILTER_LABEL}
+                <span className={styles.filterButtonLabel}>{DEFAULT_FILTER_LABEL}</span>
               </button>
 
               {isSubjectsLoading ? null : (
@@ -141,9 +164,13 @@ export default function StudentRatingPage() {
                     key={subject.subjectId}
                     type="button"
                     className={`${styles.filterButton} ${activeSubjectId === subject.subjectId ? styles.filterButtonActive : ''}`}
-                    onClick={() => setSelectedSubjectId(subject.subjectId)}
+                    onClick={() => {
+                      setIsExpanded(false);
+                      setSelectedSubjectId(subject.subjectId);
+                    }}
+                    aria-pressed={activeSubjectId === subject.subjectId}
                   >
-                    {subject.subjectName}
+                    <span className={styles.filterButtonLabel}>{subject.subjectName}</span>
                   </button>
                 ))
               )}
@@ -152,7 +179,18 @@ export default function StudentRatingPage() {
         </section>
 
         {isLoading ? (
-          <RatingTable rows={[]} visibleCount={0} totalCount={0} />
+          <section className={styles.loaderCard} aria-live="polite" aria-busy="true">
+            <div className={styles.loaderPulse} aria-hidden="true">
+              <span className={styles.loaderDot} />
+              <span className={styles.loaderDot} />
+              <span className={styles.loaderDot} />
+            </div>
+
+            <div className={styles.loaderCopy}>
+              <span className={styles.loaderTitle}>{loaderTitle}</span>
+              <span className={styles.loaderHint}>{loaderHint}</span>
+            </div>
+          </section>
         ) : error ? (
           <section className={styles.statCard}>
             <span className={styles.statLabel}>Ошибка</span>
@@ -167,9 +205,10 @@ export default function StudentRatingPage() {
           </section>
         ) : (
           <RatingTable
-            rows={rows}
-            visibleCount={rows.length}
+            rows={visibleRows}
+            visibleCount={visibleRows.length}
             totalCount={activeStudentsCount}
+            onShowMore={hasHiddenRows && !isExpanded ? () => setIsExpanded(true) : undefined}
             showAllLabel="Показать больше"
           />
         )}

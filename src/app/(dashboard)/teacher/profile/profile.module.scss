@@ -96,36 +96,6 @@
   text-align: left;
 }
 
-.detailsColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.infoGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px 36px;
-
-  @include mobile {
-    grid-template-columns: 1fr;
-  }
-}
-
-.contactGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px 36px;
-
-  @include mobile {
-    grid-template-columns: 1fr;
-  }
-}
-
-.wide {
-  grid-column: 1 / -1;
-}
-
 .actions {
   display: flex;
   justify-content: flex-end;

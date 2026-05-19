@@ -1,22 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import CalculateOutlinedIcon from '@mui/icons-material/CalculateOutlined';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import CodeOutlinedIcon from '@mui/icons-material/CodeOutlined';
 import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined';
-import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
-import type { SvgIconComponent } from '@mui/icons-material';
 import { PageHero } from '@/components/ui';
 import { useMyTeacherSubjects } from '@/lib/hooks/useSubjects';
 import { pluralizeRu } from '@/lib/utils/pluralize';
+import { getSubjectIconByName } from '@/lib/utils/subjectIcons';
 import styles from './subjects.module.scss';
-
-const SUBJECT_ICON_COMPONENTS: SvgIconComponent[] = [
-  CalculateOutlinedIcon,
-  HubOutlinedIcon,
-  CodeOutlinedIcon,
-];
 
 function getGroupCountLabel(groupsCount: number) {
   return `${groupsCount} ${pluralizeRu(groupsCount, ['группа', 'группы', 'групп'])}`;
@@ -50,9 +41,9 @@ export default function TeacherSubjectsPage() {
           <section className={styles.stateCard}>У вас пока нет назначенных предметов.</section>
         ) : (
           <section className={styles.subjectsGrid} aria-label="Выбор группы по предмету">
-            {teacherSubjects.map((subject, index) => {
+            {teacherSubjects.map((subject) => {
               const groups = Array.isArray(subject.groups) ? subject.groups : [];
-              const SubjectIcon = SUBJECT_ICON_COMPONENTS[index % SUBJECT_ICON_COMPONENTS.length];
+              const SubjectIcon = getSubjectIconByName(subject.subjectName);
               const groupsLabel = getGroupsLineLabel(groups.length);
               const groupsSummary = groups.length > 0
                 ? groups.map((group) => group.groupName).join(', ')

@@ -124,6 +124,51 @@
   opacity: 0.7;
 }
 
+.animatedSideColumn,
+.animatedTodayColumn {
+  min-width: 0;
+  will-change: transform, opacity;
+}
+
+.animatedTodayColumn {
+  animation: schedule-column-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animatedSideColumn {
+  animation: schedule-column-enter 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animatedColumnPrevious {
+  --schedule-enter-x: -18px;
+}
+
+.animatedColumnNext {
+  --schedule-enter-x: 18px;
+}
+
+.sidePreviewList {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+
+  > :nth-child(n + 5) {
+    display: none;
+  }
+}
+
+.sidePreviewListOverflow4::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 40px;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, $color-bg 100%);
+}
+
 .sideColumnLeft {
   align-items: flex-start;
 }
@@ -219,6 +264,45 @@
   line-height: 1.5;
 }
 
+@keyframes schedule-column-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--schedule-enter-x, 0), 0, 0) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animatedSideColumn,
+  .animatedTodayColumn {
+    animation: none;
+  }
+}
+
+@media (max-width: 1360px) {
+  .sidePreviewList {
+    > :nth-child(n + 4) {
+      display: none;
+    }
+  }
+
+  .sidePreviewListOverflow3::after,
+  .sidePreviewListOverflow4::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 40px;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, $color-bg 100%);
+  }
+}
+
 @include tablet {
   .container {
     padding: 30px 24px 52px;
@@ -259,6 +343,11 @@
 
   .todayColumn {
     gap: 14px;
+  }
+
+  .animatedColumnPrevious,
+  .animatedColumnNext {
+    --schedule-enter-x: 0;
   }
 
   .subjectsGrid {
