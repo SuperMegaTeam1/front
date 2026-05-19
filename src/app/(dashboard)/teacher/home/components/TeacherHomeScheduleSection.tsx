@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import { LessonCard } from '@/components/shared/LessonCard/LessonCard';
@@ -69,14 +69,16 @@ export function TeacherHomeScheduleSection({
   onLessonOpen,
 }: TeacherHomeScheduleSectionProps) {
   const lastDayIndexRef = useRef(currentDayIndex);
-  const navigationDirection: NavigationDirection =
-    currentDayIndex > lastDayIndexRef.current
-      ? 'next'
-      : currentDayIndex < lastDayIndexRef.current
-        ? 'previous'
-        : null;
+  const [navigationDirection, setNavigationDirection] = useState<NavigationDirection>(null);
 
   useEffect(() => {
+    setNavigationDirection(
+      currentDayIndex > lastDayIndexRef.current
+        ? 'next'
+        : currentDayIndex < lastDayIndexRef.current
+          ? 'previous'
+          : null,
+    );
     lastDayIndexRef.current = currentDayIndex;
   }, [currentDayIndex]);
 
