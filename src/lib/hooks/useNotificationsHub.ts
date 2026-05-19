@@ -10,11 +10,11 @@ import { studentNotificationsQueryKey } from './useNotifications';
 export function useNotificationsHub() {
   const queryClient = useQueryClient();
   const accessToken = useAuthStore((state) => state.accessToken);
-  const role = useAuthStore((state) => state.user?.role);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
+  const hasHydrated = useAuthStore((state) => state.hasHydrated);
 
   useEffect(() => {
-    if (!isAuthenticated || role !== 'student' || !accessToken) {
+    if (!hasHydrated || !user || user.role !== 'student' || !accessToken) {
       return;
     }
 
@@ -35,5 +35,5 @@ export function useNotificationsHub() {
     return () => {
       connection.stop().catch(() => undefined);
     };
-  }, [accessToken, isAuthenticated, role, queryClient]);
+  }, [accessToken, hasHydrated, user, queryClient]);
 }
