@@ -30,10 +30,26 @@ export function useNotificationsHub() {
       queryClient.invalidateQueries({ queryKey: studentNotificationsQueryKey });
     });
 
-    connection.start().catch(() => undefined);
+    // В dev (Strict Mode / Fast Refresh) эффект монтируется дважды,
+    // и cleanup может вызвать stop() до завершения negotiate.
+    // Чтобы не словить "The connection was stopped during negotiation",
+    // стопаем коннект уже после успешного start().
+    let cancelled = false;
+
+    connection
+      .start()
+      .then(() => {
+        if (cancelled) {
+          void connection.stop().catch(() => undefined);
+        }
+      })
+      .catch(() => undefined);
 
     return () => {
-      connection.stop().catch(() => undefined);
+      cancelled = true;
+      if (connection.state === 'Connected') {
+        void connection.stop().catch(() => undefined);
+      }
     };
   }, [accessToken, hasHydrated, user, queryClient]);
 }
