@@ -137,6 +137,37 @@ export interface TeacherSubjectsResponse {
   items: TeacherSubjectListItem[];
 }
 
+export interface TeacherGroupListItem {
+  groupId: string;
+  name?: string;
+  groupName: string;
+}
+
+export type TeacherGroupsResponse = TeacherGroupListItem[];
+
+export interface TeacherMessageRequest {
+  groupId: string;
+  title: string;
+  body: string;
+}
+
+export interface TeacherMessageResponse {
+  groupName: string;
+  title: string;
+  body: string;
+}
+
+export interface StudentNotificationResponse {
+  id: string;
+  senderName: string;
+  senderLastName: string;
+  senderFatherName: string | null;
+  title: string;
+  messageBody: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
 export interface BackendStatusResponse {
   service: string;
   status: string;

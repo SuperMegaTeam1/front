@@ -48,10 +48,12 @@ $transition-fast: var(--transition-fast);
 $transition-normal: var(--transition-normal);
 $transition-slow: var(--transition-slow);
 
-$bp-mobile: var(--bp-mobile);
-$bp-tablet: var(--bp-tablet);
-$bp-desktop: var(--bp-desktop);
-$bp-wide: var(--bp-wide);
+// Должны быть Sass-литералами: var(...) в условии @media невалиден.
+// Значения синхронизированы с tokens.ts.
+$bp-mobile: 480px;
+$bp-tablet: 768px;
+$bp-desktop: 1024px;
+$bp-wide: 1280px;
 
 $header-height: var(--header-height);
 $sidebar-width: var(--sidebar-width);
