@@ -21,115 +21,90 @@
   }
 }
 
-.content {
-  display: grid;
-  grid-template-columns: minmax(320px, 0.38fr) minmax(0, 1fr);
+.profileCard {
+  width: 100%;
+  padding: 36px 48px;
+  border-radius: 18px;
+  background: $color-surface;
+  border: 1px solid rgba(227, 233, 236, 0.94);
+  box-shadow: $shadow-sm;
+  display: flex;
+  flex-direction: column;
   gap: 24px;
-  align-items: start;
 
   @include tablet {
-    grid-template-columns: 1fr;
+    padding: 28px 28px;
+  }
+
+  @include mobile {
+    padding: 28px 22px;
+    border-radius: 14px;
   }
 }
 
-.profileCard {
-  padding: 36px 32px 40px;
-  border-radius: 14px;
-  background: $color-surface;
-  border: 1px solid rgba(227, 233, 236, 0.94);
+.identity {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 0;
-}
-
-.avatarBox {
-  width: 110px;
-  height: 110px;
-  border-radius: 18px;
-  background: #e7eef2;
-  color: $color-brand;
-  @include flex-center;
-  margin-bottom: 20px;
+  gap: 10px;
+  min-width: 0;
 }
 
 .profileName {
   margin: 0;
-  max-width: 280px;
   font-family: $font-family-heading;
-  font-size: clamp(20px, 1.5vw, 26px);
+  font-size: clamp(22px, 1.8vw, 28px);
   font-weight: 800;
   letter-spacing: -0.02em;
-  line-height: 1.25;
+  line-height: 1.2;
   color: $color-text-primary;
 }
 
 .roleBadge {
+  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 28px;
-  margin-top: 12px;
-  padding: 0 16px;
+  min-height: 26px;
+  padding: 0 14px;
   border-radius: $radius-full;
   background: rgba(191, 232, 255, 0.62);
   color: $color-brand;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
 .cardDivider {
-  width: 100%;
   height: 1px;
-  margin: 28px 0 24px;
   background: rgba(227, 233, 236, 0.95);
+  margin: 0;
 }
 
-.profileFacts {
-  width: 100%;
+.contactRow {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  text-align: left;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(241, 244, 246, 0.6);
 }
 
-.detailsColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.infoGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px 36px;
-
-  @include mobile {
-    grid-template-columns: 1fr;
-  }
-}
-
-.contactGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px 36px;
-
-  @include mobile {
-    grid-template-columns: 1fr;
-  }
-}
-
-.wide {
-  grid-column: 1 / -1;
+.contactIcon {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: $color-surface;
+  color: $color-brand;
+  border: 1px solid rgba(227, 233, 236, 0.94);
+  @include flex-center;
 }
 
 .actions {
   display: flex;
   justify-content: flex-end;
-  padding-top: 8px;
+  padding-top: 4px;
 
   @include mobile {
     justify-content: stretch;
