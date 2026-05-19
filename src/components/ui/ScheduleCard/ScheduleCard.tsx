@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import styles from './ScheduleCard.module.scss';
 
 export interface ScheduleCardProps {
@@ -75,7 +75,7 @@ export function ScheduleCard({
           aria-label={moreLabel ?? `Действия: ${subjectName}`}
           onClick={onMore}
         >
-          <MoreHorizRoundedIcon sx={{ fontSize: 22 }} />
+          <ChevronRightRoundedIcon sx={{ fontSize: 24 }} />
         </button>
       )}
     </article>
