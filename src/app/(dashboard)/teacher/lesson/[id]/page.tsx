@@ -79,11 +79,13 @@ function sanitizeJournalValue(value: string) {
     return 'Н';
   }
 
-  if (/^-?\d+$/.test(normalized)) {
-    return String(Math.min(MAX_GRADE, Math.max(MIN_GRADE, Number(normalized))));
+  const digitsOnly = normalized.replace(/\D/g, '');
+
+  if (digitsOnly) {
+    return String(Math.min(MAX_GRADE, Math.max(MIN_GRADE, Number(digitsOnly))));
   }
 
-  return normalized;
+  return '';
 }
 
 function formatJournalValue(isAttended: boolean | null, grade: number | null) {
