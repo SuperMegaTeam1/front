@@ -3,13 +3,11 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import AddchartRoundedIcon from '@mui/icons-material/AddchartRounded';
-import ApartmentRoundedIcon from '@mui/icons-material/ApartmentRounded';
-import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
-import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded';
+import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import { PageHero } from '@/components/ui';
 import type { ScheduleLessonResult } from '@/lib/api/types';
 import { useOverallRating, useSubjectRatings } from '@/lib/hooks/useRating';
+import { useStudentNotifications } from '@/lib/hooks/useNotifications';
 import { useWeekSchedule } from '@/lib/hooks/useSchedule';
 import { useMyStudentSubjects } from '@/lib/hooks/useSubjects';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
@@ -29,37 +27,6 @@ import {
 
 type HomeLesson = StudentHomeScheduleDay['lessons'][number];
 type HomeScheduleDay = StudentHomeScheduleDay;
-
-const MOCK_NOTIFICATIONS = [
-  {
-    id: 1,
-    icon: <AddchartRoundedIcon sx={{ fontSize: 28, color: '#2a657e' }} />,
-    title: 'Добавлены баллы: +5 по Базам данных',
-    subtitle: 'Раздел: практическая работа №4',
-    time: '2 ч назад',
-  },
-  {
-    id: 2,
-    icon: <ApartmentRoundedIcon sx={{ fontSize: 28, color: '#2a657e' }} />,
-    title: 'Изменена аудитория: Дискретная математика',
-    subtitle: 'Новая локация: Ауд. 602 вместо 604',
-    time: 'Вчера',
-  },
-  {
-    id: 3,
-    icon: <DescriptionRoundedIcon sx={{ fontSize: 28, color: '#2a657e' }} />,
-    title: 'Опубликовано новое задание: Программная инженерия',
-    subtitle: 'Срок сдачи: 16 апреля',
-    time: 'Вчера',
-  },
-  {
-    id: 4,
-    icon: <VerifiedRoundedIcon sx={{ fontSize: 28, color: '#2a657e' }} />,
-    title: 'Зачет подтвержден: Физкультура',
-    subtitle: 'Преподаватель: Смирнов Д. А.',
-    time: '2 дня назад',
-  },
-];
 
 function formatTeacherName(lesson: ScheduleLessonResult) {
   return [lesson.teacherLastName, lesson.teacherFirstName, lesson.teacherFatherName]
@@ -81,6 +48,39 @@ function mapLessonToHomeLesson(lesson: ScheduleLessonResult): HomeLesson {
   };
 }
 
+function formatNotificationTime(createdAt: string) {
+  const date = new Date(createdAt);
+  const today = new Date();
+  const yesterday = new Date();
+  const getLocalDateKey = (value: Date) => {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  };
+  const dateKey = getLocalDateKey(date);
+  const todayKey = getLocalDateKey(today);
+  yesterday.setDate(today.getDate() - 1);
+  const yesterdayKey = getLocalDateKey(yesterday);
+
+  if (dateKey === todayKey) {
+    return new Intl.DateTimeFormat('ru-RU', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(date);
+  }
+
+  if (dateKey === yesterdayKey) {
+    return 'Вчера';
+  }
+
+  return new Intl.DateTimeFormat('ru-RU', {
+    day: 'numeric',
+    month: 'short',
+  }).format(date);
+}
+
 export default function StudentHomePage() {
   const { user } = useAuthStore();
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
@@ -97,6 +97,9 @@ export default function StudentHomePage() {
   const {
     data: subjects = [],
   } = useMyStudentSubjects();
+  const {
+    data: notifications = [],
+  } = useStudentNotifications();
 
   const topSubjects = useMemo(() => subjects.slice(0, 3), [subjects]);
   const subjectRatingQueries = useSubjectRatings(topSubjects.map((subject) => subject.subjectId));
@@ -165,6 +168,16 @@ export default function StudentHomePage() {
     return `${count} занятий`;
   }, [currentDay.lessons.length, isWeekScheduleLoading, weekScheduleError]);
 
+  const recentNotifications = useMemo(() => {
+    return notifications.slice(0, 4).map((notification) => ({
+      id: notification.id,
+      icon: <ChatBubbleOutlineRoundedIcon sx={{ fontSize: 28, color: '#2a657e' }} />,
+      title: notification.title,
+      subtitle: notification.messageBody,
+      time: formatNotificationTime(notification.createdAt),
+    }));
+  }, [notifications]);
+
   return (
     <div className={styles.page}>
       <div className={styles.container}>
@@ -214,7 +227,7 @@ export default function StudentHomePage() {
           grades={ratingGrades}
         />
 
-        <StudentHomeRecentChangesSection notifications={MOCK_NOTIFICATIONS} />
+        <StudentHomeRecentChangesSection notifications={recentNotifications} />
       </div>
     </div>
   );

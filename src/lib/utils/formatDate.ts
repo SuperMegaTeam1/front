@@ -21,6 +21,15 @@ export function formatDateShort(dateStr: string): string {
   });
 }
 
+/** "16.04" */
+export function formatDateCompact(dateStr: string): string {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+  });
+}
+
 /** "Среда, 16 апреля" */
 export function formatDateWithDay(dateStr: string): string {
   const date = new Date(dateStr);

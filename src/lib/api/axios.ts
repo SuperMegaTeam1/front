@@ -13,6 +13,9 @@ export const API_BASE_URL =
 
 export const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '');
 
+export const HUB_URL =
+  process.env.NEXT_PUBLIC_HUB_URL ?? 'http://localhost:53959/notification';
+
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
