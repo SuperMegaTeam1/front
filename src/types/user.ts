@@ -7,7 +7,6 @@ export interface User {
   firstName: string;
   lastName: string;
   patronymic: string;
-  phone: string;
   role: Role;
   email?: string;
   studentId?: string | null;
