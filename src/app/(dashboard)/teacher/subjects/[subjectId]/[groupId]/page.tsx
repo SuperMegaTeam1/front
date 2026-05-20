@@ -7,6 +7,15 @@ import { PageHero } from '@/components/ui';
 import type { SaveLessonJournalPayload } from '@/lib/api/types';
 import { useGroupStudents, useSaveLessonJournal, useTeacherGroupJournal } from '@/lib/hooks/useTeacherJournal';
 import { formatDateCompact } from '@/lib/utils/formatDate';
+import {
+  formatJournalDisplayValue,
+  getCellKey,
+  getComparableJournalValue,
+  getTotalPoints,
+  normalizeJournalValue,
+  parseJournalInput,
+  sanitizeJournalValue,
+} from '@/lib/utils/journal';
 import styles from './gradebook.module.scss';
 
 type GradeValue = string;
@@ -36,8 +45,6 @@ interface StudentGradeRow {
 
 const DATES_PER_MOBILE_PAGE = 2;
 const AVATAR_TONES: AvatarTone[] = ['violet', 'blue', 'sky', 'lilac', 'gray'];
-const MIN_GRADE = 0;
-const MAX_GRADE = 100;
 
 function formatShortFullName(fullName: string) {
   const [lastName, firstName, fatherName] = fullName.trim().split(/\s+/);
@@ -52,100 +59,6 @@ function formatShortFullName(fullName: string) {
 function getInitials(fullName: string) {
   const [lastName, firstName] = fullName.trim().split(/\s+/);
   return `${lastName?.[0] ?? ''}${firstName?.[0] ?? ''}`.toUpperCase();
-}
-
-function getCellKey(studentId: string, lessonId: string) {
-  return `${studentId}:${lessonId}`;
-}
-
-function sanitizeJournalValue(value: string) {
-  const normalized = value.trim().toUpperCase();
-
-  if (!normalized) {
-    return '';
-  }
-
-  if (normalized === 'N' || normalized === 'Н') {
-    return 'Н';
-  }
-
-  const digitsOnly = normalized.replace(/\D/g, '');
-
-  if (digitsOnly) {
-    return String(Math.min(MAX_GRADE, Math.max(MIN_GRADE, Number(digitsOnly))));
-  }
-
-  return '';
-}
-
-function normalizeJournalValue(value: string) {
-  const normalized = value.trim().toUpperCase();
-
-  if (normalized === 'N' || normalized === 'Н') {
-    return 'Н';
-  }
-
-  return normalized;
-}
-
-function getDisplayMark(isAttended: boolean | null, grade: number | null) {
-  if (typeof grade === 'number') {
-    return String(grade);
-  }
-
-  if (isAttended === false) {
-    return 'Н';
-  }
-
-  return '';
-}
-
-function parseJournalInput(value: string) {
-  const normalized = normalizeJournalValue(value);
-
-  if (!normalized) {
-    return null;
-  }
-
-  if (/^\d+$/.test(normalized)) {
-    return { grade: Number(normalized) };
-  }
-
-  if (normalized === 'Н') {
-    return { attended: false };
-  }
-
-  return 'invalid' as const;
-}
-
-function getComparableJournalValue(value: string) {
-  const parsed = parseJournalInput(value);
-
-  if (parsed === 'invalid') {
-    return `invalid:${normalizeJournalValue(value)}`;
-  }
-
-  if (parsed === null) {
-    return '';
-  }
-
-  if (typeof parsed.grade === 'number') {
-    return `grade:${parsed.grade}`;
-  }
-
-  return `attendance:${parsed.attended ? 'present' : 'absent'}`;
-}
-
-function getTotalPoints(values: GradeValue[]) {
-  return values.reduce((sum, value) => {
-    const parsed = parseJournalInput(value);
-
-    if (parsed && parsed !== 'invalid' && typeof parsed.grade === 'number') {
-      return sum + parsed.grade;
-    }
-
-    return sum;
-  }, 0);
 }
 
 function getGradeInputClassName(value: GradeValue, isDirty: boolean) {
@@ -226,7 +139,7 @@ export default function TeacherGroupGradebookPage() {
 
     for (const item of journal?.items ?? []) {
       const key = getCellKey(item.studentId, item.lessonId);
-      const nextValue = getDisplayMark(item.attended, item.grade);
+      const nextValue = formatJournalDisplayValue(item.attended, item.grade);
 
       if (!valueMap.has(key) || typeof item.grade === 'number') {
         valueMap.set(key, nextValue);
@@ -320,13 +233,7 @@ export default function TeacherGroupGradebookPage() {
 
         const lessonItems = updatesByLessonId.get(grade.lessonId) ?? [];
 
-        if (parsed === null) {
-          lessonItems.push({
-            studentId: student.studentId,
-            attended: null,
-            grade: null,
-          });
-        } else if (typeof parsed.grade === 'number') {
+        if ('grade' in parsed) {
           lessonItems.push({
             studentId: student.studentId,
             grade: parsed.grade,
