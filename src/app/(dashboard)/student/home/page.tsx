@@ -5,17 +5,18 @@ import Link from 'next/link';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import { PageHero } from '@/components/ui';
-import type { ScheduleLessonResult } from '@/lib/api/types';
-import { useOverallRating, useSubjectRatings } from '@/lib/hooks/useRating';
 import { useStudentNotifications } from '@/lib/hooks/useNotifications';
+import { useOverallRating, useSubjectRatings } from '@/lib/hooks/useRating';
 import { useWeekSchedule } from '@/lib/hooks/useSchedule';
 import { useMyStudentSubjects } from '@/lib/hooks/useSubjects';
 import { formatDateFull, getWeekDay } from '@/lib/utils/formatDate';
 import { getIsoWeekNumber, getLocalIsoDate } from '@/lib/utils/isoDate';
 import {
-  buildEmptyScheduleWeek,
-  mapBackendWeekToScheduleDays,
-} from '@/lib/utils/schedule';
+  buildScheduleHomeState,
+  formatLessonsCountLabel,
+  getCurrentScheduleDayLabel,
+  mapLessonToStudentHomeLesson,
+} from '@/lib/utils/scheduleView';
 import { useAuthStore } from '@/stores/useAuthStore';
 import styles from './home.module.scss';
 import { StudentHomeInsightsSection } from './components/StudentHomeInsightsSection';
@@ -26,27 +27,6 @@ import {
 } from './components/StudentHomeScheduleSection';
 
 type HomeLesson = StudentHomeScheduleDay['lessons'][number];
-type HomeScheduleDay = StudentHomeScheduleDay;
-
-function formatTeacherName(lesson: ScheduleLessonResult) {
-  return [lesson.teacherLastName, lesson.teacherFirstName, lesson.teacherFatherName]
-    .filter(Boolean)
-    .join(' ');
-}
-
-function mapLessonToHomeLesson(lesson: ScheduleLessonResult): HomeLesson {
-  const teacherName = formatTeacherName(lesson);
-  const meta = [lesson.type, teacherName].filter(Boolean).join(' • ');
-
-  return {
-    id: lesson.lessonsId,
-    startTime: lesson.startsAt,
-    endTime: lesson.endsAt,
-    subjectName: lesson.subjectName,
-    meta: meta || undefined,
-    room: lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined,
-  };
-}
 
 function formatNotificationTime(createdAt: string) {
   const date = new Date(createdAt);
@@ -104,30 +84,23 @@ export default function StudentHomePage() {
   const topSubjects = useMemo(() => subjects.slice(0, 3), [subjects]);
   const subjectRatingQueries = useSubjectRatings(topSubjects.map((subject) => subject.subjectId));
 
-  const weekDays = useMemo<HomeScheduleDay[]>(() => {
-    const backendDays = mapBackendWeekToScheduleDays(weekSchedule, mapLessonToHomeLesson);
-    return backendDays.length > 0 ? backendDays : buildEmptyScheduleWeek<HomeLesson>(todayDate);
-  }, [todayDate, weekSchedule]);
-
-  const todayIndex = Math.max(0, weekDays.findIndex((day) => day.date === todayDate));
-  const currentDayIndex = Math.min(
-    selectedDayIndex ?? todayIndex,
-    Math.max(weekDays.length - 1, 0),
-  );
-  const currentDay = weekDays[currentDayIndex];
-  const previousDay = weekDays[currentDayIndex - 1];
-  const nextDay = weekDays[currentDayIndex + 1];
+  const {
+    todayIndex,
+    currentDayIndex,
+    currentDay,
+    previousDay,
+    nextDay,
+    totalDays,
+  } = useMemo(() => buildScheduleHomeState<HomeLesson>({
+    weekSchedule,
+    todayDate,
+    selectedDayIndex,
+    mapLesson: mapLessonToStudentHomeLesson,
+  }), [selectedDayIndex, todayDate, weekSchedule]);
 
   const currentDateStr = formatDateFull(currentDay.date);
   const currentWeekDay = getWeekDay(currentDay.date);
-  const currentDayLabel =
-    currentDayIndex === todayIndex
-      ? 'Сегодня'
-      : currentDayIndex === todayIndex - 1
-        ? 'Вчера'
-        : currentDayIndex === todayIndex + 1
-          ? 'Завтра'
-          : getWeekDay(currentDay.date);
+  const currentDayLabel = getCurrentScheduleDayLabel(currentDayIndex, todayIndex, currentDay.date);
 
   const ratingGrades = useMemo(() => {
     return topSubjects.map((subject, index) => {
@@ -145,28 +118,14 @@ export default function StudentHomePage() {
     ?? '—';
   const firstName = user?.firstName ?? 'Тимур';
   const weekNumber = getIsoWeekNumber(currentDay.date);
-
-  const lessonsCountLabel = useMemo(() => {
-    if (isWeekScheduleLoading) {
-      return 'загружаем расписание';
-    }
-
-    if (weekScheduleError) {
-      return 'расписание недоступно';
-    }
-
-    const count = currentDay.lessons.length;
-
-    if (count === 1) {
-      return '1 занятие';
-    }
-
-    if (count >= 2 && count <= 4) {
-      return `${count} занятия`;
-    }
-
-    return `${count} занятий`;
-  }, [currentDay.lessons.length, isWeekScheduleLoading, weekScheduleError]);
+  const lessonsCountLabel = useMemo(
+    () => formatLessonsCountLabel(
+      currentDay.lessons.length,
+      isWeekScheduleLoading,
+      Boolean(weekScheduleError),
+    ),
+    [currentDay.lessons.length, isWeekScheduleLoading, weekScheduleError],
+  );
 
   const recentNotifications = useMemo(() => {
     return notifications.slice(0, 4).map((notification) => ({
@@ -208,14 +167,14 @@ export default function StudentHomePage() {
           nextDay={nextDay}
           currentDayIndex={currentDayIndex}
           todayIndex={todayIndex}
-          totalDays={weekDays.length}
+          totalDays={totalDays}
           isLoading={isWeekScheduleLoading}
           hasError={Boolean(weekScheduleError)}
           onPrevious={() => {
             setSelectedDayIndex((index) => Math.max(0, (index ?? currentDayIndex) - 1));
           }}
           onNext={() => {
-            setSelectedDayIndex((index) => Math.min(weekDays.length - 1, (index ?? currentDayIndex) + 1));
+            setSelectedDayIndex((index) => Math.min(totalDays - 1, (index ?? currentDayIndex) + 1));
           }}
         />
 

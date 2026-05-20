@@ -1,16 +1,19 @@
+'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
-import { LessonCard, type LessonCardProps } from '@/components/shared/LessonCard/LessonCard';
+import { LessonCard } from '@/components/shared/LessonCard/LessonCard';
 import { EmptyDayState, ScheduleCard } from '@/components/ui';
 import { getRelativeScheduleDayLabel, getScheduleStageTag } from '@/lib/utils/schedule';
+import type { StudentHomeLessonView } from '@/lib/utils/scheduleView';
 import styles from '../home.module.scss';
 
 type NavigationDirection = 'previous' | 'next' | null;
 
 export type StudentHomeScheduleDay = {
   date: string;
-  lessons: Array<LessonCardProps & { id: string }>;
+  lessons: StudentHomeLessonView[];
 };
 
 interface StudentHomeScheduleSectionProps {
@@ -44,19 +47,6 @@ function getAnimatedColumnClassName(baseClassName: string, direction: Navigation
   ]
     .filter(Boolean)
     .join(' ');
-}
-
-function parseLessonMeta(meta?: string) {
-  if (!meta) {
-    return {};
-  }
-
-  const [lessonType, teacherName] = meta.split(' • ');
-
-  return {
-    lessonType,
-    teacherName,
-  };
 }
 
 export function StudentHomeScheduleSection({
@@ -138,21 +128,17 @@ export function StudentHomeScheduleSection({
           ) : hasError ? (
             <EmptyDayState title="Не удалось загрузить расписание" subtitle="" />
           ) : currentDay.lessons.length > 0 ? (
-            currentDay.lessons.map((lesson) => {
-              const { lessonType, teacherName } = parseLessonMeta(lesson.meta);
-
-              return (
-                <ScheduleCard
-                  key={lesson.id}
-                  startTime={lesson.startTime}
-                  endTime={lesson.endTime}
-                  subjectName={lesson.subjectName}
-                  lessonType={lessonType}
-                  teacherName={teacherName}
-                  room={lesson.room}
-                />
-              );
-            })
+            currentDay.lessons.map((lesson) => (
+              <ScheduleCard
+                key={lesson.id}
+                startTime={lesson.startTime}
+                endTime={lesson.endTime}
+                subjectName={lesson.subjectName}
+                lessonType={lesson.lessonType}
+                teacherName={lesson.teacherName}
+                room={lesson.room}
+              />
+            ))
           ) : (
             <EmptyDayState />
           )}

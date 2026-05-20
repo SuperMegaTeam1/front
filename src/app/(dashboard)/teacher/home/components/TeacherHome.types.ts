@@ -1,19 +1,8 @@
 import type { ReactNode } from 'react';
 import type { SubjectCardProps } from '@/components/shared/SubjectCard/SubjectCard';
-import type { TeacherLessonGroupInfo } from '@/lib/utils/teacherLesson';
+import type { TeacherHomeLessonView } from '@/lib/utils/scheduleView';
 
-export interface TeacherHomeLesson {
-  id: string;
-  subjectId: string;
-  startTime: string;
-  endTime: string;
-  subjectName: string;
-  meta?: string;
-  groups?: string[];
-  groupInfos?: TeacherLessonGroupInfo[];
-  room?: string;
-  isActive?: boolean;
-}
+export type TeacherHomeLesson = TeacherHomeLessonView;
 
 export interface TeacherHomeDay {
   date: string;

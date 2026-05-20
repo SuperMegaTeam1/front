@@ -4,18 +4,18 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import { PageHero, ViewSwitch, WeekNavigation, ScheduleCard, DayDivider, EmptyDayState } from '@/components/ui';
-import { useDaySchedule, useWeekSchedule } from '@/lib/hooks/useSchedule';
 import type { ScheduleLessonResult } from '@/lib/api/types';
-import { getIsoWeekNumber, getLocalIsoDate, shiftIsoDate } from '@/lib/utils/isoDate';
+import { useDaySchedule, useWeekSchedule } from '@/lib/hooks/useSchedule';
+import { getLocalIsoDate, shiftIsoDate } from '@/lib/utils/isoDate';
 import {
-  buildEmptyScheduleWeek,
   formatScheduleDayTitle,
   formatScheduleHeadlineDate,
   formatScheduleWeekRange,
-  mapBackendWeekToScheduleDays,
-  type ScheduleDay,
-  sortScheduleLessons,
 } from '@/lib/utils/schedule';
+import {
+  buildSchedulePageState,
+  formatScheduleRoom,
+} from '@/lib/utils/scheduleView';
 import {
   buildTeacherLessonHref,
   formatTeacherLessonGroupNames,
@@ -24,7 +24,6 @@ import {
 import styles from './schedule.module.scss';
 
 type ViewMode = 'today' | 'week';
-type WeekDaySchedule = ScheduleDay<ScheduleLessonResult>;
 
 const VIEW_OPTIONS: Array<{ value: ViewMode; label: string }> = [
   { value: 'today', label: 'Сегодня' },
@@ -50,24 +49,19 @@ export default function TeacherSchedulePage() {
     error: weekScheduleError,
   } = useWeekSchedule(weekAnchorDate, view === 'week');
 
-  const todayLessons = useMemo(
-    () => sortScheduleLessons(todaySchedule?.items),
-    [todaySchedule?.items]
-  );
-
-  const weekDays = useMemo<WeekDaySchedule[]>(
-    () => mapBackendWeekToScheduleDays(weekSchedule, (lesson) => lesson),
-    [weekSchedule]
-  );
-
-  const displayWeekDays = weekDays.length > 0
-    ? weekDays
-    : buildEmptyScheduleWeek<ScheduleLessonResult>(weekAnchorDate);
-  const weekNumber = weekOffset === 0 && todaySchedule?.weekNumber
-    ? todaySchedule.weekNumber
-    : getIsoWeekNumber(weekAnchorDate);
-  const isEvenWeek = weekNumber % 2 === 0;
-  const headlineDate = todaySchedule?.date ?? todayDate;
+  const {
+    todayLessons,
+    displayWeekDays,
+    headlineDate,
+    isEvenWeek,
+  } = useMemo(() => buildSchedulePageState<ScheduleLessonResult>({
+    todaySchedule,
+    weekSchedule,
+    todayDate,
+    weekAnchorDate,
+    weekOffset,
+    mapLesson: (lesson) => lesson,
+  }), [todayDate, todaySchedule, weekAnchorDate, weekOffset, weekSchedule]);
 
   const openLessonPage = (lesson: ScheduleLessonResult, date: string) => {
     router.push(buildTeacherLessonHref({
@@ -132,7 +126,7 @@ export default function TeacherSchedulePage() {
                   endTime={lesson.endsAt}
                   subjectName={lesson.subjectName}
                   lessonType={lesson.type ?? undefined}
-                  room={lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined}
+                  room={formatScheduleRoom(lesson.cabinet)}
                   groups={formatTeacherLessonGroupNames(normalizeTeacherLessonGroups(lesson)) || undefined}
                   onMore={() => openLessonPage(lesson, todayDate)}
                   moreLabel={`Открыть занятие: ${lesson.subjectName}`}
@@ -161,7 +155,7 @@ export default function TeacherSchedulePage() {
                           endTime={lesson.endsAt}
                           subjectName={lesson.subjectName}
                           lessonType={lesson.type ?? undefined}
-                          room={lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined}
+                          room={formatScheduleRoom(lesson.cabinet)}
                           groups={formatTeacherLessonGroupNames(normalizeTeacherLessonGroups(lesson)) || undefined}
                           onMore={() => openLessonPage(lesson, day.date)}
                           moreLabel={`Открыть занятие: ${lesson.subjectName}`}

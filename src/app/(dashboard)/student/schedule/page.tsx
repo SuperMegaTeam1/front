@@ -4,33 +4,27 @@ import { useMemo, useState } from 'react';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import { useRouter } from 'next/navigation';
 import { PageHero, ViewSwitch, WeekNavigation, ScheduleCard, DayDivider, EmptyDayState } from '@/components/ui';
-import { useDaySchedule, useWeekSchedule } from '@/lib/hooks/useSchedule';
 import type { ScheduleLessonResult } from '@/lib/api/types';
-import { getIsoWeekNumber, getLocalIsoDate, shiftIsoDate } from '@/lib/utils/isoDate';
+import { useDaySchedule, useWeekSchedule } from '@/lib/hooks/useSchedule';
+import { getLocalIsoDate, shiftIsoDate } from '@/lib/utils/isoDate';
 import {
-  buildEmptyScheduleWeek,
   formatScheduleDayTitle,
   formatScheduleHeadlineDate,
   formatScheduleWeekRange,
-  mapBackendWeekToScheduleDays,
-  type ScheduleDay,
-  sortScheduleLessons,
 } from '@/lib/utils/schedule';
+import {
+  buildSchedulePageState,
+  formatScheduleRoom,
+  formatScheduleTeacherName,
+} from '@/lib/utils/scheduleView';
 import styles from './schedule.module.scss';
 
 type ScheduleView = 'today' | 'week';
-type WeekDaySchedule = ScheduleDay<ScheduleLessonResult>;
 
 const VIEW_OPTIONS: Array<{ value: ScheduleView; label: string }> = [
   { value: 'today', label: 'Сегодня' },
   { value: 'week', label: 'Неделя' },
 ];
-
-function formatTeacherName(lesson: ScheduleLessonResult) {
-  return [lesson.teacherLastName, lesson.teacherFirstName, lesson.teacherFatherName]
-    .filter(Boolean)
-    .join(' ');
-}
 
 export default function StudentSchedulePage() {
   const router = useRouter();
@@ -51,23 +45,19 @@ export default function StudentSchedulePage() {
     error: weekScheduleError,
   } = useWeekSchedule(weekAnchorDate, view === 'week');
 
-  const todayLessons = useMemo(
-    () => sortScheduleLessons(todaySchedule?.items),
-    [todaySchedule?.items]
-  );
-
-  const weekDays = useMemo<WeekDaySchedule[]>(
-    () => mapBackendWeekToScheduleDays(weekSchedule, (lesson) => lesson),
-    [weekSchedule]
-  );
-  const displayWeekDays = weekDays.length > 0
-    ? weekDays
-    : buildEmptyScheduleWeek<ScheduleLessonResult>(weekAnchorDate);
-  const weekNumber = weekOffset === 0 && todaySchedule?.weekNumber
-    ? todaySchedule.weekNumber
-    : getIsoWeekNumber(weekAnchorDate);
-  const isEvenWeek = weekNumber % 2 === 0;
-  const headlineDate = todaySchedule?.date ?? todayDate;
+  const {
+    todayLessons,
+    displayWeekDays,
+    headlineDate,
+    isEvenWeek,
+  } = useMemo(() => buildSchedulePageState<ScheduleLessonResult>({
+    todaySchedule,
+    weekSchedule,
+    todayDate,
+    weekAnchorDate,
+    weekOffset,
+    mapLesson: (lesson) => lesson,
+  }), [todayDate, todaySchedule, weekAnchorDate, weekOffset, weekSchedule]);
 
   const heroMeta = view === 'today' ? (
     <>
@@ -118,8 +108,8 @@ export default function StudentSchedulePage() {
                   endTime={lesson.endsAt}
                   subjectName={lesson.subjectName}
                   lessonType={lesson.type ?? undefined}
-                  room={lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined}
-                  teacherName={formatTeacherName(lesson)}
+                  room={formatScheduleRoom(lesson.cabinet)}
+                  teacherName={formatScheduleTeacherName(lesson) || undefined}
                   onMore={() => router.push(`/student/subjects/${lesson.subjectId}`)}
                   moreLabel={`Перейти к ${lesson.subjectName}`}
                 />
@@ -147,8 +137,8 @@ export default function StudentSchedulePage() {
                           endTime={lesson.endsAt}
                           subjectName={lesson.subjectName}
                           lessonType={lesson.type ?? undefined}
-                          room={lesson.cabinet ? `Ауд. ${lesson.cabinet}` : undefined}
-                          teacherName={formatTeacherName(lesson)}
+                          room={formatScheduleRoom(lesson.cabinet)}
+                          teacherName={formatScheduleTeacherName(lesson) || undefined}
                           onMore={() => router.push(`/student/subjects/${lesson.subjectId}`)}
                           moreLabel={`Перейти к ${lesson.subjectName}`}
                         />
