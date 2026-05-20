@@ -19,6 +19,11 @@ import type {
 import { useSaveLessonJournal } from '@/lib/hooks/useTeacherJournal';
 import { formatDateFull } from '@/lib/utils/formatDate';
 import {
+  formatJournalDisplayValue,
+  parseJournalInput,
+  sanitizeJournalValue,
+} from '@/lib/utils/journal';
+import {
   normalizeTeacherLessonGroups,
   parseTeacherLessonGroups,
   type TeacherLessonRouteContext,
@@ -32,8 +37,6 @@ interface GroupSectionData {
 }
 
 type ScoreMap = Record<string, Record<string, string>>;
-const MIN_GRADE = 0;
-const MAX_GRADE = 100;
 
 function formatStudentsCount(count: number) {
   const remainder10 = count % 10;
@@ -66,56 +69,6 @@ function formatShortFullName(fullName: string) {
 
 function formatStudentFullName(student: GroupStudentListItem) {
   return `${student.lastName} ${student.firstName}${student.fatherName ? ` ${student.fatherName}` : ''}`.trim();
-}
-
-function sanitizeJournalValue(value: string) {
-  const normalized = value.trim().toUpperCase();
-
-  if (!normalized) {
-    return '';
-  }
-
-  if (normalized === 'N' || normalized === 'Н') {
-    return 'Н';
-  }
-
-  const digitsOnly = normalized.replace(/\D/g, '');
-
-  if (digitsOnly) {
-    return String(Math.min(MAX_GRADE, Math.max(MIN_GRADE, Number(digitsOnly))));
-  }
-
-  return '';
-}
-
-function formatJournalValue(isAttended: boolean | null, grade: number | null) {
-  if (typeof grade === 'number') {
-    return String(grade);
-  }
-
-  if (isAttended === false) {
-    return 'Н';
-  }
-
-  return '';
-}
-
-function parseJournalInput(value: string) {
-  const normalized = value.trim().toUpperCase();
-
-  if (!normalized) {
-    return null;
-  }
-
-  if (/^\d+$/.test(normalized)) {
-    return { grade: Number(normalized) };
-  }
-
-  if (normalized === 'Н' || normalized === 'N') {
-    return { attended: false };
-  }
-
-  return 'invalid' as const;
 }
 
 function buildLessonContext(lesson: ScheduleLessonResult, date: string): TeacherLessonRouteContext {
@@ -316,7 +269,7 @@ export default function TeacherLessonPage() {
       for (const item of section.items) {
         journalValueMap.set(
           `${section.groupId}:${item.studentId}`,
-          formatJournalValue(item.attended, item.grade)
+          formatJournalDisplayValue(item.attended, item.grade)
         );
       }
     }
@@ -361,14 +314,10 @@ export default function TeacherLessonPage() {
           continue;
         }
 
-        if (parsed === null) {
-          continue;
-        }
-
         items.push({
           studentId: student.studentId,
-          attended: typeof parsed.attended === 'boolean' ? parsed.attended : undefined,
-          grade: typeof parsed.grade === 'number' ? parsed.grade : undefined,
+          attended: 'attended' in parsed ? parsed.attended : undefined,
+          grade: 'grade' in parsed ? parsed.grade : null,
         });
       }
     }
