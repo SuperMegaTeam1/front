@@ -45,16 +45,6 @@ function getAnimatedColumnClassName(baseClassName: string, direction: Navigation
     .join(' ');
 }
 
-function parseLessonMeta(meta?: string) {
-  if (!meta) {
-    return {};
-  }
-
-  return {
-    lessonType: meta,
-  };
-}
-
 export function TeacherHomeScheduleSection({
   previousDay,
   currentDay,
@@ -135,23 +125,19 @@ export function TeacherHomeScheduleSection({
           ) : hasError ? (
             <EmptyDayState title="Не удалось загрузить расписание" subtitle="" />
           ) : currentDay.lessons.length > 0 ? (
-            currentDay.lessons.map((lesson) => {
-              const { lessonType } = parseLessonMeta(lesson.meta);
-
-              return (
-                <ScheduleCard
-                  key={lesson.id}
-                  startTime={lesson.startTime}
-                  endTime={lesson.endTime}
-                  subjectName={lesson.subjectName}
-                  lessonType={lessonType}
-                  groups={lesson.groups?.join(', ') || undefined}
-                  room={lesson.room}
-                  onMore={() => onLessonOpen(lesson, currentDay.date)}
-                  moreLabel={`Открыть занятие: ${lesson.subjectName}`}
-                />
-              );
-            })
+            currentDay.lessons.map((lesson) => (
+              <ScheduleCard
+                key={lesson.id}
+                startTime={lesson.startTime}
+                endTime={lesson.endTime}
+                subjectName={lesson.subjectName}
+                lessonType={lesson.lessonType}
+                groups={lesson.groups?.join(', ') || undefined}
+                room={lesson.room}
+                onMore={() => onLessonOpen(lesson, currentDay.date)}
+                moreLabel={`Открыть занятие: ${lesson.subjectName}`}
+              />
+            ))
           ) : (
             <EmptyDayState />
           )}
