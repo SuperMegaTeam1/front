@@ -16,7 +16,7 @@ import {
   getCurrentScheduleDayLabel,
   mapLessonToTeacherHomeLesson,
 } from '@/lib/utils/scheduleView';
-import { getSubjectIconByName } from '@/lib/utils/subjectIcons';
+import { mapTeacherSubjectsToHomeSubjects } from '@/lib/utils/subjectView';
 import { buildTeacherLessonHref } from '@/lib/utils/teacherLesson';
 import { useAuthStore } from '@/stores/useAuthStore';
 
@@ -27,7 +27,9 @@ import { TeacherHomeSubjectsSection } from './components/TeacherHomeSubjectsSect
 
 import type { TeacherHomeLesson, TeacherHomeSubject } from './components/TeacherHome.types';
 
-const SUBJECT_CARD_VARIANTS: TeacherHomeSubject['iconVariant'][] = ['brand', 'violet', 'mint'];
+type TeacherHomeSubjectIconVariant = NonNullable<TeacherHomeSubject['iconVariant']>;
+
+const SUBJECT_CARD_VARIANTS: TeacherHomeSubjectIconVariant[] = ['brand', 'violet', 'mint'];
 
 export default function TeacherHomePage() {
   const router = useRouter();
@@ -77,16 +79,15 @@ export default function TeacherHomePage() {
     [currentDay.lessons.length, isWeekScheduleLoading, weekScheduleError],
   );
 
-  const homeSubjects: TeacherHomeSubject[] = teacherSubjects.map((subject, index) => {
-    const groups = Array.isArray(subject.groups) ? subject.groups : [];
-    const SubjectIcon = getSubjectIconByName(subject.subjectName);
+  const homeSubjects: TeacherHomeSubject[] = mapTeacherSubjectsToHomeSubjects(
+    teacherSubjects,
+    SUBJECT_CARD_VARIANTS,
+  ).map((subject) => {
+    const SubjectIcon = subject.icon;
 
     return {
-      id: subject.subjectId,
-      name: subject.subjectName,
-      groups: groups.map((group) => group.groupName),
+      ...subject,
       icon: <SubjectIcon sx={{ fontSize: 30, color: '#2a657e' }} />,
-      iconVariant: SUBJECT_CARD_VARIANTS[index % SUBJECT_CARD_VARIANTS.length],
     };
   });
 

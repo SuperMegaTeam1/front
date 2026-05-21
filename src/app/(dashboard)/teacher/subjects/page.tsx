@@ -6,16 +6,8 @@ import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined';
 import { PageHero } from '@/components/ui';
 import { useMyTeacherSubjects } from '@/lib/hooks/useSubjects';
 import { pluralizeRu } from '@/lib/utils/pluralize';
-import { getSubjectIconByName } from '@/lib/utils/subjectIcons';
+import { buildTeacherSubjectCardViewModels } from '@/lib/utils/subjectView';
 import styles from './subjects.module.scss';
-
-function getGroupCountLabel(groupsCount: number) {
-  return `${groupsCount} ${pluralizeRu(groupsCount, ['группа', 'группы', 'групп'])}`;
-}
-
-function getGroupsLineLabel(groupsCount: number) {
-  return groupsCount === 1 ? 'Группа' : 'Группы';
-}
 
 export default function TeacherSubjectsPage() {
   const {
@@ -23,6 +15,7 @@ export default function TeacherSubjectsPage() {
     isLoading,
     error,
   } = useMyTeacherSubjects();
+  const subjectCards = buildTeacherSubjectCardViewModels(teacherSubjects);
 
   return (
     <main className={styles.page}>
@@ -41,14 +34,8 @@ export default function TeacherSubjectsPage() {
           <section className={styles.stateCard}>У вас пока нет назначенных предметов.</section>
         ) : (
           <section className={styles.subjectsGrid} aria-label="Выбор группы по предмету">
-            {teacherSubjects.map((subject) => {
-              const groups = Array.isArray(subject.groups) ? subject.groups : [];
-              const SubjectIcon = getSubjectIconByName(subject.subjectName);
-              const groupsLabel = getGroupsLineLabel(groups.length);
-              const groupsSummary = groups.length > 0
-                ? groups.map((group) => group.groupName).join(', ')
-                : 'пока не назначены';
-              const hasGroups = groups.length > 0;
+            {subjectCards.map((subject) => {
+              const SubjectIcon = subject.icon;
 
               return (
                 <article key={subject.subjectId} className={styles.subjectCard}>
@@ -56,31 +43,25 @@ export default function TeacherSubjectsPage() {
                     <div className={styles.iconBox}>
                       <SubjectIcon sx={{ fontSize: 42 }} />
                     </div>
-                    <span className={styles.semesterBadge}>{getGroupCountLabel(groups.length)}</span>
+                    <span className={styles.semesterBadge}>{subject.groupCountLabel}</span>
                   </div>
 
                   <div className={styles.subjectInfo}>
                     <h2>{subject.subjectName}</h2>
                     <div className={styles.groupsLine}>
                       <Groups2OutlinedIcon sx={{ fontSize: 22 }} />
-                      <span>{groupsLabel}: {groupsSummary}</span>
+                      <span>{subject.groupsLabel}: {subject.groupsSummary}</span>
                     </div>
                   </div>
 
                   <div className={styles.divider} />
 
                   <div className={styles.groupLinks}>
-                    {hasGroups ? (
-                      groups.map((group) => (
+                    {subject.hasGroups ? (
+                      subject.groups.map((group) => (
                         <Link
                           key={group.groupId}
-                          href={{
-                            pathname: `/teacher/subjects/${subject.subjectId}/${group.groupId}`,
-                            query: {
-                              subjectName: subject.subjectName,
-                              groupName: group.groupName,
-                            },
-                          }}
+                          href={group.href}
                           className={styles.groupLink}
                         >
                           {group.groupName}
