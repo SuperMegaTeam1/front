@@ -27,7 +27,9 @@ import { TeacherHomeSubjectsSection } from './components/TeacherHomeSubjectsSect
 
 import type { TeacherHomeLesson, TeacherHomeSubject } from './components/TeacherHome.types';
 
-const SUBJECT_CARD_VARIANTS: TeacherHomeSubject['iconVariant'][] = ['brand', 'violet', 'mint'];
+type TeacherHomeSubjectIconVariant = NonNullable<TeacherHomeSubject['iconVariant']>;
+
+const SUBJECT_CARD_VARIANTS: TeacherHomeSubjectIconVariant[] = ['brand', 'violet', 'mint'];
 
 export default function TeacherHomePage() {
   const router = useRouter();
