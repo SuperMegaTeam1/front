@@ -52,9 +52,9 @@
   min-height: 160px;
   padding: 42px;
   border-radius: 18px;
-  background: rgba(241, 244, 246, 0.88);
-  border: 1px solid rgba(227, 233, 236, 0.82);
-  color: #9badc4;
+  background: $color-surface-alt;
+  border: 1px solid $color-border-soft;
+  color: $color-text-secondary;
   display: flex;
   align-items: center;
   justify-content: center;

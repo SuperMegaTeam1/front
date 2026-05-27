@@ -9,10 +9,10 @@
   min-width: 280px;
   min-height: 48px;
   overflow: hidden;
-  border: 1px solid rgba(227, 233, 236, 0.92);
+  border: 1px solid $color-border-soft;
   border-radius: 16px;
-  background: rgba(248, 249, 250, 0.98);
-  box-shadow: 0 8px 20px rgba(146, 164, 183, 0.08);
+  background: $color-surface;
+  box-shadow: $shadow-sm;
 }
 
 .button {
@@ -35,7 +35,7 @@
   white-space: nowrap;
 
   &:hover {
-    background: rgba(191, 232, 255, 0.28);
+    background: $color-accent-soft;
   }
 
   &:disabled {

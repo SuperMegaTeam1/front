@@ -17,7 +17,7 @@
     justify-content: space-between;
     min-height: 73px;
     padding: 12px 22px 11px;
-    background: rgba(255, 255, 255, 0.98);
+    background: $color-surface;
     border-bottom: 1px solid rgba(151, 169, 189, 0.18);
   }
 
@@ -46,7 +46,7 @@
     border: 0;
     border-radius: 9px;
     background: transparent;
-    color: #5b6972;
+    color: $color-text-label;
     text-decoration: none;
     cursor: pointer;
     @include flex-center;
@@ -54,22 +54,22 @@
 
     &:hover {
       color: $color-brand;
-      background: rgba(191, 232, 255, 0.34);
+      background: $color-accent-soft;
     }
   }
 
   .actionButtonActive {
     color: $color-brand;
-    background: rgba(191, 232, 255, 0.46);
+    background: $color-accent-muted;
   }
 
   .profileAvatar {
     color: #ffffff;
-    box-shadow: 0 8px 18px rgba(32, 27, 45, 0.18);
+    box-shadow: $shadow-sm;
   }
 
   .profileAvatarActive {
-    outline: 2px solid rgba(191, 232, 255, 0.95);
+    outline: 2px solid $color-accent-muted;
   }
 
   .bottomNav {
@@ -82,16 +82,16 @@
     grid-template-columns: repeat(3, 1fr);
     min-height: calc(64px + env(safe-area-inset-bottom));
     padding: 7px 10px calc(7px + env(safe-area-inset-bottom));
-    background: rgba(255, 255, 255, 0.98);
+    background: $color-surface;
     border-top: 1px solid rgba(151, 169, 189, 0.2);
-    box-shadow: 0 -10px 26px rgba(25, 28, 30, 0.08);
+    box-shadow: $shadow-sm;
   }
 
   .bottomLink {
     min-width: 0;
     min-height: 48px;
     border-radius: 14px;
-    color: #5b6972;
+    color: $color-text-label;
     text-decoration: none;
     @include flex-center;
     flex-direction: column;
@@ -107,7 +107,7 @@
 
   .bottomLinkActive {
     color: $color-brand;
-    background: rgba(191, 232, 255, 0.28);
+    background: $color-accent-soft;
   }
 }
 

@@ -73,7 +73,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #97a7bd;
+  color: $color-text-secondary;
 }
 
 @include tablet {

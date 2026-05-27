@@ -4,7 +4,8 @@
 
 .page {
   min-height: 100vh;
-  background: $color-bg;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, $color-bg 92%, $color-surface-alt 8%) 0%, $color-bg 100%);
   @include flex-center;
   position: relative;
   overflow: hidden;
@@ -18,7 +19,8 @@
   width: 840px;
   height: 840px;
   border-radius: 50%;
-  background: rgba(219, 228, 231, 0.75);
+  background: color-mix(in srgb, $color-surface-alt 82%, $color-brand 18%);
+  opacity: 0.58;
   pointer-events: none;
 }
 
@@ -28,9 +30,9 @@
   bottom: -220px;
   width: 640px;
   height: 640px;
-  border: 22px solid rgba(219, 228, 231, 0.66);
+  border: 18px solid color-mix(in srgb, $color-surface-alt 86%, $color-brand 14%);
   border-radius: 26px;
-  opacity: 0.95;
+  opacity: 0.52;
   pointer-events: none;
 }
 
@@ -53,7 +55,8 @@
   width: 128px;
   height: 128px;
   border-radius: 24px;
-  background: $color-surface-alt;
+  background: color-mix(in srgb, $color-surface-alt 84%, $color-brand 16%);
+  border: 1px solid $color-border-soft;
   @include flex-center;
 }
 
@@ -67,16 +70,17 @@
 
 .subtitle {
   font-size: clamp(24px, 1.8vw, 32px) !important;
-  color: rgba(88, 96, 100, 0.92) !important;
+  color: $color-text-label !important;
   text-align: center;
 }
 
 .card {
   width: 100%;
   max-width: 640px;
-  background: $color-surface;
+  background: color-mix(in srgb, $color-surface 94%, $color-surface-alt 6%);
   border-radius: 26px;
-  box-shadow: 0 30px 70px rgba(146, 164, 183, 0.18);
+  border: 1px solid $color-border-soft;
+  box-shadow: $shadow-md;
   padding: 48px 42px 36px;
   @include flex-column;
   gap: 34px;
@@ -101,7 +105,7 @@
   font-size: 16px !important;
   font-weight: 700 !important;
   letter-spacing: 0.12em !important;
-  color: rgba(88, 96, 100, 0.92) !important;
+  color: $color-text-label !important;
 }
 
 .errorText {
@@ -118,11 +122,11 @@
   letter-spacing: 0.08em !important;
   min-height: 78px !important;
   border-radius: 16px !important;
-  box-shadow: 0 18px 32px rgba(0, 75, 99, 0.2) !important;
-  transition: opacity $transition-fast, transform $transition-fast !important;
+  box-shadow: none !important;
+  transition: opacity $transition-fast, transform $transition-fast, filter $transition-fast !important;
 
   &:hover {
-    opacity: 0.9;
+    filter: brightness(0.98);
     transform: translateY(-1px);
   }
 
@@ -135,7 +139,7 @@
 .helperText {
   font-size: clamp(16px, 1.1vw, 20px) !important;
   line-height: 1.55 !important;
-  color: rgba(88, 96, 100, 0.86) !important;
+  color: $color-text-secondary !important;
   text-align: center;
   max-width: 420px;
   margin: 0 auto !important;
@@ -160,5 +164,23 @@
   .logoIconWrap {
     width: 96px;
     height: 96px;
+  }
+}
+
+:global(:root[data-theme="dark"]) {
+  .decorCircle {
+    opacity: 0.34;
+  }
+
+  .decorFrame {
+    opacity: 0.28;
+  }
+
+  .card {
+    box-shadow: $shadow-sm;
+  }
+
+  .submitBtn {
+    background: $color-brand !important;
   }
 }

@@ -11,12 +11,12 @@
   padding: 24px 28px;
   border-radius: 12px;
   background: $color-surface;
-  border: 1px solid rgba(227, 233, 236, 0.94);
-  box-shadow: 0 8px 24px rgba(146, 164, 183, 0.08);
+  border: 1px solid $color-border-soft;
+  box-shadow: $shadow-md;
   transition: box-shadow $transition-fast, transform $transition-fast;
 
   &:hover {
-    box-shadow: 0 12px 30px rgba(146, 164, 183, 0.13);
+    box-shadow: $shadow-lg;
     transform: translateY(-1px);
   }
 
@@ -79,7 +79,7 @@
   gap: 4px;
   font-size: 14px;
   font-weight: 500;
-  color: #97a7bd;
+  color: $color-text-secondary;
   white-space: nowrap;
 }
 
@@ -94,7 +94,7 @@
   border: 2px solid rgba(155, 173, 196, 0.6);
   border-radius: 50%;
   background: transparent;
-  color: #9badc4;
+  color: $color-text-secondary;
   cursor: pointer;
   @include flex-center;
   transition: color $transition-fast, border-color $transition-fast, background $transition-fast;
@@ -103,7 +103,7 @@
   &:hover {
     color: $color-brand;
     border-color: $color-brand;
-    background: rgba(191, 232, 255, 0.24);
+    background: $color-accent-soft;
   }
 
   @include tablet {

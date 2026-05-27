@@ -10,8 +10,8 @@
   min-height: 132px;
   padding: 24px 28px 24px 20px;
   border-radius: 18px;
-  background: rgba(241, 244, 246, 0.88);
-  border: 1px solid rgba(227, 233, 236, 0.82);
+  background: $color-surface-alt;
+  border: 1px solid $color-border-soft;
   box-shadow: 0 8px 24px rgba(146, 164, 183, 0.08);
 
   @include tablet {
@@ -83,7 +83,7 @@
     min-height: 126px;
     padding: 26px 22px;
     border-radius: 22px;
-    background: rgba(255, 255, 255, 0.98);
+    background: $color-surface;
     box-shadow: none;
   }
 

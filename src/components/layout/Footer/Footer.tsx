@@ -80,15 +80,15 @@ export function Footer() {
             <p className={styles.colHeading}>Контакты</p>
             <ul className={styles.contactList}>
               <li className={styles.contactItem}>
-                <LocationOnOutlinedIcon sx={{ fontSize: 20, color: '#94a3b8' }} />
+                <LocationOnOutlinedIcon sx={{ fontSize: 20, color: 'var(--color-text-secondary)' }} />
                 <span>Казань, ул. Кремлевская, д. 35</span>
               </li>
               <li className={styles.contactItem}>
-                <LocalPhoneOutlinedIcon sx={{ fontSize: 20, color: '#94a3b8' }} />
+                <LocalPhoneOutlinedIcon sx={{ fontSize: 20, color: 'var(--color-text-secondary)' }} />
                 <span>+7 (843) 233-71-09</span>
               </li>
               <li className={styles.contactItem}>
-                <MailOutlineRoundedIcon sx={{ fontSize: 20, color: '#94a3b8' }} />
+                <MailOutlineRoundedIcon sx={{ fontSize: 20, color: 'var(--color-text-secondary)' }} />
                 <span>ivmiit@kpfu.ru</span>
               </li>
             </ul>

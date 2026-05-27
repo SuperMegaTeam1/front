@@ -9,8 +9,8 @@
   gap: 24px;
   padding: 28px 36px;
   border-radius: 18px;
-  background: rgba(241, 244, 246, 0.98);
-  border: 1px solid rgba(227, 233, 236, 0.94);
+  background: $color-surface-alt;
+  border: 1px solid $color-border-soft;
 
   @include tablet {
     grid-template-columns: 1fr;
@@ -42,7 +42,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #97a7bd;
+  color: $color-text-secondary;
 }
 
 .meta {
@@ -53,7 +53,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #97a7bd;
+  color: $color-text-secondary;
 }
 
 .center {

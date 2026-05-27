@@ -130,7 +130,7 @@ export default function StudentHomePage() {
   const recentNotifications = useMemo(() => {
     return notifications.slice(0, 4).map((notification) => ({
       id: notification.id,
-      icon: <ChatBubbleOutlineRoundedIcon sx={{ fontSize: 28, color: '#2a657e' }} />,
+      icon: <ChatBubbleOutlineRoundedIcon sx={{ fontSize: 28, color: 'var(--color-brand)' }} />,
       title: notification.title,
       subtitle: notification.messageBody,
       time: formatNotificationTime(notification.createdAt),

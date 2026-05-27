@@ -7,8 +7,10 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useThemeMode } from '@/providers/ThemeProvider';
 import { HeaderTeacherMobile } from './HeaderTeacherMobile';
 import styles from './HeaderTeacher.module.scss';
 
@@ -20,6 +22,7 @@ const PROFILE_PATH = '/teacher/profile';
 
 export function HeaderTeacher() {
   const { user } = useAuthStore();
+  const { mode, toggleMode } = useThemeMode();
   const pathname = usePathname();
 
   const avatarLabel = user
@@ -30,6 +33,7 @@ export function HeaderTeacher() {
   const isSubjectsPage = pathname === SUBJECTS_PATH || pathname.startsWith(`${SUBJECTS_PATH}/`);
   const isMessagesPage = pathname === MESSAGES_PATH;
   const isProfilePage = pathname === PROFILE_PATH;
+  const isDarkMode = mode === 'dark';
 
   return (
     <>
@@ -72,8 +76,17 @@ export function HeaderTeacher() {
           </nav>
 
           <div className={styles.actions}>
-            <button type="button" className={styles.actionButton} aria-label="Сменить тему">
-              <DarkModeOutlinedIcon sx={{ fontSize: 28 }} />
+            <button
+              type="button"
+              className={styles.actionButton}
+              onClick={toggleMode}
+              aria-label={isDarkMode ? 'Включить светлую тему' : 'Включить темную тему'}
+            >
+              {isDarkMode ? (
+                <LightModeOutlinedIcon sx={{ fontSize: 28 }} />
+              ) : (
+                <DarkModeOutlinedIcon sx={{ fontSize: 28 }} />
+              )}
             </button>
 
             <Link
@@ -92,7 +105,7 @@ export function HeaderTeacher() {
               variant="rounded"
               className={`${styles.profileAvatar} ${isProfilePage ? styles.profileAvatarActive : ''}`}
               sx={{
-                bgcolor: '#201b2d',
+                bgcolor: 'var(--color-brand)',
                 width: 62,
                 height: 62,
                 fontSize: '20px',

@@ -40,13 +40,13 @@
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: rgba(43, 52, 55, 0.75);
+  color: $color-text-secondary;
 }
 
 .brandDesc {
   font-size: clamp(16px, 1.2vw, 18px);
   line-height: 1.7;
-  color: rgba(43, 52, 55, 0.82);
+  color: $color-text-label;
 }
 
 .brandIcons {
@@ -59,11 +59,10 @@
   width: 48px;
   height: 48px;
   border-radius: 14px;
-  background: rgba(191, 232, 255, 0.4);
+  background: $color-accent-soft;
   color: $color-brand;
   @include flex-center;
   font-weight: 800;
-  box-shadow: 0 10px 24px rgba(42, 101, 126, 0.08);
 }
 
 .brandCounter {
@@ -105,7 +104,7 @@
 
 .colLink {
   font-size: 15px;
-  color: rgba(43, 52, 55, 0.78);
+  color: $color-text-label;
   text-decoration: none;
   transition: color $transition-fast, transform $transition-fast;
 
@@ -126,7 +125,7 @@
   grid-template-columns: 22px 1fr;
   gap: 12px;
   align-items: flex-start;
-  color: rgba(43, 52, 55, 0.82);
+  color: $color-text-label;
   font-size: 15px;
   line-height: 1.55;
 }
@@ -169,12 +168,12 @@
   font-size: 20px;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: rgba(43, 52, 55, 0.78);
+  color: $color-text-label;
 }
 
 .bottomCopy {
   font-size: clamp(15px, 1vw, 18px);
-  color: rgba(43, 52, 55, 0.78);
+  color: $color-text-label;
 }
 
 .bottomLinks {
@@ -189,7 +188,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(43, 52, 55, 0.82);
+  color: $color-text-label;
   text-decoration: none;
 
   &:hover {

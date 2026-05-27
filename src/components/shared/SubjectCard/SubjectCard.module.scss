@@ -8,18 +8,18 @@
   gap: 28px;
   min-height: 270px;
   padding: 28px;
-  background: rgba(255, 255, 255, 0.98);
-  border: 1px solid rgba(227, 233, 236, 0.9);
+  background: $color-surface;
+  border: 1px solid $color-border-soft;
   border-radius: 26px;
-  box-shadow: 0 22px 50px rgba(146, 164, 183, 0.12);
+  box-shadow: $shadow-md;
   text-decoration: none;
   transition: transform $transition-fast, box-shadow $transition-fast, border-color $transition-fast;
   cursor: pointer;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 28px 56px rgba(146, 164, 183, 0.16);
-    border-color: rgba(191, 232, 255, 0.92);
+    box-shadow: $shadow-lg;
+    border-color: $color-accent-muted;
   }
 }
 
@@ -44,7 +44,7 @@
 }
 
 .iconBrand {
-  background: rgba(191, 232, 255, 0.84);
+  background: $color-accent-muted;
 }
 
 .iconViolet {
@@ -79,7 +79,7 @@
 
 .groups {
   font-size: clamp(16px, 1.1vw, 20px);
-  color: #97a7bd;
+  color: $color-text-secondary;
   line-height: 1.5;
   @include line-clamp(2);
 }
@@ -90,7 +90,7 @@
     min-height: 116px;
     padding: 18px;
     border-radius: 6px;
-    box-shadow: 0 9px 22px rgba(146, 164, 183, 0.12);
+    box-shadow: $shadow-md;
   }
 
   .rootCompact {

@@ -35,7 +35,7 @@ export function SubjectCard({
     >
       <div className={styles.topRow}>
         <div className={`${styles.iconWrap} ${ICON_VARIANT_CLASS[iconVariant]}`}>
-          {icon ?? <MenuBookOutlinedIcon sx={{ fontSize: 30, color: '#2a657e' }} />}
+          {icon ?? <MenuBookOutlinedIcon sx={{ fontSize: 30, color: 'var(--color-brand)' }} />}
         </div>
       </div>
 

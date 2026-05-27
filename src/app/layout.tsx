@@ -5,6 +5,17 @@ import './globals.scss';
 import { Providers } from '@/providers/Providers';
 import { rootCssVariables } from '@/theme/tokens';
 
+const themeInitScript = `
+(() => {
+  try {
+    const savedTheme = localStorage.getItem('theme-mode');
+    document.documentElement.dataset.theme = savedTheme === 'dark' ? 'dark' : 'light';
+  } catch {
+    document.documentElement.dataset.theme = 'light';
+  }
+})();
+`;
+
 // Шрифты из Figma подключены через next/font:
 // — Next скачает их на этапе сборки, захостит локально (self-hosted),
 //   свяжет имя с CSS-переменной, чтобы её можно было использовать в MUI-теме и SCSS.
@@ -33,8 +44,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" className={`${manrope.variable} ${ibmPlexSans.variable}`}>
+    <html lang="ru" className={`${manrope.variable} ${ibmPlexSans.variable}`} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <style>{rootCssVariables}</style>
       </head>
       <body>

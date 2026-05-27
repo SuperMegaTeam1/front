@@ -7,8 +7,10 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useThemeMode } from '@/providers/ThemeProvider';
 import styles from './HeaderTeacherMobile.module.scss';
 
 const HOME_PATH = '/teacher/home';
@@ -19,6 +21,7 @@ const PROFILE_PATH = '/teacher/profile';
 
 export function HeaderTeacherMobile() {
   const { user } = useAuthStore();
+  const { mode, toggleMode } = useThemeMode();
   const pathname = usePathname();
 
   const avatarLabel = user
@@ -30,6 +33,7 @@ export function HeaderTeacherMobile() {
   const isSubjectsPage = pathname === SUBJECTS_PATH || pathname.startsWith(`${SUBJECTS_PATH}/`);
   const isMessagesPage = pathname === MESSAGES_PATH;
   const isProfilePage = pathname === PROFILE_PATH;
+  const isDarkMode = mode === 'dark';
 
   return (
     <>
@@ -40,8 +44,17 @@ export function HeaderTeacherMobile() {
         </Link>
 
         <div className={styles.actions}>
-          <button type="button" className={styles.actionButton} aria-label="Сменить тему">
-            <DarkModeOutlinedIcon sx={{ fontSize: 21 }} />
+          <button
+            type="button"
+            className={styles.actionButton}
+            onClick={toggleMode}
+            aria-label={isDarkMode ? 'Включить светлую тему' : 'Включить темную тему'}
+          >
+            {isDarkMode ? (
+              <LightModeOutlinedIcon sx={{ fontSize: 21 }} />
+            ) : (
+              <DarkModeOutlinedIcon sx={{ fontSize: 21 }} />
+            )}
           </button>
 
           <Link
@@ -59,7 +72,7 @@ export function HeaderTeacherMobile() {
             variant="rounded"
             className={`${styles.profileAvatar} ${isProfilePage ? styles.profileAvatarActive : ''}`}
             sx={{
-              bgcolor: '#201b2d',
+              bgcolor: 'var(--color-brand)',
               width: 36,
               height: 44,
               fontSize: '13px',
