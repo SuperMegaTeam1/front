@@ -8,8 +8,10 @@ import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import { useUnreadCount } from '@/lib/hooks/useNotifications';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useThemeMode } from '@/providers/ThemeProvider';
 import { HeaderStudentMobile } from './HeaderStudentMobile';
 import styles from './HeaderStudent.module.scss';
 
@@ -22,6 +24,7 @@ const PROFILE_PATH = '/student/profile';
 export function HeaderStudent() {
   const { user } = useAuthStore();
   const { data: unreadCount = 0 } = useUnreadCount();
+  const { mode, toggleMode } = useThemeMode();
   const pathname = usePathname();
 
   const avatarLabel = user
@@ -32,6 +35,7 @@ export function HeaderStudent() {
   const isRatingPage = pathname === RATING_PATH;
   const isNotificationsPage = pathname === NOTIFICATIONS_PATH;
   const isProfilePage = pathname === PROFILE_PATH;
+  const isDarkMode = mode === 'dark';
 
   return (
     <>
@@ -74,8 +78,17 @@ export function HeaderStudent() {
           </nav>
 
           <div className={styles.actions}>
-            <button type="button" className={styles.actionButton} aria-label="Сменить тему">
-              <DarkModeOutlinedIcon sx={{ fontSize: 28 }} />
+            <button
+              type="button"
+              className={styles.actionButton}
+              onClick={toggleMode}
+              aria-label={isDarkMode ? 'Включить светлую тему' : 'Включить темную тему'}
+            >
+              {isDarkMode ? (
+                <LightModeOutlinedIcon sx={{ fontSize: 28 }} />
+              ) : (
+                <DarkModeOutlinedIcon sx={{ fontSize: 28 }} />
+              )}
             </button>
 
             <Link
@@ -100,7 +113,7 @@ export function HeaderStudent() {
               variant="rounded"
               className={`${styles.profileAvatar} ${isProfilePage ? styles.profileAvatarActive : ''}`}
               sx={{
-                bgcolor: '#201b2d',
+                bgcolor: 'var(--color-brand)',
                 width: 62,
                 height: 62,
                 fontSize: '20px',

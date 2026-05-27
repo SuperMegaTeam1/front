@@ -10,7 +10,7 @@
   &::after {
     content: '';
     height: 1px;
-    background: rgba(227, 233, 236, 0.95);
+    background: $color-divider;
   }
 }
 
@@ -21,8 +21,8 @@
   min-height: 22px;
   padding: 0 14px;
   border-radius: $radius-full;
-  background: rgba(241, 244, 246, 0.98);
-  color: #687b92;
+  background: $color-surface-alt;
+  color: $color-text-secondary;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.18em;

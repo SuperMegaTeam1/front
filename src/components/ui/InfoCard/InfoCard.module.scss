@@ -5,12 +5,12 @@
 .root {
   padding: 28px 32px 24px;
   border-radius: 14px;
-  background: rgba(241, 244, 246, 0.88);
-  border: 1px solid rgba(227, 233, 236, 0.76);
+  background: $color-surface-alt;
+  border: 1px solid $color-border-soft;
 }
 
 .white {
-  background: rgba(255, 255, 255, 0.94);
+  background: $color-surface;
 }
 
 .header {

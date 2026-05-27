@@ -87,7 +87,7 @@ export default function TeacherHomePage() {
 
     return {
       ...subject,
-      icon: <SubjectIcon sx={{ fontSize: 30, color: '#2a657e' }} />,
+      icon: <SubjectIcon sx={{ fontSize: 30, color: 'var(--color-brand)' }} />,
     };
   });
 

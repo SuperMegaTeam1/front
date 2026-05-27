@@ -53,7 +53,7 @@
   min-height: 28px;
   padding: 0 14px;
   border-radius: $radius-full;
-  background: rgba(191, 232, 255, 0.62);
+  background: $color-accent-muted;
   color: $color-brand;
   font-size: 12px;
   font-weight: 800;
@@ -65,20 +65,20 @@
 
 .gradebookCard {
   background: $color-surface;
-  border: 1px solid rgba(227, 233, 236, 0.94);
+  border: 1px solid $color-border-soft;
   border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(146, 164, 183, 0.08);
+  box-shadow: $shadow-md;
   overflow: hidden;
 }
 
 .stateCard {
   padding: 24px 28px;
-  border: 1px solid rgba(227, 233, 236, 0.94);
+  border: 1px solid $color-border-soft;
   border-radius: 14px;
   background: $color-surface;
   color: #687b92;
   font-size: 15px;
-  box-shadow: 0 8px 24px rgba(146, 164, 183, 0.08);
+  box-shadow: $shadow-sm;
 }
 
 .tableHeader,
@@ -125,11 +125,11 @@
   transition: background $transition-fast;
 
   &:nth-child(even) {
-    background: rgba(248, 249, 250, 0.7);
+    background: $color-surface-alt;
   }
 
   &:hover {
-    background: rgba(191, 232, 255, 0.18);
+    background: $color-accent-soft;
   }
 }
 
@@ -147,7 +147,7 @@
   width: 100%;
   height: 36px;
   padding: 0 10px;
-  border: 1px solid rgba(191, 232, 255, 0.85);
+  border: 1px solid $color-border-soft;
   border-radius: 8px;
   background: $color-surface;
   color: $color-text-primary;
@@ -169,7 +169,7 @@
 
   &:focus {
     border-color: $color-brand;
-    box-shadow: 0 0 0 3px rgba(42, 101, 126, 0.16);
+    box-shadow: 0 0 0 3px $color-focus-ring;
   }
 }
 
@@ -226,12 +226,12 @@
   border: none;
   background: $color-brand;
   color: #ffffff;
-  box-shadow: 0 8px 18px rgba(42, 101, 126, 0.18);
+  box-shadow: $shadow-btn;
 
   &:hover {
     background: $color-brand-dark;
     transform: translateY(-1px);
-    box-shadow: 0 12px 22px rgba(42, 101, 126, 0.24);
+    box-shadow: $shadow-md;
   }
 
   &:active {

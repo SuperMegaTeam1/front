@@ -25,7 +25,7 @@
 .header {
   padding: 0 0 12px;
   margin-bottom: 52px;
-  background: rgba(241, 244, 246, 0.98);
+  background: $color-surface-alt;
 
   h1 {
     margin: 0;
@@ -34,12 +34,12 @@
     font-weight: 800;
     line-height: 0.95;
     letter-spacing: -0.04em;
-    color: #263135;
+    color: $color-text-primary;
   }
 
   p {
     margin: 14px 0 0;
-    color: #9badc4;
+    color: $color-text-secondary;
     font-size: clamp(17px, 1.1vw, 22px);
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -70,7 +70,7 @@
 
   h2 {
     margin: 0;
-    color: #334044;
+    color: $color-text-primary;
     font-family: $font-family-heading;
     font-size: clamp(24px, 1.5vw, 34px);
     font-weight: 800;
@@ -87,7 +87,7 @@
 }
 
 .groupState {
-  color: #9badc4;
+  color: $color-text-secondary;
   font-family: $font-family-heading;
   font-size: 20px;
   font-weight: 700;
@@ -100,8 +100,8 @@
   padding: 0 42px;
   border: none;
   border-radius: 16px;
-  background: rgba(241, 244, 246, 0.98);
-  color: #9badc4;
+  background: $color-surface-alt;
+  color: $color-text-secondary;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -120,8 +120,11 @@
 }
 
 .groupButtonActive {
-  background: #bfe8ff;
-  color: $color-brand;
+  background: color-mix(in srgb, $color-brand-light 78%, $color-surface 22%);
+  color: #243238;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, $color-brand 28%, transparent),
+    0 10px 22px color-mix(in srgb, $color-brand 16%, transparent);
 }
 
 .messageInput {
@@ -131,8 +134,8 @@
   padding: 56px 52px;
   border: 2px solid #9badc4;
   border-radius: 8px;
-  background: rgba(241, 244, 246, 0.98);
-  color: #263135;
+  background: $color-surface-alt;
+  color: $color-text-primary;
   display: block;
   resize: vertical;
   font-family: Georgia, 'Times New Roman', serif;
@@ -142,7 +145,7 @@
   outline: none;
 
   &::placeholder {
-    color: rgba(43, 52, 55, 0.24);
+    color: color-mix(in srgb, $color-text-secondary 82%, $color-text-primary 18%);
   }
 
   &:focus {

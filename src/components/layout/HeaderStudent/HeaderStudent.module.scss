@@ -53,7 +53,7 @@
 
   &:hover {
     color: $color-brand;
-    background: rgba(191, 232, 255, 0.36);
+    background: $color-accent-soft;
     transform: translateY(-1px);
   }
 }
@@ -74,9 +74,8 @@
 
 .navIconLinkActive,
 .actionButtonActive {
-  background: rgba(191, 232, 255, 0.92);
+  background: $color-accent-strong;
   color: $color-brand;
-  box-shadow: 0 10px 24px rgba(42, 101, 126, 0.12);
 }
 
 .navText {
@@ -100,17 +99,17 @@
 
 .profileAvatar {
   color: #ffffff;
-  box-shadow: 0 10px 24px rgba(32, 27, 45, 0.18);
+  box-shadow: $shadow-sm;
   transition: transform $transition-fast, box-shadow $transition-fast, outline-color $transition-fast;
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 14px 30px rgba(32, 27, 45, 0.24);
+    box-shadow: $shadow-md;
   }
 }
 
 .profileAvatarActive {
-  outline: 3px solid rgba(191, 232, 255, 0.95);
+  outline: 3px solid $color-accent-muted;
   outline-offset: 0;
 }
 

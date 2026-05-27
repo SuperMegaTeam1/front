@@ -68,8 +68,8 @@
 .progressCard,
 .journalSection {
   border-radius: 18px;
-  border: 1px solid rgba(227, 233, 236, 0.9);
-  background: #ffffff;
+  border: 1px solid $color-border-soft;
+  background: $color-surface;
   box-shadow: 0 1px 0 rgba(219, 227, 233, 0.24);
 }
 
@@ -196,7 +196,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  background: #f1f4f6fa;
+  background: $color-surface-alt;
 
   @include mobile {
     padding: 18px 12px;
@@ -239,8 +239,8 @@
 .row {
   padding: 15px 16px;
   border-radius: 16px;
-  background: #ffffff;
-  border: 1px solid rgba(227, 233, 236, 0.95);
+  background: $color-surface;
+  border: 1px solid $color-border-soft;
 }
 
 .rowCell {
@@ -264,8 +264,8 @@
   margin: 0;
   padding: 18px 16px;
   border-radius: 16px;
-  background: #ffffff;
-  border: 1px solid rgba(227, 233, 236, 0.95);
+  background: $color-surface;
+  border: 1px solid $color-border-soft;
   color: #7b8d9b;
   font-size: 15px;
 }

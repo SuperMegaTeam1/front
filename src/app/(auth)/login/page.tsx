@@ -66,7 +66,7 @@ export default function LoginPage() {
       <div className={styles.content}>
         <div className={styles.logoBlock}>
           <div className={styles.logoIconWrap}>
-            <SchoolOutlinedIcon sx={{ fontSize: 52, color: '#2a657e' }} />
+            <SchoolOutlinedIcon sx={{ fontSize: 52, color: 'var(--color-brand)' }} />
           </div>
           <Typography className={styles.title}>Мой ИВМиИТ</Typography>
           <Typography className={styles.subtitle}>Цифровой кабинет студента</Typography>
