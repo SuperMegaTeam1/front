@@ -180,6 +180,7 @@
 }
 
 .sideLabel {
+  align-self: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -233,6 +234,11 @@
     transform: none;
     box-shadow: none;
   }
+}
+
+.arrowSpacer {
+  width: 52px;
+  height: 52px;
 }
 
 .emptyState,
@@ -489,7 +495,8 @@
     order: 1;
   }
 
-  .arrowButton {
+  .arrowButton,
+  .arrowSpacer {
     width: 56px;
     height: 56px;
     justify-self: center;
@@ -594,7 +601,8 @@
   }
 
   .sideColumn,
-  .arrowButton {
+  .arrowButton,
+  .arrowSpacer {
     display: none;
   }
 

@@ -1,5 +1,5 @@
 import type { ScheduleLessonResult, TeacherSubjectGroupListItem, WeekScheduleResult } from '@/lib/api/types';
-import { getWeekDay } from './formatDate';
+import { getWeekDay, getWeekDayAfterNa } from './formatDate';
 import { getWeekStart, parseIsoDate, shiftIsoDate } from './isoDate';
 import { normalizeTeacherLessonGroups } from './teacherLesson';
 
@@ -125,5 +125,5 @@ export function getScheduleStageTag(index: number, todayIndex: number, date: str
     return 'ПАРЫ ЗАВТРА';
   }
 
-  return `РАСПИСАНИЕ НА ${getWeekDay(date).toUpperCase()}`;
+  return `РАСПИСАНИЕ НА ${getWeekDayAfterNa(date).toUpperCase()}`;
 }

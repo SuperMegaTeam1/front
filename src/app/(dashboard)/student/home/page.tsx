@@ -167,7 +167,6 @@ export default function StudentHomePage() {
           nextDay={nextDay}
           currentDayIndex={currentDayIndex}
           todayIndex={todayIndex}
-          totalDays={totalDays}
           isLoading={isWeekScheduleLoading}
           hasError={Boolean(weekScheduleError)}
           onPrevious={() => {

@@ -197,8 +197,11 @@ describe('schedule utils', () => {
       expect(getScheduleStageTag(3, 2, '2026-01-08')).toBe('ПАРЫ ЗАВТРА');
     });
 
-    it('falls back to a weekday-based tag for non-adjacent days', () => {
+    it('uses the correct weekday form after "на"', () => {
       expect(getScheduleStageTag(5, 2, '2026-01-05')).toBe('РАСПИСАНИЕ НА ПОНЕДЕЛЬНИК');
+      expect(getScheduleStageTag(5, 2, '2026-01-07')).toBe('РАСПИСАНИЕ НА СРЕДУ');
+      expect(getScheduleStageTag(5, 2, '2026-01-09')).toBe('РАСПИСАНИЕ НА ПЯТНИЦУ');
+      expect(getScheduleStageTag(5, 2, '2026-01-10')).toBe('РАСПИСАНИЕ НА СУББОТУ');
     });
   });
 });

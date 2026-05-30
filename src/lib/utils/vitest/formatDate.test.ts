@@ -6,6 +6,7 @@ import {
   formatDateWithDay,
   getTodayISO,
   getWeekDay,
+  getWeekDayAfterNa,
 } from '@/lib/utils/formatDate';
 
 describe('formatDate utils', () => {
@@ -36,6 +37,19 @@ describe('formatDate utils', () => {
   describe('getWeekDay', () => {
     it('returns the weekday with an uppercase first letter', () => {
       expect(getWeekDay('2026-04-16')).toBe('Четверг');
+    });
+  });
+
+  describe('getWeekDayAfterNa', () => {
+    it('uses the correct form for feminine weekdays', () => {
+      expect(getWeekDayAfterNa('2026-01-07')).toBe('Среду');
+      expect(getWeekDayAfterNa('2026-01-09')).toBe('Пятницу');
+      expect(getWeekDayAfterNa('2026-01-10')).toBe('Субботу');
+    });
+
+    it('keeps the original form for weekdays that do not change', () => {
+      expect(getWeekDayAfterNa('2026-01-05')).toBe('Понедельник');
+      expect(getWeekDayAfterNa('2026-01-08')).toBe('Четверг');
     });
   });
 

@@ -180,6 +180,7 @@
 }
 
 .sideLabel {
+  align-self: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -225,6 +226,11 @@
     transform: translateY(-1px);
     box-shadow: $shadow-md;
   }
+}
+
+.arrowSpacer {
+  width: 52px;
+  height: 52px;
 }
 
 .subjectSection {
@@ -351,7 +357,8 @@
   }
 
   .sideColumn,
-  .arrowButton {
+  .arrowButton,
+  .arrowSpacer {
     display: none;
   }
 
@@ -437,7 +444,8 @@
   }
 
   .sideColumn,
-  .arrowButton {
+  .arrowButton,
+  .arrowSpacer {
     display: none;
   }
 
