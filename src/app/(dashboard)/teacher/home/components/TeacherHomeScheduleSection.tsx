@@ -17,7 +17,6 @@ interface TeacherHomeScheduleSectionProps {
   nextDay?: TeacherHomeDay;
   currentDayIndex: number;
   todayIndex: number;
-  totalDays: number;
   isLoading: boolean;
   hasError: boolean;
   onPrevious: () => void;
@@ -51,7 +50,6 @@ export function TeacherHomeScheduleSection({
   nextDay,
   currentDayIndex,
   todayIndex,
-  totalDays,
   isLoading,
   hasError,
   onPrevious,
@@ -60,6 +58,8 @@ export function TeacherHomeScheduleSection({
 }: TeacherHomeScheduleSectionProps) {
   const lastDayIndexRef = useRef(currentDayIndex);
   const [navigationDirection, setNavigationDirection] = useState<NavigationDirection>(null);
+  const hasPreviousDay = Boolean(previousDay);
+  const hasNextDay = Boolean(nextDay);
 
   useEffect(() => {
     setNavigationDirection(
@@ -103,15 +103,18 @@ export function TeacherHomeScheduleSection({
           ) : null}
         </div>
 
-        <button
-          type="button"
-          className={styles.arrowButton}
-          aria-label="Показать предыдущий день"
-          onClick={onPrevious}
-          disabled={currentDayIndex === 0}
-        >
-          <ChevronLeftRoundedIcon sx={{ fontSize: 26 }} />
-        </button>
+        {hasPreviousDay ? (
+          <button
+            type="button"
+            className={styles.arrowButton}
+            aria-label="Показать предыдущий день"
+            onClick={onPrevious}
+          >
+            <ChevronLeftRoundedIcon sx={{ fontSize: 26 }} />
+          </button>
+        ) : (
+          <div className={styles.arrowSpacer} aria-hidden="true" />
+        )}
 
         <div
           key={`teacher-current-${currentDay.date}`}
@@ -143,15 +146,18 @@ export function TeacherHomeScheduleSection({
           )}
         </div>
 
-        <button
-          type="button"
-          className={styles.arrowButton}
-          aria-label="Показать следующий день"
-          onClick={onNext}
-          disabled={currentDayIndex === totalDays - 1}
-        >
-          <ChevronRightRoundedIcon sx={{ fontSize: 26 }} />
-        </button>
+        {hasNextDay ? (
+          <button
+            type="button"
+            className={styles.arrowButton}
+            aria-label="Показать следующий день"
+            onClick={onNext}
+          >
+            <ChevronRightRoundedIcon sx={{ fontSize: 26 }} />
+          </button>
+        ) : (
+          <div className={styles.arrowSpacer} aria-hidden="true" />
+        )}
 
         <div
           key={nextDay?.date ?? `teacher-next-empty-${currentDay.date}`}

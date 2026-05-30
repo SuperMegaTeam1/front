@@ -2,6 +2,12 @@
  * Форматирование даты в русском формате.
  */
 
+const weekdayAfterNaMap: Record<string, string> = {
+  Среда: 'Среду',
+  Пятница: 'Пятницу',
+  Суббота: 'Субботу',
+};
+
 /** "16 апреля 2026" */
 export function formatDateFull(dateStr: string): string {
   const date = new Date(dateStr);
@@ -45,6 +51,12 @@ export function getWeekDay(dateStr: string): string {
   const date = new Date(dateStr);
   const day = date.toLocaleDateString('ru-RU', { weekday: 'long' });
   return day.charAt(0).toUpperCase() + day.slice(1);
+}
+
+/** "Среду" — форма для конструкции "на среду" */
+export function getWeekDayAfterNa(dateStr: string): string {
+  const day = getWeekDay(dateStr);
+  return weekdayAfterNaMap[day] ?? day;
 }
 
 /** Получить ISO-строку текущей даты: "2026-04-16" */
