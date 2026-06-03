@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { getMyStudentSubjects, getMyTeacherSubjects, getSubjects, getSubjectById } from '@/lib/api/subjects.api';
 import type { TeacherSubjectGroupListItem } from '@/lib/api/types';
+import { sortGroupsByName } from '@/lib/utils/groupSort';
 
 function normalizeTeacherSubjectGroups(subject: {
   groups?: TeacherSubjectGroupListItem[];
@@ -14,18 +15,20 @@ function normalizeTeacherSubjectGroups(subject: {
       ? subject.studyGroups
       : [];
 
-  return rawGroups
-    .map((group) => {
-      const groupId = group.groupId ?? group.id;
-      const groupName = group.groupName ?? group.name;
+  return sortGroupsByName(
+    rawGroups
+      .map((group) => {
+        const groupId = group.groupId ?? group.id;
+        const groupName = group.groupName ?? group.name;
 
-      if (!groupId || !groupName) {
-        return null;
-      }
+        if (!groupId || !groupName) {
+          return null;
+        }
 
-      return { groupId, groupName };
-    })
-    .filter((group): group is { groupId: string; groupName: string } => group !== null);
+        return { groupId, groupName };
+      })
+      .filter((group): group is { groupId: string; groupName: string } => group !== null),
+  );
 }
 
 /** Хук: список предметов */

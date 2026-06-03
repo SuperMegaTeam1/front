@@ -150,12 +150,16 @@ describe('subjectView utils', () => {
   });
 
   describe('mapTeacherSubjectsToHomeSubjects', () => {
-    it('maps teacher subjects into home cards with cycled variants', () => {
+    it('maps teacher subjects into home cards with cycled variants and sorted groups', () => {
       const subjects: TeacherSubjectListItem[] = [
         {
           subjectId: 'subject-1',
           subjectName: 'TypeScript',
-          groups: [{ groupId: 'g-1', groupName: '09-352' }],
+          groups: [
+            { groupId: 'g-2', groupName: '09-353' },
+            { groupId: 'g-1', groupName: '09-351' },
+            { groupId: 'g-3', groupName: '09-352' },
+          ],
         },
         {
           subjectId: 'subject-2',
@@ -170,7 +174,7 @@ describe('subjectView utils', () => {
         {
           id: 'subject-1',
           name: 'TypeScript',
-          groups: ['09-352'],
+          groups: ['09-351', '09-352', '09-353'],
           icon: CodeOutlinedIcon,
           iconVariant: 'brand',
         },
@@ -186,14 +190,15 @@ describe('subjectView utils', () => {
   });
 
   describe('buildTeacherSubjectCardViewModels', () => {
-    it('builds subject cards with group summary and links', () => {
+    it('builds subject cards with sorted group summary and links', () => {
       const result = buildTeacherSubjectCardViewModels([
         {
           subjectId: 'subject-1',
           subjectName: 'TypeScript',
           groups: [
-            { groupId: 'g-1', groupName: '09-352' },
-            { id: 'g-2', name: '09-353' },
+            { id: 'g-3', name: '09-353' },
+            { groupId: 'g-1', groupName: '09-351' },
+            { id: 'g-2', name: '09-352' },
           ],
         },
       ]);
@@ -203,16 +208,27 @@ describe('subjectView utils', () => {
           subjectId: 'subject-1',
           subjectName: 'TypeScript',
           icon: CodeOutlinedIcon,
-          groupCountLabel: '2 группы',
+          groupCountLabel: '3 группы',
           groupsLabel: 'Группы',
-          groupsSummary: '09-352, 09-353',
+          groupsSummary: '09-351, 09-352, 09-353',
           hasGroups: true,
           groups: [
             {
               groupId: 'g-1',
-              groupName: '09-352',
+              groupName: '09-351',
               href: {
                 pathname: '/teacher/subjects/subject-1/g-1',
+                query: {
+                  subjectName: 'TypeScript',
+                  groupName: '09-351',
+                },
+              },
+            },
+            {
+              groupId: 'g-2',
+              groupName: '09-352',
+              href: {
+                pathname: '/teacher/subjects/subject-1/g-2',
                 query: {
                   subjectName: 'TypeScript',
                   groupName: '09-352',
@@ -220,10 +236,10 @@ describe('subjectView utils', () => {
               },
             },
             {
-              groupId: 'g-2',
+              groupId: 'g-3',
               groupName: '09-353',
               href: {
-                pathname: '/teacher/subjects/subject-1/g-2',
+                pathname: '/teacher/subjects/subject-1/g-3',
                 query: {
                   subjectName: 'TypeScript',
                   groupName: '09-353',
