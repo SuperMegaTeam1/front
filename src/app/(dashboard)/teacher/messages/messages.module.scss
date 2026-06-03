@@ -138,7 +138,7 @@
   color: $color-text-primary;
   display: block;
   resize: vertical;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: $font-family-heading;
   font-size: clamp(26px, 1.75vw, 36px);
   font-weight: 400;
   line-height: 1.5;
