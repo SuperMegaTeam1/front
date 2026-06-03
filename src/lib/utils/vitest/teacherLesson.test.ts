@@ -8,15 +8,17 @@ import {
 
 describe('teacherLesson utils', () => {
   describe('normalizeTeacherLessonGroups', () => {
-    it('normalizes structured lesson groups from groups', () => {
+    it('normalizes structured lesson groups from groups and sorts them', () => {
       expect(normalizeTeacherLessonGroups({
         groups: [
+          { id: 'g0', name: '09-351' },
           { groupId: 'g1', groupName: '09-352' },
           { id: 'g2', name: '09-353' },
           { groupId: 'g3' },
           'raw-string-group',
         ],
       })).toEqual([
+        { groupId: 'g0', groupName: '09-351' },
         { groupId: 'g1', groupName: '09-352' },
         { groupId: 'g2', groupName: '09-353' },
       ]);
@@ -34,10 +36,11 @@ describe('teacherLesson utils', () => {
       ]);
     });
 
-    it('falls back to groupNames when structured groups are absent', () => {
+    it('falls back to groupNames when structured groups are absent and sorts them', () => {
       expect(normalizeTeacherLessonGroups({
-        groupNames: ['09-352', '  ', '09-353'],
+        groupNames: ['09-353', '  ', '09-351', '09-352'],
       })).toEqual([
+        { groupId: '09-351', groupName: '09-351' },
         { groupId: '09-352', groupName: '09-352' },
         { groupId: '09-353', groupName: '09-353' },
       ]);
@@ -61,11 +64,12 @@ describe('teacherLesson utils', () => {
   });
 
   describe('formatTeacherLessonGroupNames', () => {
-    it('joins group names with commas for display', () => {
+    it('joins group names with commas for display in sorted order', () => {
       expect(formatTeacherLessonGroupNames([
-        { groupId: 'g1', groupName: '09-352' },
         { groupId: 'g2', groupName: '09-353' },
-      ])).toBe('09-352, 09-353');
+        { groupId: 'g0', groupName: '09-351' },
+        { groupId: 'g1', groupName: '09-352' },
+      ])).toBe('09-351, 09-352, 09-353');
     });
   });
 
@@ -110,11 +114,13 @@ describe('teacherLesson utils', () => {
   });
 
   describe('parseTeacherLessonGroups', () => {
-    it('parses valid serialized groups from the query string', () => {
+    it('parses valid serialized groups from the query string and sorts them', () => {
       expect(parseTeacherLessonGroups(JSON.stringify([
-        { groupId: 'g1', groupName: '09-352' },
         { groupId: 'g2', groupName: '09-353' },
+        { groupId: 'g0', groupName: '09-351' },
+        { groupId: 'g1', groupName: '09-352' },
       ]))).toEqual([
+        { groupId: 'g0', groupName: '09-351' },
         { groupId: 'g1', groupName: '09-352' },
         { groupId: 'g2', groupName: '09-353' },
       ]);

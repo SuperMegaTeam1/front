@@ -1,4 +1,5 @@
 import type { ScheduleLessonResult, ScheduleLessonGroupResult } from '@/lib/api/types';
+import { sortGroupNames, sortGroupsByName } from './groupSort';
 
 export interface TeacherLessonGroupInfo {
   groupId: string;
@@ -50,11 +51,11 @@ export function normalizeTeacherLessonGroups(lesson: Partial<ScheduleLessonResul
     .filter((group): group is TeacherLessonGroupInfo => group !== null);
 
   if (normalized.length > 0) {
-    return normalized;
+    return sortGroupsByName(normalized);
   }
 
   if (Array.isArray(lesson.groupNames)) {
-    return lesson.groupNames
+    return sortGroupNames(lesson.groupNames)
       .map((groupName) => (typeof groupName === 'string' && groupName.trim()
         ? { groupId: groupName, groupName }
         : null))
@@ -69,7 +70,7 @@ export function normalizeTeacherLessonGroups(lesson: Partial<ScheduleLessonResul
 }
 
 export function formatTeacherLessonGroupNames(groups: TeacherLessonGroupInfo[]) {
-  return groups.map((group) => group.groupName).join(', ');
+  return sortGroupNames(groups.map((group) => group.groupName)).join(', ');
 }
 
 export function buildTeacherLessonHref(context: TeacherLessonRouteContext) {
@@ -118,22 +119,24 @@ export function parseTeacherLessonGroups(value: string | null): TeacherLessonGro
       return [];
     }
 
-    return parsed
-      .map((group) => {
-        if (!isRecord(group)) {
-          return null;
-        }
+    return sortGroupsByName(
+      parsed
+        .map((group) => {
+          if (!isRecord(group)) {
+            return null;
+          }
 
-        const groupId = typeof group.groupId === 'string' ? group.groupId : null;
-        const groupName = typeof group.groupName === 'string' ? group.groupName : null;
+          const groupId = typeof group.groupId === 'string' ? group.groupId : null;
+          const groupName = typeof group.groupName === 'string' ? group.groupName : null;
 
-        if (!groupId || !groupName) {
-          return null;
-        }
+          if (!groupId || !groupName) {
+            return null;
+          }
 
-        return { groupId, groupName };
-      })
-      .filter((group): group is TeacherLessonGroupInfo => group !== null);
+          return { groupId, groupName };
+        })
+        .filter((group): group is TeacherLessonGroupInfo => group !== null),
+    );
   } catch {
     return [];
   }

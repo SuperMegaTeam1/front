@@ -80,14 +80,15 @@ describe('schedule utils', () => {
   });
 
   describe('getScheduleLessonGroupNames', () => {
-    it('collects unique group names from lesson groups', () => {
+    it('collects unique group names from lesson groups in sorted order', () => {
       expect(getScheduleLessonGroupNames({
         groups: [
           { groupId: 'g1', groupName: '09-352' },
           { id: 'g2', name: '09-353' },
+          { groupId: 'g4', groupName: '09-351' },
           { groupId: 'g3', groupName: '09-352' },
         ],
-      })).toEqual(['09-352', '09-353']);
+      })).toEqual(['09-351', '09-352', '09-353']);
     });
 
     it('falls back to groupNames and groupName when structured groups are missing', () => {

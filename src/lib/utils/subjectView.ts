@@ -5,6 +5,7 @@ import type {
   TeacherSubjectGroupListItem,
   TeacherSubjectListItem,
 } from '@/lib/api/types';
+import { sortGroupNames, sortGroupsByName } from '@/lib/utils/groupSort';
 import { pluralizeRu } from '@/lib/utils/pluralize';
 import { getSubjectIconByName } from '@/lib/utils/subjectIcons';
 
@@ -158,7 +159,11 @@ export function mapTeacherSubjectsToHomeSubjects(
   return subjects.map((subject, index) => ({
     id: subject.subjectId,
     name: subject.subjectName,
-    groups: (Array.isArray(subject.groups) ? subject.groups : []).map((group) => group.groupName ?? ''),
+    groups: sortGroupNames(
+      (Array.isArray(subject.groups) ? subject.groups : [])
+        .map((group) => group.groupName ?? '')
+        .filter(Boolean),
+    ),
     icon: getSubjectIconByName(subject.subjectName),
     iconVariant: variants[index % variants.length] ?? 'brand',
   }));
@@ -193,9 +198,11 @@ export function buildTeacherSubjectCardViewModels(
   subjects: TeacherSubjectListItem[],
 ): TeacherSubjectCardViewModel[] {
   return subjects.map((subject) => {
-    const groups = (Array.isArray(subject.groups) ? subject.groups : [])
-      .map((group) => mapTeacherSubjectGroupLink(subject.subjectId, subject.subjectName, group))
-      .filter((group) => group.groupId && group.groupName);
+    const groups = sortGroupsByName(
+      (Array.isArray(subject.groups) ? subject.groups : [])
+        .map((group) => mapTeacherSubjectGroupLink(subject.subjectId, subject.subjectName, group))
+        .filter((group) => group.groupId && group.groupName),
+    );
     const groupsCount = groups.length;
 
     return {
