@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildJournalValueMap,
   formatJournalDisplayValue,
   getCellKey,
   getComparableJournalValue,
@@ -71,6 +72,27 @@ describe('journal utils', () => {
     it('renders an empty string for attended without a grade', () => {
       expect(formatJournalDisplayValue(true, null)).toBe('');
       expect(formatJournalDisplayValue(null, null)).toBe('');
+    });
+  });
+
+  describe('buildJournalValueMap', () => {
+    it('keeps the latest journal state for a student lesson cell', () => {
+      const result = buildJournalValueMap([
+        {
+          studentId: 'student-1',
+          lessonId: 'lesson-1',
+          attended: true,
+          grade: 90,
+        },
+        {
+          studentId: 'student-1',
+          lessonId: 'lesson-1',
+          attended: true,
+          grade: null,
+        },
+      ]);
+
+      expect(result.get(getCellKey('student-1', 'lesson-1'))).toBe('');
     });
   });
 

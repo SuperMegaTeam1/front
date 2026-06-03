@@ -8,7 +8,7 @@ import type { SaveLessonJournalPayload } from '@/lib/api/types';
 import { useGroupStudents, useSaveLessonJournal, useTeacherGroupJournal } from '@/lib/hooks/useTeacherJournal';
 import { formatDateCompact } from '@/lib/utils/formatDate';
 import {
-  formatJournalDisplayValue,
+  buildJournalValueMap,
   getCellKey,
   getComparableJournalValue,
   getTotalPoints,
@@ -135,18 +135,7 @@ export default function TeacherGroupGradebookPage() {
   }, [journal?.items]);
 
   const initialGrades = useMemo(() => {
-    const valueMap = new Map<string, string>();
-
-    for (const item of journal?.items ?? []) {
-      const key = getCellKey(item.studentId, item.lessonId);
-      const nextValue = formatJournalDisplayValue(item.attended, item.grade);
-
-      if (!valueMap.has(key) || typeof item.grade === 'number') {
-        valueMap.set(key, nextValue);
-      }
-    }
-
-    return valueMap;
+    return buildJournalValueMap(journal?.items ?? []);
   }, [journal?.items]);
 
   const rows = useMemo<StudentGradeRow[]>(() => {

@@ -7,6 +7,13 @@ export type JournalParsedValue =
   | { attended: false }
   | 'invalid';
 
+interface JournalValueMapItem {
+  studentId: string;
+  lessonId: string;
+  attended: boolean | null;
+  grade: number | null;
+}
+
 export function getCellKey(studentId: string, lessonId: string) {
   return `${studentId}:${lessonId}`;
 }
@@ -54,6 +61,19 @@ export function formatJournalDisplayValue(
   }
 
   return '';
+}
+
+export function buildJournalValueMap<T extends JournalValueMapItem>(items: T[]) {
+  const valueMap = new Map<string, string>();
+
+  for (const item of items) {
+    valueMap.set(
+      getCellKey(item.studentId, item.lessonId),
+      formatJournalDisplayValue(item.attended, item.grade)
+    );
+  }
+
+  return valueMap;
 }
 
 export function parseJournalInput(value: string): JournalParsedValue {
