@@ -1,21 +1,16 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
+import { useRouter } from 'next/navigation';
 import { PageHero, ViewSwitch, WeekNavigation, ScheduleCard, DayDivider, EmptyDayState } from '@/components/ui';
 import type { ScheduleLessonResult } from '@/lib/api/types';
-import { useDaySchedule, useWeekSchedule } from '@/lib/hooks/useSchedule';
-import { getLocalIsoDate, shiftIsoDate } from '@/lib/utils/isoDate';
+import { SCHEDULE_VIEW_OPTIONS, useSchedulePage } from '@/lib/hooks/useSchedulePage';
 import {
   formatScheduleDayTitle,
   formatScheduleHeadlineDate,
   formatScheduleWeekRange,
 } from '@/lib/utils/schedule';
-import {
-  buildSchedulePageState,
-  formatScheduleRoom,
-} from '@/lib/utils/scheduleView';
+import { formatScheduleRoom } from '@/lib/utils/scheduleView';
 import {
   buildTeacherLessonHref,
   formatTeacherLessonGroupNames,
@@ -23,45 +18,23 @@ import {
 } from '@/lib/utils/teacherLesson';
 import styles from './schedule.module.scss';
 
-type ViewMode = 'today' | 'week';
-
-const VIEW_OPTIONS: Array<{ value: ViewMode; label: string }> = [
-  { value: 'today', label: 'Сегодня' },
-  { value: 'week', label: 'Неделя' },
-];
-
 export default function TeacherSchedulePage() {
   const router = useRouter();
-  const [view, setView] = useState<ViewMode>('today');
-  const [weekOffset, setWeekOffset] = useState(0);
-  const todayDate = getLocalIsoDate();
-  const weekAnchorDate = useMemo(() => shiftIsoDate(todayDate, weekOffset * 7), [todayDate, weekOffset]);
-
   const {
-    data: todaySchedule,
-    isLoading: isTodayScheduleLoading,
-    error: todayScheduleError,
-  } = useDaySchedule(todayDate);
-
-  const {
-    data: weekSchedule,
-    isLoading: isWeekScheduleLoading,
-    error: weekScheduleError,
-  } = useWeekSchedule(weekAnchorDate, view === 'week');
-
-  const {
+    view,
+    setView,
+    goToPreviousWeek,
+    goToNextWeek,
+    todayDate,
     todayLessons,
+    isTodayScheduleLoading,
+    todayScheduleError,
     displayWeekDays,
+    isWeekScheduleLoading,
+    weekScheduleError,
     headlineDate,
     isEvenWeek,
-  } = useMemo(() => buildSchedulePageState<ScheduleLessonResult>({
-    todaySchedule,
-    weekSchedule,
-    todayDate,
-    weekAnchorDate,
-    weekOffset,
-    mapLesson: (lesson) => lesson,
-  }), [todayDate, todaySchedule, weekAnchorDate, weekOffset, weekSchedule]);
+  } = useSchedulePage();
 
   const openLessonPage = (lesson: ScheduleLessonResult, date: string) => {
     router.push(buildTeacherLessonHref({
@@ -93,13 +66,10 @@ export default function TeacherSchedulePage() {
   );
 
   const heroCenter = view === 'week' ? (
-    <WeekNavigation
-      onPrevious={() => setWeekOffset((offset) => offset - 1)}
-      onNext={() => setWeekOffset((offset) => offset + 1)}
-    />
+    <WeekNavigation onPrevious={goToPreviousWeek} onNext={goToNextWeek} />
   ) : undefined;
 
-  const heroAction = <ViewSwitch options={VIEW_OPTIONS} value={view} onChange={setView} />;
+  const heroAction = <ViewSwitch options={SCHEDULE_VIEW_OPTIONS} value={view} onChange={setView} />;
 
   return (
     <div className={styles.page}>

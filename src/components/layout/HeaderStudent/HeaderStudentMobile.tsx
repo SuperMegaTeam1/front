@@ -10,6 +10,7 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import { useUnreadCount } from '@/lib/hooks/useNotifications';
+import { getUserInitials } from '@/lib/utils/fullName';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useThemeMode } from '@/providers/ThemeProvider';
 import styles from './HeaderStudentMobile.module.scss';
@@ -26,9 +27,7 @@ export function HeaderStudentMobile() {
   const { mode, toggleMode } = useThemeMode();
   const pathname = usePathname();
 
-  const avatarLabel = user
-    ? `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.trim()
-    : 'МИ';
+  const avatarLabel = user ? getUserInitials(user.firstName, user.lastName) : 'МИ';
 
   const isHomePage = pathname === HOME_PATH;
   const isSchedulePage = pathname === SCHEDULE_PATH;

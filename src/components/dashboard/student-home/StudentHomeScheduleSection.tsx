@@ -7,7 +7,7 @@ import { LessonCard } from '@/components/shared/LessonCard/LessonCard';
 import { EmptyDayState, ScheduleCard } from '@/components/ui';
 import { getRelativeScheduleDayLabel, getScheduleStageTag } from '@/lib/utils/schedule';
 import type { StudentHomeLessonView } from '@/lib/utils/scheduleView';
-import styles from '../home.module.scss';
+import styles from '@/app/(dashboard)/student/home/home.module.scss';
 
 type NavigationDirection = 'previous' | 'next' | null;
 

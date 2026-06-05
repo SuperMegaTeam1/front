@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Typography } from '@mui/material';
 import { SubjectCard } from '@/components/shared/SubjectCard/SubjectCard';
-import styles from '../home.module.scss';
+import styles from '@/app/(dashboard)/teacher/home/home.module.scss';
 import type { TeacherHomeSubject } from './TeacherHome.types';
 
 interface TeacherHomeSubjectsSectionProps {

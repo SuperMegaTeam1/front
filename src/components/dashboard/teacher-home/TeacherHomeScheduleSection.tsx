@@ -6,7 +6,7 @@ import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import { LessonCard } from '@/components/shared/LessonCard/LessonCard';
 import { EmptyDayState, ScheduleCard } from '@/components/ui';
 import { getRelativeScheduleDayLabel, getScheduleStageTag } from '@/lib/utils/schedule';
-import styles from '../home.module.scss';
+import styles from '@/app/(dashboard)/teacher/home/home.module.scss';
 import type { TeacherHomeDay, TeacherHomeLesson } from './TeacherHome.types';
 
 type NavigationDirection = 'previous' | 'next' | null;

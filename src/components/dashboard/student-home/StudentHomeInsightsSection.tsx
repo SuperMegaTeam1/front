@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import styles from '../home.module.scss';
+import styles from '@/app/(dashboard)/student/home/home.module.scss';
 
 interface StudentHomeInsightsGrade {
   subject: string;
