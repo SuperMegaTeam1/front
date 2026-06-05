@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "lint": "eslint .",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -34,6 +36,8 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
     "@playwright/test": "^1.52.0",
+    "@storybook/addon-docs": "^10.4.2",
+    "@storybook/nextjs": "^10.4.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -43,6 +47,7 @@
     "eslint": "^9.26.0",
     "eslint-config-next": "^16.2.4",
     "jsdom": "^26.1.0",
+    "storybook": "^10.4.2",
     "typescript": "^5.8.3",
     "vitest": "^3.1.2",
     "yaml": "2.8.3"
