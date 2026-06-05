@@ -19,12 +19,12 @@ import {
 } from '@/lib/utils/scheduleView';
 import { formatNotificationTimestamp } from '@/lib/utils/notificationGroups';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { StudentHomeInsightsSection } from '@/components/dashboard/student-home/StudentHomeInsightsSection';
-import { StudentHomeRecentChangesSection } from '@/components/dashboard/student-home/StudentHomeRecentChangesSection';
 import {
+  StudentHomeInsightsSection,
+  StudentHomeRecentChangesSection,
   StudentHomeScheduleSection,
   type StudentHomeScheduleDay,
-} from '@/components/dashboard/student-home/StudentHomeScheduleSection';
+} from '@/components/dashboard/student-home';
 import styles from './home.module.scss';
 
 type HomeLesson = StudentHomeScheduleDay['lessons'][number];

@@ -9,6 +9,7 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import { getUserInitials } from '@/lib/utils/fullName';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useThemeMode } from '@/providers/ThemeProvider';
 import { HeaderTeacherMobile } from './HeaderTeacherMobile';
@@ -25,9 +26,7 @@ export function HeaderTeacher() {
   const { mode, toggleMode } = useThemeMode();
   const pathname = usePathname();
 
-  const avatarLabel = user
-    ? `${user.firstName[0] ?? ''}${user.lastName[0] ?? ''}`.trim()
-    : 'МИ';
+  const avatarLabel = user ? getUserInitials(user.firstName, user.lastName) : 'МИ';
   const isHomePage = pathname === HOME_PATH;
   const isSchedulePage = pathname === SCHEDULE_PATH || pathname.startsWith('/teacher/lesson/');
   const isSubjectsPage = pathname === SUBJECTS_PATH || pathname.startsWith(`${SUBJECTS_PATH}/`);

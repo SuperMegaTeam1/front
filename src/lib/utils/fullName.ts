@@ -24,3 +24,8 @@ export function getInitials(fullName: string) {
   const [lastName, firstName] = fullName.trim().split(/\s+/);
   return `${lastName?.[0] ?? ''}${firstName?.[0] ?? ''}`.toUpperCase();
 }
+
+/** Инициалы из отдельных полей имени и фамилии (для аватара в шапке). */
+export function getUserInitials(firstName?: string | null, lastName?: string | null) {
+  return `${firstName?.[0] ?? ''}${lastName?.[0] ?? ''}`.trim();
+}
