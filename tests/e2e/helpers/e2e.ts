@@ -1,7 +1,9 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 import type { Role } from '../../../src/types/user';
 
 const DEFAULT_PASSWORD = 'Password123!';
+const LOGIN_TIMEOUT_MS = 30000;
+const LOGIN_ERROR_TEXT = 'Неверный логин или пароль. Попробуйте ещё раз.';
 
 export const STUDENT_AUTH_FILE = 'tests/e2e/.auth/student.json';
 export const TEACHER_AUTH_FILE = 'tests/e2e/.auth/teacher.json';
@@ -44,7 +46,19 @@ export async function loginAs(page: Page, role: Role) {
   await slowStep(page);
 
   await page.getByRole('button', { name: 'ВОЙТИ' }).click();
-  await page.waitForURL(user.homeUrl, { timeout: 15000 });
+
+  const loginResult = await Promise.race([
+    expect(page).toHaveURL(user.homeUrl, { timeout: LOGIN_TIMEOUT_MS }).then(() => 'redirect' as const),
+    page.getByText(LOGIN_ERROR_TEXT).waitFor({ state: 'visible', timeout: LOGIN_TIMEOUT_MS }).then(() => 'error' as const),
+  ]);
+
+  if (loginResult === 'error') {
+    throw new Error(
+      `Не удалось войти как ${role}. Проверь, что backend запущен, БД заполнена сидером, ` +
+      `а пользователь ${user.email} / ${user.password} существует.`
+    );
+  }
+
   await slowStep(page);
 }
 
