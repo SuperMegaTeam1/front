@@ -17,49 +17,17 @@ import {
   getCurrentScheduleDayLabel,
   mapLessonToStudentHomeLesson,
 } from '@/lib/utils/scheduleView';
+import { formatNotificationTimestamp } from '@/lib/utils/notificationGroups';
 import { useAuthStore } from '@/stores/useAuthStore';
-import styles from './home.module.scss';
-import { StudentHomeInsightsSection } from './components/StudentHomeInsightsSection';
-import { StudentHomeRecentChangesSection } from './components/StudentHomeRecentChangesSection';
+import { StudentHomeInsightsSection } from '@/components/dashboard/student-home/StudentHomeInsightsSection';
+import { StudentHomeRecentChangesSection } from '@/components/dashboard/student-home/StudentHomeRecentChangesSection';
 import {
   StudentHomeScheduleSection,
   type StudentHomeScheduleDay,
-} from './components/StudentHomeScheduleSection';
+} from '@/components/dashboard/student-home/StudentHomeScheduleSection';
+import styles from './home.module.scss';
 
 type HomeLesson = StudentHomeScheduleDay['lessons'][number];
-
-function formatNotificationTime(createdAt: string) {
-  const date = new Date(createdAt);
-  const today = new Date();
-  const yesterday = new Date();
-  const getLocalDateKey = (value: Date) => {
-    const year = value.getFullYear();
-    const month = String(value.getMonth() + 1).padStart(2, '0');
-    const day = String(value.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
-  };
-  const dateKey = getLocalDateKey(date);
-  const todayKey = getLocalDateKey(today);
-  yesterday.setDate(today.getDate() - 1);
-  const yesterdayKey = getLocalDateKey(yesterday);
-
-  if (dateKey === todayKey) {
-    return new Intl.DateTimeFormat('ru-RU', {
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(date);
-  }
-
-  if (dateKey === yesterdayKey) {
-    return 'Вчера';
-  }
-
-  return new Intl.DateTimeFormat('ru-RU', {
-    day: 'numeric',
-    month: 'short',
-  }).format(date);
-}
 
 export default function StudentHomePage() {
   const { user } = useAuthStore();
@@ -133,7 +101,7 @@ export default function StudentHomePage() {
       icon: <ChatBubbleOutlineRoundedIcon sx={{ fontSize: 28, color: 'var(--color-brand)' }} />,
       title: notification.title,
       subtitle: notification.messageBody,
-      time: formatNotificationTime(notification.createdAt),
+      time: formatNotificationTimestamp(notification.createdAt),
     }));
   }, [notifications]);
 

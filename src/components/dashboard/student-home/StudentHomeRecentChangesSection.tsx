@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Typography } from '@mui/material';
-import styles from '../home.module.scss';
+import styles from '@/app/(dashboard)/student/home/home.module.scss';
 
 interface StudentHomeNotification {
   id: string;

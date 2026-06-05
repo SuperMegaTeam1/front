@@ -19,13 +19,12 @@ import {
 import { mapTeacherSubjectsToHomeSubjects } from '@/lib/utils/subjectView';
 import { buildTeacherLessonHref } from '@/lib/utils/teacherLesson';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { TeacherHomeScheduleSection } from '@/components/dashboard/teacher-home/TeacherHomeScheduleSection';
+import { TeacherHomeSubjectsSection } from '@/components/dashboard/teacher-home/TeacherHomeSubjectsSection';
 
 import styles from './home.module.scss';
 
-import { TeacherHomeScheduleSection } from './components/TeacherHomeScheduleSection';
-import { TeacherHomeSubjectsSection } from './components/TeacherHomeSubjectsSection';
-
-import type { TeacherHomeLesson, TeacherHomeSubject } from './components/TeacherHome.types';
+import type { TeacherHomeLesson, TeacherHomeSubject } from '@/components/dashboard/teacher-home/TeacherHome.types';
 
 type TeacherHomeSubjectIconVariant = NonNullable<TeacherHomeSubject['iconVariant']>;
 

@@ -4,67 +4,12 @@ import { useEffect, useRef } from 'react';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import { NotificationItem } from '@/components/shared/NotificationItem/NotificationItem';
 import { PageHero } from '@/components/ui';
-import type { StudentNotificationResponse } from '@/lib/api/types';
 import {
   useMarkAllStudentNotificationsAsRead,
   useStudentNotifications,
 } from '@/lib/hooks/useNotifications';
+import { formatNotificationTime, groupNotifications } from '@/lib/utils/notificationGroups';
 import styles from './notifications.module.scss';
-
-interface NotificationGroup {
-  label: string;
-  items: StudentNotificationResponse[];
-}
-
-function formatDateKey(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-}
-
-function getGroupLabel(createdAt: string) {
-  const date = new Date(createdAt);
-  const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
-
-  if (formatDateKey(date) === formatDateKey(today)) {
-    return 'Сегодня';
-  }
-
-  if (formatDateKey(date) === formatDateKey(yesterday)) {
-    return 'Вчера';
-  }
-
-  return new Intl.DateTimeFormat('ru-RU', {
-    day: 'numeric',
-    month: 'long',
-  }).format(date);
-}
-
-function formatTime(createdAt: string) {
-  return new Intl.DateTimeFormat('ru-RU', {
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(createdAt));
-}
-
-function groupNotifications(notifications: StudentNotificationResponse[]) {
-  return notifications.reduce<NotificationGroup[]>((groups, notification) => {
-    const label = getGroupLabel(notification.createdAt);
-    const existingGroup = groups.find((group) => group.label === label);
-
-    if (existingGroup) {
-      existingGroup.items.push(notification);
-      return groups;
-    }
-
-    groups.push({ label, items: [notification] });
-    return groups;
-  }, []);
-}
 
 export default function StudentNotificationsPage() {
   const {
@@ -108,7 +53,7 @@ export default function StudentNotificationsPage() {
                       key={item.id}
                       title={item.title}
                       message={item.messageBody}
-                      time={formatTime(item.createdAt)}
+                      time={formatNotificationTime(item.createdAt)}
                       icon={<ChatBubbleOutlineRoundedIcon sx={{ fontSize: 24 }} />}
                     />
                   ))}
