@@ -9,6 +9,7 @@ out/
 coverage/
 test-results/
 playwright-report/
+storybook-static/
 
 # production
 dist/
@@ -24,6 +25,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+storybook.log
 
 # system
 .DS_Store

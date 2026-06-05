@@ -3,6 +3,9 @@ import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTypeScript from 'eslint-config-next/typescript';
 
 export default defineConfig([
+  {
+    ignores: ['playwright-report/**', 'storybook-static/**', 'test-results/**'],
+  },
   ...nextVitals,
   ...nextTypeScript,
   {

@@ -11,7 +11,7 @@
 | Состояние | Zustand (клиент), TanStack Query (сервер) |
 | HTTP | Axios |
 | Формы | React Hook Form |
-| Качество | ESLint |
+| Качество | ESLint, Storybook |
 | Тесты | Vitest (юнит), Playwright (E2E) |
 
 ## Быстрый старт
@@ -38,6 +38,25 @@ http://localhost:3000/teacher/schedule
 | `npm run lint` | Проверка ESLint |
 | `npm run test` | Юнит-тесты (Vitest) |
 | `npm run test:e2e` | E2E-тесты (Playwright) |
+| `npm run storybook` | Локальный Storybook на `http://localhost:6006` |
+| `npm run build-storybook` | Статическая сборка Storybook |
+
+## Storybook
+
+Storybook подключён для демонстрации UI-компонентов в фирменном стиле проекта.
+
+```bash
+npm run storybook
+```
+
+Сейчас в Storybook есть примеры:
+
+- `PageHero`
+- `InfoCard` + `FieldItem`
+- `LogoutButton`
+- `LessonCard`
+- `SubjectCard`
+- `NotificationItem`
 
 ## Структура проекта
 
